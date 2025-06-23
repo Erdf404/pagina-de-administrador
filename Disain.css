@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Teachers:ital,wght@0,400..800;1,400..800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  /* modificaciones del encabezado*/
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f4f4f4; /* color del encabezado*/
+}
+
+#logo img {
+  height: 50px; /* altura del logo */
+  width: auto; /* ancho automático para mantener la proporción */
+}
+
+.placeholder form {
+  display: flex;
+}
+
+.placeholder input[type="text"] {
+  padding: 10px;
+  border: 1px solid #100c0c;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.placeholder button {
+  /* modificaciones del boton de busqueda */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #2278c8;
+}
+
+#user-info {
+  display: flex;
+  align-items: center;
+}
+
+body {
+  /* modificacion en general del cuerpo donde se encuentra la tabla */
+  font-family: "Teachers", sans-serif;
+  font-weight: 400;
+  background: linear-gradient(135deg, #1e1e2a, #2d2d39);
+  color: aliceblue; /* color del texto dentro de la tabla*/
+}
+
+.guardias {
+  /* modificaciones de la tabla */
+  text-align: center;
+  margin: 0 auto;
+  display: table;
+  table-layout: fixed;
+}
+
+.guardias thead tr th {
+  /* modificaciones del encabezado de la tabla */
+  font-weight: bold;
+  font-size: 1.1rem;
+  background-color: #2b3856;
+}
+
+.guardias thead tr td {
+  /* modificaciones de las celdas de la tabla */
+  font-size: 1rem;
+}
+
+.guardias tbody tr:nth-child(odd) {
+  /* modifica los colores de las celdas impares de la tabla */
+  background-color: #687eb0;
+}
+.guardias tbody tr:nth-child(even) {
+  /* modifica los colores de las celdas pares de la tabla */
+  background-color: #425277;
+}
+
+.guardias tbody tr td,/*hace una sepacacion entre las celdas*/
+.guardias tbody tr th {
+  padding: 10px;
+}
+
+.guardias tbody tr td:hover {
+  /*hace que al pasar el cursor cambie de color*/
+  background-color: #faa307;
+  cursor: pointer;
+}
