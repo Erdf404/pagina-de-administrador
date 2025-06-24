@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
     <title>Busqueda de guardias</title>
-    <link rel="stylesheet" href="Busqueda.css" />
+    <link rel="stylesheet" href="Rondines.css" />
   </head>
 
   <body>
@@ -14,11 +13,8 @@
         <!-- Logotipo del TSJ -->
       </div>
 
-       <div class="placeholder">
-        <form method="POST" action="">
-          <input type="text" name="busqueda" placeholder="Buscar guardia......" ? />
+       <div class="calendario">
           <button type="submit">Buscar</button>
-        </form>
        </div>
 
       <div id="user-info">
@@ -33,13 +29,21 @@
       <table class="guardias">
         <thead>
           <tr>
-            <th>Guardia</th>
+            <th>Fecha del recorrido</th>
+            <th>Hora de inicio</th>
+            <th>Hora de fin</th>
+            <th>Tipo de recorrido</th>
+            <th>Mapa</th>
           </tr>
         </thead>
 
         <tbody>
           <tr>
             <td>Nombres de guardias</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td> Mostrar mapa</td>
           </tr>
         </tbody>
       </table>

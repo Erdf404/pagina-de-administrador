@@ -1,0 +1,85 @@
+/*estilos de la página de inicio de sesión*/
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center; /* para centrar el contenido */
+  align-items: center; /* para centrar el contenido verticalmente */
+  min-height: 100vh; /* establecer la altura mínima */
+  background: linear-gradient(
+    135deg,
+    #1e1e2a,
+    #2d2d39
+  ); /* aplica un degradado de fondo */
+  overflow: hidden; /* oculta el contenido desbordante */
+}
+
+/* estilo principal para la caja del formulario */
+.box {
+  position: relative; /* posición relativa para permitir el uso de pseudo-elementos */
+  width: 400px; /* ancho de la caja */
+  padding: 30px; /* espacio interno */
+  background: #25252b; /* color de fondo */
+  border-radius: 20px; /* bordes redondeados */
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); /* sombra para dar profundidad */
+  overflow: hidden;
+  text-align: center; /* centrar el texto dentro de la caja */
+}
+/* efecto de fondo radial */
+.box::before {
+  content: ""; /* Inserta un elemento vacío decorativo */
+  position: absolute; /* Posiciona el elemento en relación a .box */
+  top: -50%; /* mueve el elemento hacia arriba */
+  left: -50%; /* mueve el elemento hacia la izquierda */
+  width: 200%; /* ancho del elemento */
+  height: 200%; /* altura del elemento */
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  ); /* degradado radial */
+  z-index: -2; /* coloca el elemento detrás de .box */
+}
+/* efecto de sombra interna */
+.box::after {
+  content: "";
+  position: absolute;
+  inset: 4px; /* Coloca un margen interno uniforme de 4px */
+  background: #2d2d39; /* color de fondo para la sombra interna */
+  border-radius: 15px; /* bordes redondeados */
+  border: 8px solid #25252b; /* color del borde */
+  z-index: -1; /* coloca el elemento detrás de .box */
+}
+/* estilos para el título y los campos del formulario */
+.box h1 {
+  color: #fff; /* color del texto del título */
+  margin-bottom: 20px; /* espacio debajo del título */
+  font-size: 24px; /* tamaño de fuente del título */
+}
+/* estilos para los campos de entrada y el botón */
+.box input {
+  width: 100%; /* ancho completo del campo de entrada */
+  padding: 10px; /* espacio interno del campo de entrada */
+  margin: 10px 0; /* margen vertical entre campos */
+  border: none; /* sin borde */
+  border-radius: 10px; /* bordes redondeados */
+  outline: none; /* sin contorno al enfocar */
+  font-size: 16px; /* tamaño de fuente del campo de entrada */
+  background: #1e1e28; /* color de fondo del campo de entrada */
+  color: #fff; /* color del texto del campo de entrada */
+}
+/* estilos para el botón de envío */
+.box button {
+  width: 100%; /* ancho completo del botón */
+  padding: 10px; /* espacio interno del botón */
+  border: none; /* sin borde */
+  border-radius: 10px; /* bordes redondeados */
+  background: #4caf50; /* color de fondo del botón */
+  color: #fff; /* color del texto del botón */
+  font-size: 16px; /* tamaño de fuente del botón */
+  cursor: pointer; /* cursor de mano al pasar por encima */
+}
+/* efecto hover para el botón */
+.box button:hover {
+  background: #45a049; /* color de fondo del botón al pasar el ratón */
+}

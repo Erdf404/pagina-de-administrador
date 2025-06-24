@@ -19,18 +19,7 @@ header {
   width: auto; /* ancho automático para mantener la proporción */
 }
 
-.placeholder form {
-  display: flex;
-}
-
-.placeholder input[type="text"] {
-  padding: 10px;
-  border: 1px solid #100c0c;
-  font-size: 16px;
-  border-radius: 5px;
-}
-
-.placeholder button {
+.calendario button {
   /* modificaciones del boton de busqueda */
   padding: 10px 20px;
   border-radius: 5px;
@@ -64,6 +53,7 @@ body {
   font-weight: bold;
   font-size: 1.1rem;
   background-color: #2b3856;
+  padding: 1rem;
 }
 
 .guardias thead tr td {
@@ -85,8 +75,12 @@ body {
   padding: 10px;
 }
 
-.guardias tbody tr td:hover {
+.guardias tbody tr td:last-child {
   /*hace que al pasar el cursor cambie de color*/
-  background-color: #faa307;
   cursor: pointer;
+}
+
+.guardias tbody tr td:last-child:hover {
+  /* cambia el color al pasar el cursor */
+  background-color: #ffba08;
 }
