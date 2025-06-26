@@ -27,8 +27,8 @@ body {
 }
 /* efecto de fondo radial */
 .box::before {
-  content: ""; /* Inserta un elemento vacío decorativo */
-  position: absolute; /* Posiciona el elemento en relación a .box */
+  content: ""; /* inserta un elemento vacío decorativo */
+  position: absolute; /* posiciona el elemento en relación a .box */
   top: -50%; /* mueve el elemento hacia arriba */
   left: -50%; /* mueve el elemento hacia la izquierda */
   width: 200%; /* ancho del elemento */
@@ -44,21 +44,23 @@ body {
 .box::after {
   content: "";
   position: absolute;
-  inset: 4px; /* Coloca un margen interno uniforme de 4px */
+  inset: 4px; /* coloca un margen interno uniforme de 4px */
   background: #2d2d39; /* color de fondo para la sombra interna */
   border-radius: 15px; /* bordes redondeados */
   border: 8px solid #25252b; /* color del borde */
   z-index: -1; /* coloca el elemento detrás de .box */
 }
+
 /* estilos para el título y los campos del formulario */
 .box h1 {
   color: #fff; /* color del texto del título */
   margin-bottom: 20px; /* espacio debajo del título */
   font-size: 24px; /* tamaño de fuente del título */
 }
+
 /* estilos para los campos de entrada y el botón */
 .box input {
-  width: 100%; /* ancho completo del campo de entrada */
+  width: calc(100% - 20px); /* ancho ajustado al tamaño de la caja */
   padding: 10px; /* espacio interno del campo de entrada */
   margin: 10px 0; /* margen vertical entre campos */
   border: none; /* sin borde */
@@ -68,10 +70,12 @@ body {
   background: #1e1e28; /* color de fondo del campo de entrada */
   color: #fff; /* color del texto del campo de entrada */
 }
+
 /* estilos para el botón de envío */
 .box button {
   width: 100%; /* ancho completo del botón */
-  padding: 10px; /* espacio interno del botón */
+  padding: 12px; /* espacio interno del botón */
+  margin-top: 10px; /* margen superior */
   border: none; /* sin borde */
   border-radius: 10px; /* bordes redondeados */
   background: #4caf50; /* color de fondo del botón */
@@ -79,7 +83,117 @@ body {
   font-size: 16px; /* tamaño de fuente del botón */
   cursor: pointer; /* cursor de mano al pasar por encima */
 }
+
 /* efecto hover para el botón */
 .box button:hover {
+  background: #45a049; /* color de fondo del botón al pasar el ratón */
+}
+/* contenedor para la contraseña con icono */
+.password-container {
+  position: relative; /* posición relativa para el icono */
+  width: 100%; /* asegura que el contenedor tenga el mismo ancho que el resto de los campos */
+}
+/* campo de entrada de contraseña */
+.password-container input {
+  width: 100%; /* el campo ocupará todo el ancho del contenedor */
+  padding-right: 40px; /* espacio interno para el icono */
+  padding: 10px; /* espaciado interno uniforme */
+  margin: 10px 0; /* margen vertical */
+  border: none; /* sin bordes */
+  border-radius: 10px; /* bordes redondeados */
+  outline: none; /* sin contorno al enfocar */
+  font-size: 16px; /* Tamaño de fuente */
+  background: #1e1e28; /* color de fondo */
+  color: #fff; /* color del texto */
+  box-sizing: border-box; /* asegura que padding y borde no afecten el ancho total */
+}
+
+/* Icono para mostrar/ocultar contraseña */
+.toggle-password {
+  position: absolute; /* posición absoluta dentro del contenedor */
+  top: 50%; /* centra el icono verticalmente */
+  right: 10px; /* posiciona el icono a la derecha */
+  transform: translateY(-50%); /* ajuste fino del centrado vertical */
+  background: none; /* sin fondo */
+  border: none; /* sin bordes */
+  font-size: 16px; /* tamaño del icono acorde al campo */
+  color: #fff; /* color del icono */
+  cursor: pointer; /* cambia el cursor al pasar por encima */
+}
+/* botón para recuperar usuario */
+.recover-button {
+  background: #007bff; /* color de fondo */
+  margin-top: 10px; /* margen superior */
+}
+/* estilo del botón de recuperación */
+.recover-button:hover {
+  background: #0056b3; /* color de fondo al pasar el ratón */
+}
+
+/* estilos del modal */
+.modal {
+  display: none; /* oculta inicialmente el modal */
+  position: fixed; /* fija el modal en la pantalla */
+  top: 0; /* alinea el modal al borde superior */
+  left: 0; /* alinea el modal al borde izquierdo */
+  width: 100%; /* ocupa todo el ancho */
+  height: 100%; /* ocupa toda la altura */
+  background-color: rgba(0, 0, 0, 0.7); /* fondo oscuro semi-transparente */
+  justify-content: center; /* centra el contenido horizontalmente */
+  align-items: center; /* centra el contenido verticalmente */
+}
+
+/* contenido del modal */
+.modal-content {
+  background: #25252b; /* color de fondo */
+  padding: 20px; /* espaciado interno */
+  border-radius: 10px; /* bordes redondeados */
+  text-align: center; /* centrar texto dentro del modal */
+  width: 350px; /* ancho del modal */
+}
+
+/* título del modal */
+.modal-content h2 {
+  color: #fff; /* color del texto del título */
+}
+
+/* texto descriptivo del modal */
+.modal-content p {
+  color: #ccc; /* color del texto */
+}
+
+/* campo de entrada en el modal */
+.modal-content input {
+  width: 100%; /* ancho completo */
+  padding: 10px; /* espaciado interno */
+  margin: 10px 0; /* margen entre el campo y otros elementos */
+  border: none; /* sin borde */
+  border-radius: 10px; /* bordes redondeados */
+  background: #1e1e28; /* color de fondo */
+  color: #fff; /* color del texto */
+}
+
+/* botón dentro del modal */
+.modal-content button {
+  width: 100%; /* ancho completo */
+  padding: 10px; /* espaciado interno */
+  border: none; /* sin borde */
+  border-radius: 10px; /* bordes redondeados */
+  background: #4caf50; /* color de fondo */
+  color: #fff; /* color del texto */
+  cursor: pointer; /* cursor de mano al pasar por encima */
+}
+
+/* icono de cierre del modal */
+.modal-content .close {
+  position: absolute; /* posiciona el icono en el contenido */
+  top: 10px; /* margen superior */
+  right: 10px; /* margen derecho */
+  color: #fff; /* color del icono */
+  font-size: 20px; /* tamaño del icono */
+  cursor: pointer; /* cursor de mano */
+}
+/* efecto hover para el botón del modal*/
+.modal button:hover {
   background: #45a049; /* color de fondo del botón al pasar el ratón */
 }

@@ -8,20 +8,77 @@
     <title>Página de Inicio de Sesión</title>
     <!-- Título de la página web -->
     <link rel="stylesheet" href="Inicio.css" />
-    <!-- Enlace al archivo CSS para estilos -->
+     <!-- Enlace al archivo CSS para estilos -->
   </head>
   <body>
     <div class="box">
       <h1>Iniciar Sesión</h1>
-      <!-- Título de la página -->
+      <!-- Título de la sección de inicio de sesión -->
       <form>
         <input type="text" placeholder="Usuario" required />
         <!-- Campo de entrada para el usuario -->
-        <input type="password" placeholder="Contraseña" required />
-        <!-- Campo de entrada para la contraseña -->
+         
+        <div class="password-container"> 
+          <!-- Contenedor para la contraseña -->
+          <input
+            type="password"
+            id="password"
+            placeholder="Contraseña"
+            required
+          />  <!-- Campo de entrada para la contraseña -->
+          <span class="toggle-password" onclick="togglePassword()">👁</span> 
+          <!-- Icono para alternar la visibilidad de la contraseña -->
+        </div>
+
         <button type="submit">Entrar</button>
         <!-- Botón para enviar el formulario -->
+        <button type="button" class="recover-button" onclick="openModal()">
+        <!-- Botón para abrir la ventana modal de recuperación de usuario -->
+          Recuperar Usuario
+        </button>
       </form>
     </div>
+
+    <!-- Ventana modal para recuperación de usuario -->
+    <div class="modal" id="recoverModal"> 
+      <!-- Contenedor de la ventana modal -->
+      <div class="modal-content"> 
+      <!-- Contenido de la ventana modal -->
+        <span class="close" onclick="closeModal()">&times;</span> 
+        <!-- Botón para cerrar la ventana modal -->
+        <h2>Recuperar Usuario</h2>
+        <!-- Título de la ventana modal -->
+        <p>Por favor, ingresa tu correo electrónico:</p> 
+        <!-- Instrucción para el usuario -->
+        <input type="email" placeholder="Correo electrónico" required /> 
+        <!-- Campo de entrada para el correo electrónico -->
+        <button type="button">Enviar</button> 
+        <!-- Botón para enviar la solicitud de recuperación -->
+      </div>
+    </div>
+    
+    <script>  
+      function togglePassword() { 
+        // Función para alternar la visibilidad de la contraseña
+        const passwordInput = document.getElementById('password');
+         // Obtiene el campo de entrada de contraseña
+        const type = passwordInput.type === 'password' ? 'text' : 'password'; 
+        // Cambia el tipo de entrada entre 'password' y 'text'
+        passwordInput.type = type;
+         // Actualiza el tipo de entrada del campo de contraseña
+      }
+
+      function openModal() { 
+        // Función para abrir la ventana modal de recuperación de usuario
+        document.getElementById('recoverModal').style.display = 'flex';
+         // Muestra la ventana modal estableciendo su estilo de visualización a 'flex'
+      }
+
+      function closeModal() { 
+        // Función para cerrar la ventana modal de recuperación de usuario
+        document.getElementById('recoverModal').style.display = 'none';
+         // Oculta la ventana modal estableciendo su estilo de visualización a 'none'
+      }
+    </script>
   </body>
 </html>

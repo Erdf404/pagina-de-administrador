@@ -2,7 +2,7 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <title>Busqueda de guardias</title>
+    <title>Rondines</title>
     <link rel="stylesheet" href="Rondines.css" />
   </head>
 
