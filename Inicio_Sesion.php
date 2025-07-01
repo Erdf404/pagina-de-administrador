@@ -14,8 +14,9 @@
     <div class="box">
       <h1>Iniciar Sesión</h1>
       <!-- Título de la sección de inicio de sesión -->
-      <form>
-        <input type="text" placeholder="Usuario" required />
+       
+      <form action="Rondines.php" method="post" >
+        <input type="email" placeholder="Usuario" required />
         <!-- Campo de entrada para el usuario -->
          
         <div class="password-container"> 
@@ -79,6 +80,7 @@
         document.getElementById('recoverModal').style.display = 'none';
          // Oculta la ventana modal estableciendo su estilo de visualización a 'none'
       }
+
     </script>
   </body>
 </html>
