@@ -1,36 +1,43 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agregar Usuario</title>
-    <link rel="stylesheet" href="Agregar-Usuario.css" />
+    <link rel="stylesheet" href="Agregar.css" />
     <!-- Enlace al archivo CSS para estilos -->
 </head>
+
 <body>
     <header>
         <div id="logo">
             <img src="logo-tsj.png" alt="Logo del TSJ" />
         </div>
-        <div id="user-info"> 
-            <button id="user-data">Datos del usuario actual</button>
-            <div id="dropdown">
-                <button>Cerrar sesión</button>
+        <div id="user-info">
+            <div class="user-dropdown">
+                <button class="user-button">☰</button>
+                <div class="dropdown-menu">
+                    <button>Datos del usuario actual</button>
+                    <button>Cerrar sesión</button>
+                    <button>Buscar rondines</button>
+                    <button>Eliminar usuario</button>
+                </div>
             </div>
         </div>
     </header>
     <main>
-        <h1>Agregar Usuario</h1> 
+        <h1>Agregar Usuario</h1>
         <!-- Título de la sección de agregar usuario -->
         <form action="Agregar-Usuario.php" method="post">
             <!-- Formulario para agregar un nuevo usuario -->
             <label for="tipo-usuario">Seleccionar Tipo de Usuario:</label>
             <!-- Etiqueta para el campo de selección de tipo de usuario -->
             <select id="tipo-usuario" name="tipo-usuario" required onchange="mostrarOpcionesAdministrador()">
-            <!-- Campo de selección para el tipo de usuario -->
+                <!-- Campo de selección para el tipo de usuario -->
                 <option value="" disabled selected>Seleccionar...</option>
                 <option value="administrador">Administrador</option>
-                <option value="usuario">Usuario</option>
+                <option value="usuario">Guardia</option>
             </select>
             <!-- Opciones de tipo de usuario: Administrador o Usuario -->
 
@@ -40,7 +47,7 @@
                     <option value="" disabled selected>Seleccionar tipo de administrador...</option>
                     <option value="A1">A1</option>
                     <option value="A2">A2</option>
-                    <option value="A3">A3</option> 
+                    <option value="A3">A3</option>
                 </select>
             </div>
             <!-- Opciones adicionales para el tipo de administrador, visible solo si se selecciona Administrador -->
@@ -75,5 +82,22 @@
         }
     </script>
     <!-- Script para mostrar u ocultar las opciones de administrador según la selección del tipo de usuario -->
+
+    <script>
+        const userDropdown = document.querySelector('.user-dropdown');
+        const userButton = document.querySelector('.user-button');
+
+        userButton.addEventListener('click', () => {
+            userDropdown.classList.toggle('active');
+        });
+
+        // Cierra el menú si haces clic fuera
+        document.addEventListener('click', function(e) {
+            if (!userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
+    </script>
 </body>
+
 </html>

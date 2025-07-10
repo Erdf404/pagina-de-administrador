@@ -8,8 +8,8 @@ body {
   min-height: 100vh; /* establecer la altura mínima */
   background: linear-gradient(
     135deg,
-    #1e1e2a,
-    #2d2d39
+    #e0e0e4,
+    #434392
   ); /* aplica un degradado de fondo */
   overflow: hidden; /* oculta el contenido desbordante */
 }
@@ -19,7 +19,7 @@ body {
   position: relative; /* posición relativa para permitir el uso de pseudo-elementos */
   width: 400px; /* ancho de la caja */
   padding: 30px; /* espacio interno */
-  background: #25252b; /* color de fondo */
+  background: #e4e4e9; /* color de fondo */
   border-radius: 20px; /* bordes redondeados */
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5); /* sombra para dar profundidad */
   overflow: hidden;
