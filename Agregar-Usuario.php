@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agregar Usuario</title>
-    <link rel="stylesheet" href="Agregar.css" />
+    <link rel="stylesheet" href="estilos.css" />
     <!-- Enlace al archivo CSS para estilos -->
 </head>
 
@@ -18,10 +18,13 @@
             <div class="user-dropdown">
                 <button class="user-button">☰</button>
                 <div class="dropdown-menu">
-                    <button>Datos del usuario actual</button>
-                    <button>Cerrar sesión</button>
-                    <button>Buscar rondines</button>
-                    <button>Eliminar usuario</button>
+                    <button >Datos del usuario actual</button>
+                    <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
+                    <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
+                    <button onclick="window.location.href='Eliminar usuario.php'">Eliminar usuario</button>
+                    <button onclick="window.location.href='Modificar usuario.php'">Modificar usuario</button>
+                    <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias
+                    <!-- Botones para navegar a diferentes secciones -->
                 </div>
             </div>
         </div>
@@ -69,35 +72,8 @@
         </form>
     </main>
 
-    <script>
-        function mostrarOpcionesAdministrador() {
-            const tipoUsuario = document.getElementById('tipo-usuario').value;
-            const adminOptions = document.getElementById('admin-options');
-
-            if (tipoUsuario === 'administrador') {
-                adminOptions.style.display = 'block';
-            } else {
-                adminOptions.style.display = 'none';
-            }
-        }
-    </script>
-    <!-- Script para mostrar u ocultar las opciones de administrador según la selección del tipo de usuario -->
-
-    <script>
-        const userDropdown = document.querySelector('.user-dropdown');
-        const userButton = document.querySelector('.user-button');
-
-        userButton.addEventListener('click', () => {
-            userDropdown.classList.toggle('active');
-        });
-
-        // Cierra el menú si haces clic fuera
-        document.addEventListener('click', function(e) {
-            if (!userDropdown.contains(e.target)) {
-                userDropdown.classList.remove('active');
-            }
-        });
-    </script>
+    <!-- agrega el script.js -->
+    <script src="script.js"></script>
 </body>
 
 </html>

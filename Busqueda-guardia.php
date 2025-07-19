@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Busqueda de guardias</title>
-  <link rel="stylesheet" href="Busqueda.css" />
+  <link rel="stylesheet" href="estilos.css" />
 </head>
 
 <body>
@@ -30,6 +30,8 @@
           <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
           <button onclick="window.location.href='Eliminar usuario.php'">Eliminar usuario</button>
+          <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
+          <!-- Botones para navegar a diferentes secciones -->
         </div>
       </div>
     </div>
@@ -45,26 +47,13 @@
 
       <tbody>
         <tr>
-          <td>Nombres de guardias</td>
+          <td class="guardia-nombre">Nombre de guardia</td>
         </tr>
       </tbody>
     </table>
   </main>
-  <script>
-    const userDropdown = document.querySelector('.user-dropdown');
-    const userButton = document.querySelector('.user-button');
 
-    userButton.addEventListener('click', () => {
-      userDropdown.classList.toggle('active');
-    });
-
-    // Cierra el menú si haces clic fuera
-    document.addEventListener('click', function(e) {
-      if (!userDropdown.contains(e.target)) {
-        userDropdown.classList.remove('active');
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 
 </html>

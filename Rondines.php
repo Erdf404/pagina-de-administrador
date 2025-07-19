@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>Rondines</title>
-  <link rel="stylesheet" href="Rondines.css" />
+  <link rel="stylesheet" href="estilos.css" />
 </head>
 
 <body>
@@ -25,9 +25,10 @@
           <button>Datos del usuario actual</button>
           <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
-          <button onclick="window.location.href='Eliminar-Usuario.php'">Eliminar usuario</button>
+          <button onclick="window.location.href='Eliminar usuario.php'">Eliminar usuario</button>
           <button onclick="window.location.href='Modificar usuario.php'">Modificar usuario</button>
-
+          <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
+          <!-- Botones para navegar a diferentes secciones -->
         </div>
       </div>
     </div>
@@ -51,27 +52,13 @@
           <td></td>
           <td></td>
           <td></td>
-          <td> Mostrar mapa</td>
+          <td class="mapa-boton"> Mostrar mapa</td>
         </tr>
       </tbody>
     </table>
   </main>
-  <script>
-    const userDropdown = document.querySelector('.user-dropdown');
-    const userButton = document.querySelector('.user-button');
-
-    userButton.addEventListener('click', () => {
-      userDropdown.classList.toggle('active');
-    });
-
-    // Cierra el menú si haces clic fuera
-    document.addEventListener('click', function(e) {
-      if (!userDropdown.contains(e.target)) {
-        userDropdown.classList.remove('active');
-      }
-    });
-  </script>
-
+<!-- agrega el script.js -->
+  <script src="script.js"></script>
 </body>
 
 </html>

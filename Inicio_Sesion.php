@@ -13,11 +13,12 @@
 </head>
 
 <body>
+  <img src="logo-tsj.png" alt="Logo del TSJ" class="logo" />
   <div class="box">
     <h1>Iniciar Sesión</h1>
     <!-- Título de la sección de inicio de sesión -->
 
-    <form action="Rondines.php" method="post">
+    <form action="Busqueda-guardia.php" method="post">
       <input type="email" placeholder="Usuario" required />
       <!-- Campo de entrada para el usuario -->
 
@@ -58,30 +59,8 @@
       <!-- Botón para enviar la solicitud de recuperación -->
     </div>
   </div>
-
-  <script>
-    function togglePassword() {
-      // Función para alternar la visibilidad de la contraseña
-      const passwordInput = document.getElementById('password');
-      // Obtiene el campo de entrada de contraseña
-      const type = passwordInput.type === 'password' ? 'text' : 'password';
-      // Cambia el tipo de entrada entre 'password' y 'text'
-      passwordInput.type = type;
-      // Actualiza el tipo de entrada del campo de contraseña
-    }
-
-    function openModal() {
-      // Función para abrir la ventana modal de recuperación de usuario
-      document.getElementById('recoverModal').style.display = 'flex';
-      // Muestra la ventana modal estableciendo su estilo de visualización a 'flex'
-    }
-
-    function closeModal() {
-      // Función para cerrar la ventana modal de recuperación de usuario
-      document.getElementById('recoverModal').style.display = 'none';
-      // Oculta la ventana modal estableciendo su estilo de visualización a 'none'
-    }
-  </script>
+  <!-- agrega el script.js -->
+  <script src="script.js"></script>
 </body>
 
 </html>
