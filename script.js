@@ -10,7 +10,22 @@ if (e.key === "u"){
     alert("Inspección bloqueada");
     e.preventDefault();
 }
-})
+// Prevenir el uso de Ctrl+Shift+I para inspeccionar el elemento
+if (e.ctrlKey && e.shiftKey && e.key === "I") {
+    alert("🔐 Inspección bloqueada");
+    e.preventDefault();
+}
+// Prevenir el uso de Ctrl+Shift+C para inspeccionar el elemento
+if (e.ctrlKey && e.shiftKey && e.key === "C") {
+    alert("🔐 Inspección bloqueada");
+    e.preventDefault();
+}
+// Prevenir el uso de Ctrl+Shift+J para abrir la consola
+if (e.ctrlKey && e.shiftKey && e.key === "J") {
+    alert("🔐 Inspección bloqueada");
+    e.preventDefault();
+}
+});
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // Script para manejar el login y la visibilidad de la contraseña

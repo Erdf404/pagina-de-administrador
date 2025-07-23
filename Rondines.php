@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Rondines</title>
   <link rel="stylesheet" href="estilos.css" />
 </head>
@@ -25,8 +26,8 @@
           <button>Datos del usuario actual</button>
           <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
-          <button onclick="window.location.href='Eliminar usuario.php'">Eliminar usuario</button>
-          <button onclick="window.location.href='Modificar usuario.php'">Modificar usuario</button>
+          <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
+          <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
           <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
           <!-- Botones para navegar a diferentes secciones -->
         </div>
@@ -57,7 +58,9 @@
       </tbody>
     </table>
   </main>
-<!-- agrega el script.js -->
+    <!-- agrega el script2.js -->
+    <script src="script2.js"></script>
+  <!-- agrega el script.js -->
   <script src="script.js"></script>
 </body>
 

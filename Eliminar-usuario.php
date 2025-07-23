@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <title>Eliminar usuarios</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="estilos.css" />
 </head>
 
@@ -18,14 +20,14 @@
         <button type="submit">Buscar</button>
       </form>
     </div>
-      
+
     <div id="user-info">
       <div class="user-dropdown">
         <button class="user-button">☰</button>
         <!-- Botón para desplegar el menú de usuario -->
         <div class="dropdown-menu">
           <button>Datos del usuario actual</button>
-          <button onclick="window.location.href='Modificar usuario.php'">Modificar usuario</button>
+          <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
           <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
           <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
@@ -38,9 +40,9 @@
 
   <main>
     <div class="filtros">
-  <button class="filtro filtro-a">A</button>
-  <button class="filtro filtro-g">G</button>
-</div>
+      <button class="filtro filtro-a">A</button>
+      <button class="filtro filtro-g">G</button>
+    </div>
 
     <table class="guardias">
       <thead>
@@ -58,11 +60,15 @@
           <td>Administrador/Guardia</td>
           <td class="eliminar">✖</td>
         </tr>
-        <!-- Fila de ejemplo para un usuario existente --> 
+        <!-- Fila de ejemplo para un usuario existente -->
       </tbody>
     </table>
   </main>
-<!-- agrega el script.js -->
+    <!-- agrega el script2.js -->
+    <script src="script2.js"></script>
+    
+  <!-- agrega el script.js -->
   <script src="script.js"></script>
 </body>
+
 </html>

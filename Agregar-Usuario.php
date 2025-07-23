@@ -18,13 +18,13 @@
             <div class="user-dropdown">
                 <button class="user-button">☰</button>
                 <div class="dropdown-menu">
-                    <button >Datos del usuario actual</button>
+                    <button>Datos del usuario actual</button>
                     <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
                     <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
-                    <button onclick="window.location.href='Eliminar usuario.php'">Eliminar usuario</button>
-                    <button onclick="window.location.href='Modificar usuario.php'">Modificar usuario</button>
+                    <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
+                    <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
                     <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias
-                    <!-- Botones para navegar a diferentes secciones -->
+                        <!-- Botones para navegar a diferentes secciones -->
                 </div>
             </div>
         </div>
@@ -71,6 +71,8 @@
             <!-- Botón para enviar el formulario y agregar el usuario -->
         </form>
     </main>
+    <!-- agrega el script2.js -->
+    <script src="script2.js"></script>
 
     <!-- agrega el script.js -->
     <script src="script.js"></script>
