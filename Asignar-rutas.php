@@ -33,6 +33,11 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-section">
+            <label>Fecha de Asignación:</label>
+            <input type="date" id="fecha-asignacion" required />
+          </div>
 
 
 </html>
