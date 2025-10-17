@@ -25,6 +25,14 @@
             </select>
           </div>
 
+          <div class="form-section">
+            <label>Ruta:</label>
+            <select id="select-ruta" required>
+              <option value="">-- Selecciona una ruta --</option>
+            </select>
+          </div>
+        </div>
+
 
 
 </html>
