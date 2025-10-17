@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <title>Asignar Rutas a Guardias</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="estilo_mapa.css" />
 
 
 </head>
@@ -49,10 +50,10 @@
           </div>
         </div>
 
-    </div class="botones-control">
-    <button type="submit" class="btn-guardar">Guardar Asignación</button>
-    <button type="reset" class="btn-limpiar">Limpiar</button>
-    <div>
+    <div class="botones-control">
+    <button type="submit" class="success">Guardar Asignación</button>
+    <button type="reset" class="peligro">Limpiar</button>
+    </div>
       </form>
     </div>
     <!--Filtros-->
@@ -112,5 +113,6 @@
       </div>
     </div>
   </div>
+  
 
 </html>
