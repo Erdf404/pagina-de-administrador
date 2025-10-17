@@ -55,7 +55,36 @@
     <div>
       </form>
     </div>
+    <!--Filtros-->
+    <div class="filtros-container">
+      <h4> Filtrar Asignaciones</h4>
+      <div class="filtros-row">
+        <div class="form-section">
+          <label>Buscar guardia:</label>
+          <input type="text" id="filtro-guardia" placeholder="Nombre o email">
+        </div>
 
+        <div class="form-section">
+          <label>Fecha:</label>
+          <input type="date" id="filtro-fecha">
+        </div>
+
+        <div class="form-section">
+          <label>Estado:</label>
+          <select id="filtro-estado">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="en_curso">En curso</option>
+            <option value="completada">Completada</option>
+          </select>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <button onclick="filtrarAsignaciones()" class="success" style="padding: 10px 20px;">🔍 Filtrar</button>
+          <button onclick="limpiarFiltros()" class="peligro" style="padding: 10px 20px;">❌ Limpiar</button>
+        </div>
+      </div>
+    </div>
     <!-- Tabla de asignaciones -->
     <div class="panel">
       <h3>Asignaciones Registradas</h3>
