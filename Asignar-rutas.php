@@ -49,12 +49,39 @@
           </div>
         </div>
 
-          </div class="botones-control">
-        <button type="submit" class="btn-guardar">Guardar Asignación</button>
-        <button type="reset" class="btn-limpiar">Limpiar</button>
-        <div>
+    </div class="botones-control">
+    <button type="submit" class="btn-guardar">Guardar Asignación</button>
+    <button type="reset" class="btn-limpiar">Limpiar</button>
+    <div>
       </form>
     </div>
 
+    <!-- Tabla de asignaciones -->
+    <div class="panel">
+      <h3>Asignaciones Registradas</h3>
+      <div style="overflow-x: auto;">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Guardia</th>
+              <th>Ruta</th>
+              <th>Fecha</th>
+              <th>Hora Inicio</th>
+              <th>Hora Fin</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-asignaciones">
+            <tr>
+              <td colspan="7" class="sin-datos">
+                No hay asignaciones registradas aún
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 
 </html>
