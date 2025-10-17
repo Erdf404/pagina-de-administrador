@@ -15,11 +15,11 @@
     </div>
 
     <div class="placeholder">
-      <form method="POST" action="">
+    <form method="POST" action="" onsubmit="event.preventDefault(); buscarUsuario(this.busqueda.value);">
         <input type="text" name="busqueda" placeholder="Buscar guardia......" />
         <button type="submit">Buscar</button>
-      </form>
-    </div>
+    </form>
+</div>
 
     <div id="user-info">
       <div class="user-dropdown">
@@ -40,9 +40,11 @@
 
   <main>
     <div class="filtros">
-      <button class="filtro filtro-a">A</button>
-      <button class="filtro filtro-g">G</button>
-    </div>
+    <button class="filtro filtro-a" onclick="filtrarPorTipo('A')">A</button>
+    <button class="filtro filtro-g" onclick="filtrarPorTipo('G')">G</button>
+    <button class="filtro" onclick="cargarTablaEliminar()">Todos</button>
+</div>
+
 
     <table class="guardias">
       <thead>
@@ -69,6 +71,9 @@
     
   <!-- agrega el script.js -->
   <script src="script.js"></script>
+
+  <!-- agrega el script_usuarios.js -->
+  <script src="script_usuarios.js"></script>
 </body>
 
 </html>

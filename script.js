@@ -6,7 +6,7 @@ if (e.key === "F12"){
     e.preventDefault();
 }
 //prevenir el uso de ctrl+u para inspeccionar el código fuente
-if (e.key === "u"){
+if (e.ctrlKey && e.key === "u"){
     alert("Inspección bloqueada");
     e.preventDefault();
 }

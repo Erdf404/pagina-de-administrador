@@ -1,7 +1,7 @@
 // Variables globales
-const map = L.map("map").setView([20.702314, -103.473337], 19);
+const map = L.map("map").setView([20.702314, -103.473337], 17);
 
-// Solo OpenStreetMap
+// OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors",
   maxZoom: 19,
@@ -144,7 +144,7 @@ function verPunto(idPunto) {
   limpiarMarcadorTemporal();
 
   // Centrar el mapa en el punto
-  map.setView([punto.lat, punto.lng], 19);
+  map.setView([punto.lat, punto.lng], 17);
 
   // Pequeño delay para asegurar que el mapa se centre correctamente
   setTimeout(() => {

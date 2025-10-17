@@ -76,6 +76,9 @@
 
     <!-- agrega el script.js -->
     <script src="script.js"></script>
+
+    <!-- agrega el script_usuarios.js -->
+    <script src="script_usuarios.js"></script>
 </body>
 
 </html>
