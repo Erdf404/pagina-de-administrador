@@ -74,8 +74,6 @@
               <th>Fecha</th>
               <th>Hora Inicio</th>
               <th>Hora Fin</th>
-              <th>Estado</th>
-              <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="tbody-asignaciones">
