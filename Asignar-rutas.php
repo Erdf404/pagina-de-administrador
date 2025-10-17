@@ -33,11 +33,19 @@
           </div>
         </div>
 
-        <div class="form-row">
+        <div class="form-row-triple">
           <div class="form-section">
             <label>Fecha de Asignación:</label>
             <input type="date" id="fecha-asignacion" required />
           </div>
+
+          <div class="form-section">
+            <label>Hora de Inicio:</label>
+            <input type="time" id="hora-inicio" required />
+          </div>
+          <div class="form-section">
+            <label>Hora de Finalizacion:</label>
+            <input type="time" id="hora-fin" required />
 
 
 </html>
