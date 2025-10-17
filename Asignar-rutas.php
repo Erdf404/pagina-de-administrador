@@ -46,6 +46,15 @@
           <div class="form-section">
             <label>Hora de Finalizacion:</label>
             <input type="time" id="hora-fin" required />
+          </div>
+        </div>
+
+          </div class="botones-control">
+        <button type="submit" class="btn-guardar">Guardar Asignación</button>
+        <button type="reset" class="btn-limpiar">Limpiar</button>
+        <div>
+      </form>
+    </div>
 
 
 </html>
