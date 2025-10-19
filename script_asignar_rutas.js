@@ -62,10 +62,10 @@ async getContador() {
     return contador ? parseInt(contador) : 1;
 }
 };
-// ==================== VARIABLES GLOBALES ====================
+// ==================== Variables Globales ====================
 let asignacionesGuardadas = [];
 
-// ==================== INICIALIZACIÓN ====================
+// ==================== Inicializacion ====================
 document.addEventListener('DOMContentLoaded', async function() {
   await cargarAsignaciones();
 
@@ -85,5 +85,44 @@ async function inicializarAsignaciones() {
       e.preventDefault();
       await asignarRuta();
     });
+  }
+}
+// ==================== Cargar selectores de rutas y guardias ====================
+async function cargarGuardiasSelect() {
+  const select = document.getElementById('select-guardia');
+  if (!select) return;
+  
+  let guardias = [];
+  if (window.UsuariosDB) {
+    guardias = await window.UsuariosDB.getGuardias();
+  } else if (window.obtenerGuardias) {
+    guardias = window.obtenerGuardias();
+  }
+
+  select.innerHTML = '<option value="">-- Selecciona un guardia --</option>';
+  
+  guardias.forEach(guardia => {
+    select.innerHTML += `<option value="${guardia.id}">${guardia.nombre} (${guardia.email})</option>`;
+  });
+
+  if (guardias.length === 0) {
+    select.innerHTML = '<option value="">No hay guardias registrados</option>';
+  }
+}
+
+async function cargarRutasSelect() {
+  const select = document.getElementById('select-ruta');
+  if (!select) return;
+  
+  const rutasGuardadas = JSON.parse(localStorage.getItem('rutasGuardadas') || '[]');
+
+  select.innerHTML = '<option value="">-- Selecciona una ruta --</option>';
+  
+  rutasGuardadas.forEach(ruta => {
+    select.innerHTML += `<option value="${ruta.id}">${ruta.nombre} (${ruta.puntos.length} puntos)</option>`;
+  });
+
+  if (rutasGuardadas.length === 0) {
+    select.innerHTML = '<option value="">No hay rutas creadas</option>';
   }
 }
