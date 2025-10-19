@@ -126,7 +126,7 @@ async function cargarRutasSelect() {
     select.innerHTML = '<option value="">No hay rutas creadas</option>';
   }
 }
-// ==================== ASIGNAR RUTA ====================
+// ==================== Asignar rutas ====================
 async function asignarRuta() {
   const guardiaId = parseInt(document.getElementById('select-guardia').value);
   const rutaId = parseInt(document.getElementById('select-ruta').value);
@@ -191,4 +191,45 @@ async function asignarRuta() {
     console.error('Error al guardar asignación:', error);
     alert('❌ Error al guardar la asignación.');
   }
+}
+// ==================== Actualizar tabla ====================
+async function actualizarTablaAsignaciones() {
+  const tbody = document.getElementById('tbody-asignaciones');
+  if (!tbody) return;
+
+  if (asignacionesGuardadas.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="5" class="sin-datos">
+          No hay asignaciones registradas aún
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const asignacionesOrdenadas = [...asignacionesGuardadas].sort((a, b) => {
+    const fechaA = new Date(a.fecha + ' ' + a.horaInicio);
+    const fechaB = new Date(b.fecha + ' ' + b.horaInicio);
+    return fechaB - fechaA;
+  });
+
+  let html = '';
+  asignacionesOrdenadas.forEach(asignacion => {
+    html += `
+      <tr>
+        <td><strong>${asignacion.guardiaNombre}</strong><br>
+          <small>${asignacion.guardiaEmail}</small>
+        </td>
+        <td><strong>${asignacion.rutaNombre}</strong><br>
+          <small>${asignacion.rutaPuntos} puntos - Radio: ${asignacion.radioTolerancia}m</small>
+        </td>
+        <td>${formatearFecha(asignacion.fecha)}</td>
+        <td>${asignacion.horaInicio}</td>
+        <td>${asignacion.horaFin}</td>
+      </tr>
+    `;
+  });
+
+  tbody.innerHTML = html;
 }
