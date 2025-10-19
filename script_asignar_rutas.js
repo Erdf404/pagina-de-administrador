@@ -253,3 +253,14 @@ function mostrarMensajeAsignacion(mensaje, tipo) {
   div.style.display = 'block';
   setTimeout(() => div.style.display = 'none', 3000);
 }
+// ==================== Almacenamiento local ====================
+async function cargarAsignaciones() {
+  asignacionesGuardadas = await AsignacionesDB.getAll();
+}
+
+async function obtenerAsignacionesGuardia(guardiaId) {
+  return await AsignacionesDB.getByGuardia(guardiaId);
+}
+
+// Funcion global
+window.obtenerAsignacionesGuardia = obtenerAsignacionesGuardia;
