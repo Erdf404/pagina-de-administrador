@@ -233,3 +233,23 @@ async function actualizarTablaAsignaciones() {
 
   tbody.innerHTML = html;
 }
+// ==================== Funciones extras ====================
+function formatearFecha(fecha) {
+  const date = new Date(fecha + 'T00:00:00');
+  return date.toLocaleDateString('es-ES', { 
+    weekday: 'short', 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+}
+
+function mostrarMensajeAsignacion(mensaje, tipo) {
+  const div = document.getElementById('mensaje-asignacion');
+  if (!div) return;
+  
+  div.textContent = mensaje;
+  div.className = tipo === 'success' ? 'mensaje-exito' : 'mensaje-error';
+  div.style.display = 'block';
+  setTimeout(() => div.style.display = 'none', 3000);
+}
