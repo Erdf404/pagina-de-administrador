@@ -62,3 +62,28 @@ async getContador() {
     return contador ? parseInt(contador) : 1;
 }
 };
+// ==================== VARIABLES GLOBALES ====================
+let asignacionesGuardadas = [];
+
+// ==================== INICIALIZACIÓN ====================
+document.addEventListener('DOMContentLoaded', async function() {
+  await cargarAsignaciones();
+
+  if (document.getElementById('container-asignaciones')) {
+    await inicializarAsignaciones();
+  }
+});
+
+async function inicializarAsignaciones() {
+  await cargarGuardiasSelect();
+  await cargarRutasSelect();
+  await actualizarTablaAsignaciones();
+
+  const formAsignar = document.getElementById('form-asignar-ruta');
+  if (formAsignar) {
+    formAsignar.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      await asignarRuta();
+    });
+  }
+}
