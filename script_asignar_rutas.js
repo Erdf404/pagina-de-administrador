@@ -264,3 +264,7 @@ async function obtenerAsignacionesGuardia(guardiaId) {
 
 // Funcion global
 window.obtenerAsignacionesGuardia = obtenerAsignacionesGuardia;
+
+// ==================== Modificaciones futuras ====================
+// api global para base de datos en servidor en linea
+// window.AsignacionesDB = AsignacionesDB;
