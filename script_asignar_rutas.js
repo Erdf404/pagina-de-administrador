@@ -126,3 +126,69 @@ async function cargarRutasSelect() {
     select.innerHTML = '<option value="">No hay rutas creadas</option>';
   }
 }
+// ==================== ASIGNAR RUTA ====================
+async function asignarRuta() {
+  const guardiaId = parseInt(document.getElementById('select-guardia').value);
+  const rutaId = parseInt(document.getElementById('select-ruta').value);
+  const horaInicio = document.getElementById('hora-inicio').value;
+  const horaFin = document.getElementById('hora-fin').value;
+  const fecha = document.getElementById('fecha-asignacion').value;
+  const radioTolerancia = parseInt(document.getElementById('radio-tolerancia').value);
+
+  // Validaciones básicas
+  if (!guardiaId) return alert('⚠️ Por favor, selecciona un guardia.');
+  if (!rutaId) return alert('⚠️ Por favor, selecciona una ruta.');
+  if (!horaInicio || !horaFin) return alert('⚠️ Especifica hora de inicio y fin.');
+  if (!fecha) return alert('⚠️ Selecciona una fecha.');
+  if (!radioTolerancia || radioTolerancia < 5 || radioTolerancia > 500)
+    return alert('⚠️ Radio de tolerancia entre 5 y 500 metros.');
+  if (horaFin <= horaInicio)
+    return alert('⚠️ La hora de finalización debe ser posterior.');
+
+  // Obtener datos de guardia y ruta
+  let guardia = null;
+  if (window.UsuariosDB) guardia = await window.UsuariosDB.getById(guardiaId);
+  else if (window.obtenerUsuarios) {
+    const usuarios = window.obtenerUsuarios();
+    guardia = usuarios.find(g => g.id === guardiaId);
+  }
+
+  const rutasGuardadas = JSON.parse(localStorage.getItem('rutasGuardadas') || '[]');
+  const ruta = rutasGuardadas.find(r => r.id === rutaId);
+  if (!guardia || !ruta) return alert('⚠️ Error al obtener información.');
+
+  // Verificar conflicto de horario
+  const conflicto = asignacionesGuardadas.some(a => 
+    a.guardiaId === guardiaId && a.fecha === fecha &&
+    ((horaInicio >= a.horaInicio && horaInicio < a.horaFin) ||
+    (horaFin > a.horaInicio && horaFin <= a.horaFin) ||
+    (horaInicio <= a.horaInicio && horaFin >= a.horaFin))
+  );
+  if (conflicto && !confirm('⚠️ Ya existe una asignación en ese horario. ¿Continuar?')) return;
+
+  // Crear objeto
+  const nuevaAsignacion = {
+    guardiaId,
+    guardiaNombre: guardia.nombre,
+    guardiaEmail: guardia.email,
+    rutaId,
+    rutaNombre: ruta.nombre,
+    rutaPuntos: ruta.puntos.length,
+    fecha,
+    horaInicio,
+    horaFin,
+    radioTolerancia,
+    fechaCreacion: new Date().toLocaleString('es-ES')
+  };
+
+  try {
+    await AsignacionesDB.create(nuevaAsignacion);
+    await cargarAsignaciones();
+    await actualizarTablaAsignaciones();
+    mostrarMensajeAsignacion('✅ Ruta asignada exitosamente', 'success');
+    document.getElementById('form-asignar-ruta').reset();
+  } catch (error) {
+    console.error('Error al guardar asignación:', error);
+    alert('❌ Error al guardar la asignación.');
+  }
+}
