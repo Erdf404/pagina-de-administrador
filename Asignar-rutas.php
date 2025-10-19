@@ -88,5 +88,7 @@
     </div>
   </div>
   
-
+  <!-- Scripts -->
+  <script src="script_usuarios.js"></script>
+  <script src="script_asignar_rutas.js"></script>
 </html>
