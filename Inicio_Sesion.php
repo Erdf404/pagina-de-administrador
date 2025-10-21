@@ -18,7 +18,7 @@
     <h1>Iniciar Sesión</h1>
     <!-- Título de la sección de inicio de sesión -->
 
-    <form action="Busqueda-guardia.php" method="post">
+    <form method="post">
       <input type="email" placeholder="Usuario" required />
       <!-- Campo de entrada para el usuario -->
 
@@ -55,7 +55,7 @@
       <!-- Instrucción para el usuario -->
       <input type="email" placeholder="Correo electrónico" required />
       <!-- Campo de entrada para el correo electrónico -->
-      <button type="button">Enviar</button>
+      <button type="button" onclick="recuperarContrasena()">Enviar</button>
       <!-- Botón para enviar la solicitud de recuperación -->
     </div>
   </div>

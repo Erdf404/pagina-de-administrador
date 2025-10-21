@@ -142,4 +142,21 @@ function mostrarCargando(mostrar) {
     submitBtn.style.opacity = '1';
   }
 }
+// ==================== Recuperacion de contraseña (De momento solo estetico) ====================
+async function recuperarContrasena() {
+  const emailInput = document.querySelector('#recoverModal input[type="email"]');
+  if (!emailInput) return;
+
+  const email = emailInput.value.trim();
+  if (!email) return mostrarMensaje('⚠️ Ingresa tu correo electrónico', 'error');
+  if (!validarFormatoEmail(email)) return mostrarMensaje('⚠️ Correo electrónico inválido', 'error');
+
+  const usuario = UsuariosDB.getByEmail(email);
+  if (!usuario) return mostrarMensaje('❌ No se encontró un usuario con ese correo', 'error');
+
+  mostrarMensaje(`✅ Se envió un enlace de recuperación a ${email}`, 'exito');
+
+  if (window.closeModal) window.closeModal();
+  emailInput.value = '';
+}
 
