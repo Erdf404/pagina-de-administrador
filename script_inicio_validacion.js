@@ -196,3 +196,6 @@ function agregarEstilosMensajes() {
   `;
   document.head.appendChild(style);
 }
+// Agregar estilos al cargar
+agregarEstilosMensajes();
+
