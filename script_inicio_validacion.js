@@ -199,3 +199,44 @@ function agregarEstilosMensajes() {
 // Agregar estilos al cargar
 agregarEstilosMensajes();
 
+// ==================== Manejo de sesión ====================
+function verificarSesionActiva() {
+  const usuarioActual = sessionStorage.getItem('usuarioActual');
+  const loginTimestamp = sessionStorage.getItem('loginTimestamp');
+
+  if (usuarioActual && loginTimestamp) {
+    const tiempoTranscurrido = new Date().getTime() - parseInt(loginTimestamp);
+    const OCHO_HORAS = 8 * 60 * 60 * 1000;
+
+    if (tiempoTranscurrido < OCHO_HORAS) {
+      return JSON.parse(usuarioActual);
+    } else {
+      cerrarSesion();
+    }
+  }
+  return null;
+}
+
+function obtenerUsuarioActual() {
+  const usuario = sessionStorage.getItem('usuarioActual');
+  return usuario ? JSON.parse(usuario) : null;
+}
+
+function cerrarSesion() {
+  sessionStorage.removeItem('usuarioActual');
+  sessionStorage.removeItem('accesoPermitido');
+  sessionStorage.removeItem('loginTimestamp');
+  sessionStorage.removeItem('guardiaSeleccionado');
+  sessionStorage.removeItem('nombreGuardia');
+  window.location.href = 'Inicio_Sesion.php';
+}
+
+// ==================== Funciones globales ====================
+window.UsuariosDB = UsuariosDB;
+window.recuperarContrasena = recuperarContrasena;
+window.verificarSesionActiva = verificarSesionActiva;
+window.obtenerUsuarioActual = obtenerUsuarioActual;
+window.cerrarSesion = cerrarSesion;
+
+
+
