@@ -126,3 +126,20 @@ function mostrarMensaje(mensaje, tipo = 'error') {
     setTimeout(() => mensajeDiv.style.display = 'none', 4000);
   }
 }
+// ==================== Indicador de carga (solo sera visible cuando se use una base de datos en un servidor) ====================
+function mostrarCargando(mostrar) {
+  const submitBtn = document.querySelector('.box button[type="submit"]');
+  if (!submitBtn) return;
+
+  if (mostrar) {
+    submitBtn.disabled = true;
+    submitBtn.dataset.textoOriginal = submitBtn.textContent;
+    submitBtn.textContent = 'Validando...';
+    submitBtn.style.opacity = '0.7';
+  } else {
+    submitBtn.disabled = false;
+    submitBtn.textContent = submitBtn.dataset.textoOriginal || 'Entrar';
+    submitBtn.style.opacity = '1';
+  }
+}
+
