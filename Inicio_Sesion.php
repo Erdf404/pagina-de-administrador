@@ -61,6 +61,8 @@
   </div>
   <!-- agrega el script.js -->
   <script src="script.js"></script>
+  <!-- agrega el script_inicio_validacion.js -->
+  <script src="script_inicio_validacion.js"></script>
 </body>
 
 </html>
