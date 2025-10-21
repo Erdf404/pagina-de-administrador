@@ -57,3 +57,35 @@ function inicializarLogin() {
 
   console.log('✅ Sistema de validación de login inicializado');
 }
+// ==================== Validacion de Login ====================
+async function validarLogin() {
+  const emailInput = document.querySelector('input[type="email"]');
+  const passwordInput = document.getElementById('password');
+  if (!emailInput || !passwordInput) return mostrarMensaje('Error al obtener los campos', 'error');
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
+
+  // Validaciones basicas de los campos
+  if (!email) return mostrarMensaje('⚠️ Ingresa tu correo electrónico', 'error');
+  if (!validarFormatoEmail(email)) return mostrarMensaje('⚠️ Correo electrónico inválido', 'error');
+  if (!password) return mostrarMensaje('⚠️ Ingresa tu contraseña', 'error');
+
+  mostrarCargando(true);
+
+  try {
+    const resultado = UsuariosDB.validarCredenciales(email, password);
+    if (resultado.valido) {
+      await loginExitoso(resultado.usuario);
+    } else {
+      mostrarMensaje(`❌ ${resultado.mensaje}`, 'error');
+      passwordInput.value = '';
+      passwordInput.focus();
+    }
+  } catch (error) {
+    console.error('Error al validar login:', error);
+    mostrarMensaje('❌ Error al validar las credenciales. Intenta de nuevo.', 'error');
+  } finally {
+    mostrarCargando(false);
+  }
+}
