@@ -89,3 +89,17 @@ async function validarLogin() {
     mostrarCargando(false);
   }
 }
+// ==================== Login exitoso ====================
+async function loginExitoso(usuario) {
+  sessionStorage.setItem('usuarioActual', JSON.stringify(usuario));
+  sessionStorage.setItem('accesoPermitido', 'true');
+  sessionStorage.setItem('loginTimestamp', new Date().getTime());
+
+  mostrarMensaje(`✅ ¡Bienvenido, ${usuario.nombre}!`, 'exito');
+
+  // Redirigir tras un pequeño delay
+  setTimeout(() => {
+    window.location.href = 'Busqueda-guardia.php';
+  }, 1000);
+}
+
