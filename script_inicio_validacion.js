@@ -38,3 +38,22 @@ const UsuariosDB = {
   }
 };
 
+// ==================== Inicializacion ====================
+document.addEventListener('DOMContentLoaded', function() {
+  if (document.querySelector('.box') && document.getElementById('password')) {
+    inicializarLogin();
+  }
+});
+
+// ==================== Configuración del formulario de login ====================
+function inicializarLogin() {
+  const form = document.querySelector('.box form');
+  if (!form) return;
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    await validarLogin();
+  });
+
+  console.log('✅ Sistema de validación de login inicializado');
+}
