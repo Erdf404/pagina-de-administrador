@@ -159,4 +159,40 @@ async function recuperarContrasena() {
   if (window.closeModal) window.closeModal();
   emailInput.value = '';
 }
+// ==================== Agregar estilos para los mensajes ====================
+function agregarEstilosMensajes() {
+  if (document.getElementById('estilos-login-mensajes')) return;
 
+  const style = document.createElement('style');
+  style.id = 'estilos-login-mensajes';
+  style.innerHTML = `
+    .mensaje-login {
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      animation: slideDown 0.3s ease;
+      display: none;
+    }
+    .mensaje-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .mensaje-exito {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .box button[type="submit"]:disabled {
+      cursor: not-allowed;
+      background-color: #6c757d !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
