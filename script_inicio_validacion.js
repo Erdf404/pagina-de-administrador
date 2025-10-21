@@ -103,3 +103,9 @@ async function loginExitoso(usuario) {
   }, 1000);
 }
 
+// ==================== Validacion de formato de email ====================
+function validarFormatoEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
