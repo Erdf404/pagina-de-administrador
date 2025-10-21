@@ -108,4 +108,21 @@ function validarFormatoEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
+// ==================== Mensajes de UI (Error, Exito) ====================
+function mostrarMensaje(mensaje, tipo = 'error') {
+  let mensajeDiv = document.getElementById('mensaje-login');
+  if (!mensajeDiv) {
+    mensajeDiv = document.createElement('div');
+    mensajeDiv.id = 'mensaje-login';
+    const box = document.querySelector('.box');
+    if (box) box.insertBefore(mensajeDiv, box.firstChild);
+  }
 
+  mensajeDiv.className = `mensaje-login mensaje-${tipo}`;
+  mensajeDiv.textContent = mensaje;
+  mensajeDiv.style.display = 'block';
+
+  if (tipo === 'error') {
+    setTimeout(() => mensajeDiv.style.display = 'none', 4000);
+  }
+}
