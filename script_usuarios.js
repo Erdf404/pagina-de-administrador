@@ -199,11 +199,14 @@ async function modificarUsuario(idUsuario) {
 }
 
 
+
 // ==================== FUNCIONES PARA ELIMINAR USUARIO ====================
-function cargarTablaEliminar() {
+async function cargarTablaEliminar() {
     const tbody = document.querySelector('.guardias tbody');
     
     if (!tbody) return;
+
+    await cargarUsuarios();
 
     if (usuariosGuardados.length === 0) {
         tbody.innerHTML = `
@@ -218,15 +221,20 @@ function cargarTablaEliminar() {
 
     let html = '';
     usuariosGuardados.forEach(usuario => {
-        const tipoDisplay = usuario.tipoUsuario === 'administrador' 
-            ? `Administrador (${usuario.tipoAdmin})` 
-            : 'Guardia';
+        const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
+        let tipoDisplay = 'Guardia';
+        
+        if (esAdmin) {
+            if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
+            else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
+            else if (usuario.id_tipo === 4) tipoDisplay = 'Administrador (A3)';
+        }
         
         html += `
             <tr>
-                <td>${usuario.nombre} - ${usuario.email}</td>
+                <td>${usuario.nombre} - ${usuario.correo || 'Sin correo'}</td>
                 <td>${tipoDisplay}</td>
-                <td class="eliminar" onclick="eliminarUsuario(${usuario.id})">✖</td>
+                <td class="eliminar" onclick="eliminarUsuario(${usuario.id_usuario})">✖</td>
             </tr>
         `;
     });
@@ -245,16 +253,38 @@ function inicializarBusquedaEliminar() {
     }
 }
 
-function eliminarUsuario(idUsuario) {
-    const usuario = usuariosGuardados.find(u => u.id === idUsuario);
+async function eliminarUsuario(idUsuario) {
+    const usuario = usuariosGuardados.find(u => u.id_usuario === idUsuario);
     
     if (!usuario) return;
 
-    if (confirm(`¿Estás seguro de eliminar al usuario "${usuario.nombre}"?`)) {
-        usuariosGuardados = usuariosGuardados.filter(u => u.id !== idUsuario);
-        guardarUsuarios();
-        alert('🗑️ Usuario eliminado correctamente');
-        cargarTablaEliminar();
+    if (!confirm(`¿Estás seguro de eliminar al usuario "${usuario.nombre}"?`)) {
+        return;
+    }
+
+    try {
+        const response = await fetch('api_usuarios.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                accion: 'eliminar',
+                idUsuario: idUsuario
+            })
+        });
+
+        const resultado = await response.json();
+
+        if (resultado.exito) {
+            alert('🗑️ Usuario eliminado correctamente');
+            await cargarTablaEliminar();
+        } else {
+            alert('⚠️ ' + resultado.mensaje);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al eliminar usuario. Intenta de nuevo.');
     }
 }
 
@@ -266,9 +296,9 @@ function filtrarPorTipo(tipo) {
     let usuariosFiltrados = usuariosGuardados;
 
     if (tipo === 'A') {
-        usuariosFiltrados = usuariosGuardados.filter(u => u.tipoUsuario === 'administrador');
+        usuariosFiltrados = usuariosGuardados.filter(u => u.id_tipo >= 2 && u.id_tipo <= 4);
     } else if (tipo === 'G') {
-        usuariosFiltrados = usuariosGuardados.filter(u => u.tipoUsuario === 'usuario');
+        usuariosFiltrados = usuariosGuardados.filter(u => u.id_tipo === 1);
     }
 
     if (usuariosFiltrados.length === 0) {
@@ -284,15 +314,20 @@ function filtrarPorTipo(tipo) {
 
     let html = '';
     usuariosFiltrados.forEach(usuario => {
-        const tipoDisplay = usuario.tipoUsuario === 'administrador' 
-            ? `Administrador (${usuario.tipoAdmin})` 
-            : 'Guardia';
+        const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
+        let tipoDisplay = 'Guardia';
+        
+        if (esAdmin) {
+            if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
+            else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
+            else if (usuario.id_tipo === 4) tipoDisplay = 'Administrador (A3)';
+        }
         
         html += `
             <tr>
-                <td>${usuario.nombre} - ${usuario.email}</td>
+                <td>${usuario.nombre} - ${usuario.correo || 'Sin correo'}</td>
                 <td>${tipoDisplay}</td>
-                <td class="eliminar" onclick="eliminarUsuario(${usuario.id})">✖</td>
+                <td class="eliminar" onclick="eliminarUsuario(${usuario.id_usuario})">✖</td>
             </tr>
         `;
     });
@@ -310,7 +345,7 @@ function buscarUsuarioEliminar(termino) {
 
     const usuariosFiltrados = usuariosGuardados.filter(u => 
         u.nombre.toLowerCase().includes(termino) || 
-        u.email.toLowerCase().includes(termino)
+        (u.correo && u.correo.toLowerCase().includes(termino))
     );
 
     const tbody = document.querySelector('.guardias tbody');
@@ -330,15 +365,20 @@ function buscarUsuarioEliminar(termino) {
 
     let html = '';
     usuariosFiltrados.forEach(usuario => {
-        const tipoDisplay = usuario.tipoUsuario === 'administrador' 
-            ? `Administrador (${usuario.tipoAdmin})` 
-            : 'Guardia';
+        const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
+        let tipoDisplay = 'Guardia';
+        
+        if (esAdmin) {
+            if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
+            else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
+            else if (usuario.id_tipo === 4) tipoDisplay = 'Administrador (A3)';
+        }
         
         html += `
             <tr>
-                <td>${usuario.nombre} - ${usuario.email}</td>
+                <td>${usuario.nombre} - ${usuario.correo || 'Sin correo'}</td>
                 <td>${tipoDisplay}</td>
-                <td class="eliminar" onclick="eliminarUsuario(${usuario.id})">✖</td>
+                <td class="eliminar" onclick="eliminarUsuario(${usuario.id_usuario})">✖</td>
             </tr>
         `;
     });
@@ -346,33 +386,29 @@ function buscarUsuarioEliminar(termino) {
     tbody.innerHTML = html;
 }
 
-// ==================== FUNCIONES DE ALMACENAMIENTO ====================
-function guardarUsuarios() {
-    localStorage.setItem('usuariosGuardados', JSON.stringify(usuariosGuardados));
-    localStorage.setItem('contadorUsuarios', contadorUsuarios);
-}
+// ==================== FUNCIONES DE CARGA DE DATOS ====================
+async function cargarUsuarios() {
+    try {
+        const response = await fetch('api_usuarios.php?accion=obtener');
+        const resultado = await response.json();
 
-function cargarUsuarios() {
-    const usuarios = localStorage.getItem('usuariosGuardados');
-    const contador = localStorage.getItem('contadorUsuarios');
-
-    if (usuarios) {
-        usuariosGuardados = JSON.parse(usuarios);
-    }
-
-    if (contador) {
-        contadorUsuarios = parseInt(contador);
+        if (resultado.exito) {
+            usuariosGuardados = resultado.datos;
+        } else {
+            console.error('Error al cargar usuarios:', resultado.mensaje);
+        }
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
 
 // ==================== FUNCIONES AUXILIARES ====================
-// Función para obtener todos los usuarios (usada por otros scripts)
 function obtenerUsuarios() {
     return usuariosGuardados;
 }
 
 function obtenerGuardias() {
-    return usuariosGuardados.filter(u => u.tipoUsuario === 'usuario');
+    return usuariosGuardados.filter(u => u.id_tipo === 1);
 }
 
 // Hacer funciones globales
