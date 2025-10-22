@@ -152,5 +152,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 
+  // ==================== ELIMINAR USUARIO ====================
+  elseif ($accion === 'eliminar') {
+    $idUsuario = $datos['idUsuario'];
 
+    try {
+      // Verificar si el usuario tiene rondas asignadas
+      $stmt = $pdo->prepare("SELECT COUNT(*) FROM Ronda_asignada WHERE id_usuario = ?");
+      $stmt->execute([$idUsuario]);
+      $tieneRondas = $stmt->fetchColumn();
+
+      if ($tieneRondas > 0) {
+        echo json_encode(['exito' => false, 'mensaje' => 'No se puede eliminar el usuario porque tiene rondas asignadas']);
+        exit;
+      }
+
+      // Eliminar usuario
+      $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id_usuario = ?");
+      $stmt->execute([$idUsuario]);
+
+      echo json_encode(['exito' => true, 'mensaje' => 'Usuario eliminado correctamente']);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error al eliminar usuario: ' . $e->getMessage()]);
+    }
+  } else {
+    echo json_encode(['exito' => false, 'mensaje' => 'Acción no válida']);
+  }
 }
