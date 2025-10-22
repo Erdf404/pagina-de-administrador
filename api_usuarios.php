@@ -12,7 +12,7 @@ $dbname = 'sistema_rondas';
 $usuario_bd = 'root'; // Nombre de usuario de la base de datos
 $password_bd = 'admin';    //contraseña de la base de datos
 
-// Funcion para conectar a la base de datos
+// Función para conectar a la base de datos
 function conectarBD()
 {
   global $host, $dbname, $usuario_bd, $password_bd;
@@ -25,7 +25,7 @@ function conectarBD()
   }
 }
 
-// Funcion para obtener el id_tipo segun el tipo de usuario
+// Función para obtener el id_tipo según el tipo de usuario
 function obtenerIdTipo($tipoUsuario, $tipoAdmin)
 {
   if ($tipoUsuario === 'usuario') {
@@ -36,6 +36,23 @@ function obtenerIdTipo($tipoUsuario, $tipoAdmin)
     if ($tipoAdmin === 'A3') return 4;
   }
   return 1; // Por defecto guardia
+}
+
+// Función para obtener el nombre del tipo de usuario
+function obtenerNombreTipo($id_tipo)
+{
+  switch ($id_tipo) {
+    case 1:
+      return 'Guardia';
+    case 2:
+      return 'Administrador A1';
+    case 3:
+      return 'Administrador A2';
+    case 4:
+      return 'Administrador A3';
+    default:
+      return 'Usuario';
+  }
 }
 
 // Procesar solicitud GET
@@ -59,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
   }
 }
+
 // Procesar solicitud POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $json = file_get_contents('php://input');
@@ -76,8 +94,73 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['exito' => false, 'mensaje' => 'Error de conexión a la base de datos']);
     exit;
   }
-    // ==================== AGREGAR USUARIO ====================
-  if ($accion === 'agregar') {
+
+  // ==================== LOGIN ====================
+  if ($accion === 'login') {
+    $email = $datos['email'];
+    $password = $datos['password'];
+
+    try {
+      // Buscar usuario por correo
+      $stmt = $pdo->prepare("SELECT id_usuario, id_tipo, nombre, correo, contrasena FROM usuarios WHERE correo = ?");
+      $stmt->execute([$email]);
+      $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$usuario) {
+        echo json_encode(['valido' => false, 'mensaje' => 'Usuario no encontrado']);
+        exit;
+      }
+
+      // Verificar contraseña
+      if (!password_verify($password, $usuario['contrasena'])) {
+        echo json_encode(['valido' => false, 'mensaje' => 'Contraseña incorrecta']);
+        exit;
+      }
+
+      // Login exitoso - No enviar la contraseña al cliente
+      unset($usuario['contrasena']);
+      $usuario['tipoUsuarioNombre'] = obtenerNombreTipo($usuario['id_tipo']);
+
+      echo json_encode([
+        'valido' => true,
+        'mensaje' => 'Login exitoso',
+        'usuario' => $usuario
+      ]);
+    } catch (PDOException $e) {
+      echo json_encode(['valido' => false, 'mensaje' => 'Error al validar credenciales: ' . $e->getMessage()]);
+    }
+  }
+
+  // ==================== RECUPERAR CONTRASEÑA ====================
+  elseif ($accion === 'recuperar_password') {
+    $email = $datos['email'];
+
+    try {
+      // Verificar si el usuario existe
+      $stmt = $pdo->prepare("SELECT id_usuario, nombre FROM usuarios WHERE correo = ?");
+      $stmt->execute([$email]);
+      $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if (!$usuario) {
+        echo json_encode(['exito' => false, 'mensaje' => 'No se encontró un usuario con ese correo']);
+        exit;
+      }
+
+      // proxima implementacion: el envío de email real
+      // por ahora solo simulamos el envío
+      // generar token de recuperación (opcional para implementación futura)
+
+      echo json_encode([
+        'exito' => true,
+        'mensaje' => "Se envió un enlace de recuperación a $email"
+      ]);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error al procesar solicitud: ' . $e->getMessage()]);
+    }
+  }
+
+  // ==================== AGREGAR USUARIO ====================
+  elseif ($accion === 'agregar') {
     $tipoUsuario = $datos['tipoUsuario'];
     $tipoAdmin = isset($datos['tipoAdmin']) ? $datos['tipoAdmin'] : '';
     $nombre = $datos['nombre'];

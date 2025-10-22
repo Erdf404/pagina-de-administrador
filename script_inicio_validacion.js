@@ -4,41 +4,53 @@
 // ==================== Capa de datos Usuarios ====================
 const UsuariosDB = {
 
-  // Obtener todos los usuarios guardados en localStorage
-  getAll() {
-    const data = localStorage.getItem('usuariosGuardados');
-    return data ? JSON.parse(data) : [];
-  },
+  // Validar credenciales de usuario mediante API
+  async validarCredenciales(email, password) {
+    try {
+      const response = await fetch('api_usuarios.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accion: 'login',
+          email: email,
+          password: password
+        })
+      });
 
-  // Obtener usuario por email (sin sensibilidad a mayúsculas)
-  getByEmail(email) {
-    const usuarios = this.getAll();
-    return usuarios.find(u => u.email.toLowerCase() === email.toLowerCase());
-  },
-
-  // Validar credenciales de usuario
-  validarCredenciales(email, password) {
-    const usuario = this.getByEmail(email);
-
-    if (!usuario) {
-      return { valido: false, mensaje: 'Usuario no encontrado' };
+      const resultado = await response.json();
+      return resultado;
+    } catch (error) {
+      console.error('Error al validar credenciales:', error);
+      return { valido: false, mensaje: 'Error de conexión con el servidor' };
     }
-
-    if (usuario.password !== password) {
-      return { valido: false, mensaje: 'Contraseña incorrecta' };
-    }
-
-    return { valido: true, usuario, mensaje: 'Credenciales válidas' };
   },
 
-  // Obtener usuarios por tipo ("usuario" o "administrador")
-  getByTipo(tipo) {
-    const usuarios = this.getAll();
-    return usuarios.filter(u => u.tipoUsuario === tipo);
+  // Recuperar contraseña (enviar email)
+  async recuperarPassword(email) {
+    try {
+      const response = await fetch('api_usuarios.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          accion: 'recuperar_password',
+          email: email
+        })
+      });
+
+      const resultado = await response.json();
+      return resultado;
+    } catch (error) {
+      console.error('Error al recuperar contraseña:', error);
+      return { exito: false, mensaje: 'Error de conexión con el servidor' };
+    }
   }
 };
 
-// ==================== Inicializacion ====================
+// ==================== Inicialización ====================
 document.addEventListener('DOMContentLoaded', function() {
   if (document.querySelector('.box') && document.getElementById('password')) {
     inicializarLogin();
@@ -57,24 +69,37 @@ function inicializarLogin() {
 
   console.log('✅ Sistema de validación de login inicializado');
 }
-// ==================== Validacion de Login ====================
+
+// ==================== Validación de Login ====================
 async function validarLogin() {
   const emailInput = document.querySelector('input[type="email"]');
   const passwordInput = document.getElementById('password');
-  if (!emailInput || !passwordInput) return mostrarMensaje('Error al obtener los campos', 'error');
+  
+  if (!emailInput || !passwordInput) {
+    return mostrarMensaje('Error al obtener los campos', 'error');
+  }
 
   const email = emailInput.value.trim();
   const password = passwordInput.value;
 
-  // Validaciones basicas de los campos
-  if (!email) return mostrarMensaje('⚠️ Ingresa tu correo electrónico', 'error');
-  if (!validarFormatoEmail(email)) return mostrarMensaje('⚠️ Correo electrónico inválido', 'error');
-  if (!password) return mostrarMensaje('⚠️ Ingresa tu contraseña', 'error');
+  // Validaciones básicas de los campos
+  if (!email) {
+    return mostrarMensaje('⚠️ Ingresa tu correo electrónico', 'error');
+  }
+  
+  if (!validarFormatoEmail(email)) {
+    return mostrarMensaje('⚠️ Correo electrónico inválido', 'error');
+  }
+  
+  if (!password) {
+    return mostrarMensaje('⚠️ Ingresa tu contraseña', 'error');
+  }
 
   mostrarCargando(true);
 
   try {
-    const resultado = UsuariosDB.validarCredenciales(email, password);
+    const resultado = await UsuariosDB.validarCredenciales(email, password);
+    
     if (resultado.valido) {
       await loginExitoso(resultado.usuario);
     } else {
@@ -103,14 +128,16 @@ async function loginExitoso(usuario) {
   }, 1000);
 }
 
-// ==================== Validacion de formato de email ====================
+// ==================== Validación de formato de email ====================
 function validarFormatoEmail(email) {
   const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return regex.test(email);
 }
-// ==================== Mensajes de UI (Error, Exito) ====================
+
+// ==================== Mensajes de UI (Error, Éxito) ====================
 function mostrarMensaje(mensaje, tipo = 'error') {
   let mensajeDiv = document.getElementById('mensaje-login');
+  
   if (!mensajeDiv) {
     mensajeDiv = document.createElement('div');
     mensajeDiv.id = 'mensaje-login';
@@ -126,7 +153,8 @@ function mostrarMensaje(mensaje, tipo = 'error') {
     setTimeout(() => mensajeDiv.style.display = 'none', 4000);
   }
 }
-// ==================== Indicador de carga (solo sera visible cuando se use una base de datos en un servidor) ====================
+
+// ==================== Indicador de carga ====================
 function mostrarCargando(mostrar) {
   const submitBtn = document.querySelector('.box button[type="submit"]');
   if (!submitBtn) return;
@@ -142,23 +170,50 @@ function mostrarCargando(mostrar) {
     submitBtn.style.opacity = '1';
   }
 }
-// ==================== Recuperacion de contraseña (De momento solo estetico) ====================
+
+// ==================== Recuperación de contraseña ====================
 async function recuperarContrasena() {
   const emailInput = document.querySelector('#recoverModal input[type="email"]');
   if (!emailInput) return;
 
   const email = emailInput.value.trim();
-  if (!email) return mostrarMensaje('⚠️ Ingresa tu correo electrónico', 'error');
-  if (!validarFormatoEmail(email)) return mostrarMensaje('⚠️ Correo electrónico inválido', 'error');
+  
+  if (!email) {
+    return mostrarMensaje('⚠️ Ingresa tu correo electrónico', 'error');
+  }
+  
+  if (!validarFormatoEmail(email)) {
+    return mostrarMensaje('⚠️ Correo electrónico inválido', 'error');
+  }
 
-  const usuario = UsuariosDB.getByEmail(email);
-  if (!usuario) return mostrarMensaje('❌ No se encontró un usuario con ese correo', 'error');
+  // Mostrar indicador de carga
+  const btnEnviar = document.querySelector('#recoverModal button');
+  if (btnEnviar) {
+    btnEnviar.disabled = true;
+    btnEnviar.textContent = 'Enviando...';
+  }
 
-  mostrarMensaje(`✅ Se envió un enlace de recuperación a ${email}`, 'exito');
-
-  if (window.closeModal) window.closeModal();
-  emailInput.value = '';
+  try {
+    const resultado = await UsuariosDB.recuperarPassword(email);
+    
+    if (resultado.exito) {
+      mostrarMensaje(`✅ ${resultado.mensaje}`, 'exito');
+      if (window.closeModal) window.closeModal();
+      emailInput.value = '';
+    } else {
+      mostrarMensaje(`❌ ${resultado.mensaje}`, 'error');
+    }
+  } catch (error) {
+    console.error('Error al recuperar contraseña:', error);
+    mostrarMensaje('❌ Error al procesar la solicitud', 'error');
+  } finally {
+    if (btnEnviar) {
+      btnEnviar.disabled = false;
+      btnEnviar.textContent = 'Enviar';
+    }
+  }
 }
+
 // ==================== Agregar estilos para los mensajes ====================
 function agregarEstilosMensajes() {
   if (document.getElementById('estilos-login-mensajes')) return;
@@ -237,6 +292,3 @@ window.recuperarContrasena = recuperarContrasena;
 window.verificarSesionActiva = verificarSesionActiva;
 window.obtenerUsuarioActual = obtenerUsuarioActual;
 window.cerrarSesion = cerrarSesion;
-
-
-
