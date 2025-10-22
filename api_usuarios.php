@@ -76,4 +76,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['exito' => false, 'mensaje' => 'Error de conexión a la base de datos']);
     exit;
   }
+    // ==================== AGREGAR USUARIO ====================
+  if ($accion === 'agregar') {
+    $tipoUsuario = $datos['tipoUsuario'];
+    $tipoAdmin = isset($datos['tipoAdmin']) ? $datos['tipoAdmin'] : '';
+    $nombre = $datos['nombre'];
+    $email = $datos['email'];
+    $password = $datos['password'];
+
+    try {
+      // Verificar si el correo ya existe
+      $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE correo = ?");
+      $stmt->execute([$email]);
+      $existe = $stmt->fetchColumn();
+
+      if ($existe > 0) {
+        echo json_encode(['exito' => false, 'mensaje' => 'Ya existe un usuario con ese correo electrónico']);
+        exit;
+      }
+
+      // Obtener id_tipo
+      $id_tipo = obtenerIdTipo($tipoUsuario, $tipoAdmin);
+
+      // Hash de la contraseña
+      $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+      // Insertar usuario
+      $stmt = $pdo->prepare("INSERT INTO usuarios (id_tipo, nombre, contrasena, correo) VALUES (?, ?, ?, ?)");
+      $stmt->execute([$id_tipo, $nombre, $password_hash, $email]);
+
+      echo json_encode(['exito' => true, 'mensaje' => 'Usuario agregado correctamente']);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error al agregar usuario: ' . $e->getMessage()]);
+    }
+  }
+
+  
 }
