@@ -37,3 +37,25 @@ function obtenerIdTipo($tipoUsuario, $tipoAdmin)
   }
   return 1; // Por defecto guardia
 }
+
+// Procesar solicitud GET
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+  $accion = isset($_GET['accion']) ? $_GET['accion'] : '';
+
+  if ($accion === 'obtener') {
+    $pdo = conectarBD();
+    if (!$pdo) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error de conexión a la base de datos']);
+      exit;
+    }
+
+    try {
+      $stmt = $pdo->query("SELECT id_usuario, id_tipo, nombre, correo FROM usuarios ORDER BY nombre");
+      $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      echo json_encode(['exito' => true, 'datos' => $usuarios]);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error al obtener usuarios: ' . $e->getMessage()]);
+    }
+  }
+}
