@@ -59,3 +59,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
   }
 }
+// Procesar solicitud POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $json = file_get_contents('php://input');
+  $datos = json_decode($json, true);
+
+  if (!$datos) {
+    echo json_encode(['exito' => false, 'mensaje' => 'Datos inválidos']);
+    exit;
+  }
+
+  $accion = isset($datos['accion']) ? $datos['accion'] : '';
+
+  $pdo = conectarBD();
+  if (!$pdo) {
+    echo json_encode(['exito' => false, 'mensaje' => 'Error de conexión a la base de datos']);
+    exit;
+  }
+}
