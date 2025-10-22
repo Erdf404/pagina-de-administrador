@@ -9,8 +9,8 @@ header('Access-Control-Allow-Headers: Content-Type');
 // Configuracion de la base de datos
 $host = 'localhost';
 $dbname = 'sistema_rondas';
-$usuario_bd = 'root'; // Cambiar segun tu configuracion
-$password_bd = '';    // Cambiar segun tu configuracion
+$usuario_bd = 'root'; // Nombre de usuario de la base de datos
+$password_bd = 'admin';    //contraseña de la base de datos
 
 // Funcion para conectar a la base de datos
 function conectarBD()
@@ -179,3 +179,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['exito' => false, 'mensaje' => 'Acción no válida']);
   }
 }
+
+?>
