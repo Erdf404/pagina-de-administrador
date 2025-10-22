@@ -1,18 +1,18 @@
 <?php
-// api_usuarios.php - API para gestión de usuarios con MySQL
+// api_usuarios.php - API para gestion de usuarios con MySQL
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Configuración de la base de datos
+// Configuracion de la base de datos
 $host = 'localhost';
 $dbname = 'sistema_rondas';
-$usuario_bd = 'root'; // Cambiar según tu configuración
-$password_bd = '';    // Cambiar según tu configuración
+$usuario_bd = 'root'; // Cambiar segun tu configuracion
+$password_bd = '';    // Cambiar segun tu configuracion
 
-// Función para conectar a la base de datos
+// Funcion para conectar a la base de datos
 function conectarBD()
 {
   global $host, $dbname, $usuario_bd, $password_bd;
@@ -23,4 +23,17 @@ function conectarBD()
   } catch (PDOException $e) {
     return null;
   }
+}
+
+// Funcion para obtener el id_tipo segun el tipo de usuario
+function obtenerIdTipo($tipoUsuario, $tipoAdmin)
+{
+  if ($tipoUsuario === 'usuario') {
+    return 1; // Guardia
+  } elseif ($tipoUsuario === 'administrador') {
+    if ($tipoAdmin === 'A1') return 2;
+    if ($tipoAdmin === 'A2') return 3;
+    if ($tipoAdmin === 'A3') return 4;
+  }
+  return 1; // Por defecto guardia
 }
