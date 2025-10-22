@@ -111,5 +111,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 
-  
+  // ==================== MODIFICAR USUARIO ====================
+  elseif ($accion === 'modificar') {
+    $idUsuario = $datos['idUsuario'];
+    $nombre = $datos['nombre'];
+    $email = $datos['email'];
+    $tipoUsuario = $datos['tipoUsuario'];
+    $tipoAdmin = isset($datos['tipoAdmin']) ? $datos['tipoAdmin'] : '';
+    $password = isset($datos['password']) ? $datos['password'] : '';
+
+    try {
+      // Verificar si el correo ya existe en otro usuario
+      $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE correo = ? AND id_usuario != ?");
+      $stmt->execute([$email, $idUsuario]);
+      $existe = $stmt->fetchColumn();
+
+      if ($existe > 0) {
+        echo json_encode(['exito' => false, 'mensaje' => 'Ya existe otro usuario con ese correo electrónico']);
+        exit;
+      }
+
+      // Obtener id_tipo
+      $id_tipo = obtenerIdTipo($tipoUsuario, $tipoAdmin);
+
+      // Actualizar usuario
+      if (!empty($password)) {
+        // Actualizar con nueva contraseña
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("UPDATE usuarios SET id_tipo = ?, nombre = ?, contrasena = ?, correo = ? WHERE id_usuario = ?");
+        $stmt->execute([$id_tipo, $nombre, $password_hash, $email, $idUsuario]);
+      } else {
+        // Actualizar sin cambiar contraseña
+        $stmt = $pdo->prepare("UPDATE usuarios SET id_tipo = ?, nombre = ?, correo = ? WHERE id_usuario = ?");
+        $stmt->execute([$id_tipo, $nombre, $email, $idUsuario]);
+      }
+
+      echo json_encode(['exito' => true, 'mensaje' => 'Usuario modificado correctamente']);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error al modificar usuario: ' . $e->getMessage()]);
+    }
+  }
+
+
 }
