@@ -100,10 +100,12 @@ async function agregarUsuario() {
 }
 
 // ==================== FUNCIONES PARA MODIFICAR USUARIO ====================
-function cargarTablaModificar() {
+async function cargarTablaModificar() {
     const tbody = document.querySelector('.table-main tbody');
     
     if (!tbody) return;
+
+    await cargarUsuarios();
 
     if (usuariosGuardados.length === 0) {
         tbody.innerHTML = `
@@ -118,26 +120,29 @@ function cargarTablaModificar() {
 
     let html = '';
     usuariosGuardados.forEach(usuario => {
+        const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
+        const tipoUsuarioSelect = esAdmin ? 'administrador' : 'usuario';
+        
         html += `
-            <tr data-usuario-id="${usuario.id}">
+            <tr data-usuario-id="${usuario.id_usuario}">
                 <td><input type="text" value="${usuario.nombre}" data-campo="nombre" /></td>
-                <td><input type="email" value="${usuario.email}" data-campo="email" /></td>
+                <td><input type="email" value="${usuario.correo || ''}" data-campo="email" /></td>
                 <td>
                     <select onchange="mostrarTipoAdmin(this)" data-campo="tipoUsuario">
-                        <option value="usuario" ${usuario.tipoUsuario === 'usuario' ? 'selected' : ''}>Guardia</option>
-                        <option value="administrador" ${usuario.tipoUsuario === 'administrador' ? 'selected' : ''}>Administrador</option>
+                        <option value="usuario" ${!esAdmin ? 'selected' : ''}>Guardia</option>
+                        <option value="administrador" ${esAdmin ? 'selected' : ''}>Administrador</option>
                     </select>
                 </td>
                 <td>
-                    <select class="tipo-admin" data-campo="tipoAdmin" style="display: ${usuario.tipoUsuario === 'administrador' ? 'block' : 'none'};">
+                    <select class="tipo-admin" data-campo="tipoAdmin" style="display: ${esAdmin ? 'block' : 'none'};">
                         <option value="">Seleccionar...</option>
-                        <option value="A1" ${usuario.tipoAdmin === 'A1' ? 'selected' : ''}>A1</option>
-                        <option value="A2" ${usuario.tipoAdmin === 'A2' ? 'selected' : ''}>A2</option>
-                        <option value="A3" ${usuario.tipoAdmin === 'A3' ? 'selected' : ''}>A3</option>
+                        <option value="A1" ${usuario.id_tipo === 2 ? 'selected' : ''}>A1</option>
+                        <option value="A2" ${usuario.id_tipo === 3 ? 'selected' : ''}>A2</option>
+                        <option value="A3" ${usuario.id_tipo === 4 ? 'selected' : ''}>A3</option>
                     </select>
                 </td>
                 <td><input type="password" placeholder="Nueva contraseña (opcional)" data-campo="password" /></td>
-                <td><button class="guardar-btn" onclick="modificarUsuario(${usuario.id})">Guardar</button></td>
+                <td><button class="guardar-btn" onclick="modificarUsuario(${usuario.id_usuario})">Guardar</button></td>
             </tr>
         `;
     });
@@ -145,7 +150,7 @@ function cargarTablaModificar() {
     tbody.innerHTML = html;
 }
 
-function modificarUsuario(idUsuario) {
+async function modificarUsuario(idUsuario) {
     const fila = document.querySelector(`tr[data-usuario-id="${idUsuario}"]`);
     
     if (!fila) return;
@@ -161,37 +166,38 @@ function modificarUsuario(idUsuario) {
         return;
     }
 
-    // Verificar si el correo ya existe en otro usuario
-    const emailExiste = usuariosGuardados.some(u => 
-        u.email.toLowerCase() === email.toLowerCase() && u.id !== idUsuario
-    );
+    try {
+        const response = await fetch('api_usuarios.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                accion: 'modificar',
+                idUsuario: idUsuario,
+                nombre: nombre,
+                email: email,
+                tipoUsuario: tipoUsuario,
+                tipoAdmin: tipoAdmin,
+                password: password
+            })
+        });
 
-    if (emailExiste) {
-        alert('⚠️ Ya existe otro usuario con ese correo electrónico.');
-        return;
-    }
+        const resultado = await response.json();
 
-    // Buscar y actualizar usuario
-    const index = usuariosGuardados.findIndex(u => u.id === idUsuario);
-    
-    if (index !== -1) {
-        usuariosGuardados[index].nombre = nombre;
-        usuariosGuardados[index].email = email;
-        usuariosGuardados[index].tipoUsuario = tipoUsuario;
-        usuariosGuardados[index].tipoAdmin = tipoUsuario === 'administrador' ? tipoAdmin : null;
-        
-        if (password) {
-            usuariosGuardados[index].password = password;
+        if (resultado.exito) {
+            alert('✅ Usuario modificado exitosamente');
+            fila.querySelector('[data-campo="password"]').value = '';
+            await cargarUsuarios();
+        } else {
+            alert('⚠️ ' + resultado.mensaje);
         }
-
-        usuariosGuardados[index].fechaModificacion = new Date().toLocaleString('es-ES');
-
-        guardarUsuarios();
-        alert('✅ Usuario modificado exitosamente');
-        
-        fila.querySelector('[data-campo="password"]').value = '';
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al modificar usuario. Intenta de nuevo.');
     }
 }
+
 
 // ==================== FUNCIONES PARA ELIMINAR USUARIO ====================
 function cargarTablaEliminar() {
