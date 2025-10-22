@@ -2,7 +2,6 @@
 
 // Variables globales
 let usuariosGuardados = [];
-let contadorUsuarios = 1;
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
@@ -40,7 +39,7 @@ function inicializarAgregarUsuario() {
     }
 }
 
-function agregarUsuario() {
+async function agregarUsuario() {
     const tipoUsuario = document.getElementById('tipo-usuario').value;
     const tipoAdmin = document.getElementById('tipo-admin').value;
     const nombre = document.getElementById('nombre').value.trim();
@@ -63,36 +62,41 @@ function agregarUsuario() {
         return;
     }
 
-    // Verificar si el correo ya existe
-    if (usuariosGuardados.some(u => u.email.toLowerCase() === email.toLowerCase())) {
-        alert('⚠️ Ya existe un usuario con ese correo electrónico.');
-        return;
+    try {
+        const response = await fetch('api_usuarios.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                accion: 'agregar',
+                tipoUsuario: tipoUsuario,
+                tipoAdmin: tipoAdmin,
+                nombre: nombre,
+                email: email,
+                password: password
+            })
+        });
+
+        const resultado = await response.json();
+
+        if (resultado.exito) {
+            alert('✅ Usuario agregado exitosamente');
+            
+            // Limpiar formulario
+            document.getElementById('tipo-usuario').value = '';
+            document.getElementById('tipo-admin').value = '';
+            document.getElementById('nombre').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('admin-options').style.display = 'none';
+        } else {
+            alert('⚠️ ' + resultado.mensaje);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al agregar usuario. Intenta de nuevo.');
     }
-
-    // Crear objeto usuario
-    const usuario = {
-        id: contadorUsuarios++,
-        tipoUsuario: tipoUsuario,
-        tipoAdmin: tipoUsuario === 'administrador' ? tipoAdmin : null,
-        nombre: nombre,
-        email: email,
-        password: password,
-        fechaCreacion: new Date().toLocaleString('es-ES')
-    };
-
-    // Guardar usuario
-    usuariosGuardados.push(usuario);
-    guardarUsuarios();
-
-    alert('✅ Usuario agregado exitosamente');
-
-    // Limpiar formulario
-    document.getElementById('tipo-usuario').value = '';
-    document.getElementById('tipo-admin').value = '';
-    document.getElementById('nombre').value = '';
-    document.getElementById('email').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('admin-options').style.display = 'none';
 }
 
 // ==================== FUNCIONES PARA MODIFICAR USUARIO ====================
