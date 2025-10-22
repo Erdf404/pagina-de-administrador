@@ -5,36 +5,38 @@ let guardiasCargados = [];
 
 // Inicialización al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
-    // Esperar un poco para asegurar que el DOM esté completamente cargado
     setTimeout(() => {
         cargarGuardias();
-        cargarTablaGuardias();
-        inicializarBusqueda();
     }, 100);
 });
 
 // ==================== CARGAR DATOS ====================
-function cargarGuardias() {
-    const usuarios = localStorage.getItem('usuariosGuardados');
+async function cargarGuardias() {
+    console.log('Cargando guardias desde la base de datos...');
     
-    console.log('Cargando guardias desde localStorage...');
-    console.log('Datos en localStorage:', usuarios);
-    
-    if (usuarios) {
-        try {
-            const todosUsuarios = JSON.parse(usuarios);
-            console.log('Usuarios parseados:', todosUsuarios);
+    try {
+        const response = await fetch('api_usuarios.php?accion=obtener');
+        const resultado = await response.json();
+
+        if (resultado.exito) {
+            const todosUsuarios = resultado.datos;
+            console.log('Usuarios obtenidos:', todosUsuarios);
             
-            // Filtrar solo los usuarios tipo "usuario" (guardias)
-            guardiasCargados = todosUsuarios.filter(u => u.tipoUsuario === 'usuario');
+            // Filtrar solo los usuarios tipo "guardia" (id_tipo = 1)
+            guardiasCargados = todosUsuarios.filter(u => u.id_tipo === 1);
             console.log('Guardias filtrados:', guardiasCargados);
-        } catch (e) {
-            console.error('Error al parsear usuarios:', e);
+            
+            cargarTablaGuardias();
+            inicializarBusqueda();
+        } else {
+            console.error('Error al cargar guardias:', resultado.mensaje);
             guardiasCargados = [];
+            cargarTablaGuardias();
         }
-    } else {
-        console.log('No hay usuarios en localStorage');
+    } catch (error) {
+        console.error('Error:', error);
         guardiasCargados = [];
+        cargarTablaGuardias();
     }
 }
 
@@ -71,8 +73,9 @@ function cargarTablaGuardias() {
 
     let html = '';
     guardiasCargados.forEach(guardia => {
+        const email = guardia.correo || 'Sin correo';
         html += `
-            <tr onclick="verDetalleGuardia(${guardia.id})" style="cursor: pointer;" 
+            <tr onclick="verDetalleGuardia(${guardia.id_usuario})" style="cursor: pointer;" 
                 onmouseover="this.style.backgroundColor='#e3f2fd'" 
                 onmouseout="this.style.backgroundColor=''">
                 <td class="guardia-nombre">
@@ -85,7 +88,7 @@ function cargarTablaGuardias() {
                         <div>
                             <strong style="font-size: 1.1rem; color: #0044cc;">${guardia.nombre}</strong>
                             <br>
-                            <small style="color: #6c757d;">📧 ${guardia.email}</small>
+                            <small style="color: #6c757d;">📧 ${email}</small>
                         </div>
                     </div>
                 </td>
@@ -98,9 +101,9 @@ function cargarTablaGuardias() {
 }
 
 // ==================== VER DETALLE DE GUARDIA ====================
-function verDetalleGuardia(idGuardia) {
+async function verDetalleGuardia(idGuardia) {
     console.log('Ver detalle de guardia:', idGuardia);
-    const guardia = guardiasCargados.find(g => g.id === idGuardia);
+    const guardia = guardiasCargados.find(g => g.id_usuario === idGuardia);
     
     if (!guardia) {
         console.error('Guardia no encontrado:', idGuardia);
@@ -129,7 +132,7 @@ function verDetalleGuardia(idGuardia) {
                 
                 <div class="info-item">
                     <strong>📧 Correo Electrónico:</strong>
-                    <span>${guardia.email}</span>
+                    <span>${guardia.correo || 'No disponible'}</span>
                 </div>
                 
                 <div class="info-item">
@@ -138,20 +141,13 @@ function verDetalleGuardia(idGuardia) {
                 </div>
                 
                 <div class="info-item">
-                    <strong>📅 Fecha de Registro:</strong>
-                    <span>${guardia.fechaCreacion || 'No disponible'}</span>
+                    <strong>🆔 ID de Usuario:</strong>
+                    <span>${guardia.id_usuario}</span>
                 </div>
-                
-                ${guardia.fechaModificacion ? `
-                    <div class="info-item">
-                        <strong>🔄 Última Modificación:</strong>
-                        <span>${guardia.fechaModificacion}</span>
-                    </div>
-                ` : ''}
             </div>
             
             <div class="modal-acciones">
-                <button class="btn-modal btn-rondines" onclick="verRondinesGuardia(${guardia.id})">
+                <button class="btn-modal btn-rondines" onclick="verRondinesGuardia(${guardia.id_usuario})">
                     🗺️ Ver Rondines
                 </button>
                 <button class="btn-modal btn-cerrar" onclick="cerrarModalGuardia()">
@@ -181,7 +177,7 @@ function cerrarModalGuardia() {
 
 // ==================== VER RONDINES DEL GUARDIA ====================
 function verRondinesGuardia(idGuardia) {
-    const guardia = guardiasCargados.find(g => g.id === idGuardia);
+    const guardia = guardiasCargados.find(g => g.id_usuario === idGuardia);
     
     if (!guardia) return;
 
@@ -225,7 +221,7 @@ function buscarGuardia(termino) {
 
     const guardiasFiltrados = guardiasCargados.filter(g => 
         g.nombre.toLowerCase().includes(termino) || 
-        g.email.toLowerCase().includes(termino)
+        (g.correo && g.correo.toLowerCase().includes(termino))
     );
 
     const tbody = document.querySelector('.guardias tbody');
@@ -252,8 +248,9 @@ function buscarGuardia(termino) {
 
     let html = '';
     guardiasFiltrados.forEach(guardia => {
+        const email = guardia.correo || 'Sin correo';
         html += `
-            <tr onclick="verDetalleGuardia(${guardia.id})" style="cursor: pointer;"
+            <tr onclick="verDetalleGuardia(${guardia.id_usuario})" style="cursor: pointer;"
                 onmouseover="this.style.backgroundColor='#e3f2fd'" 
                 onmouseout="this.style.backgroundColor=''">
                 <td class="guardia-nombre">
@@ -266,7 +263,7 @@ function buscarGuardia(termino) {
                         <div>
                             <strong style="font-size: 1.1rem; color: #0044cc;">${guardia.nombre}</strong>
                             <br>
-                            <small style="color: #6c757d;">📧 ${guardia.email}</small>
+                            <small style="color: #6c757d;">📧 ${email}</small>
                         </div>
                     </div>
                 </td>
