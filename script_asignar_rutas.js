@@ -1,206 +1,229 @@
-// script_asignar_rutas.js
+// script_asignar_rutas.js - Actualizado con APIs de base de datos
 
-// ==================== Capa de datos Asignaciones ====================
-const AsignacionesDB = {
-
-  // Obtener todas las asignaciones
-    async getAll() {
-    const data = localStorage.getItem('asignacionesGuardadas');
-    return data ? JSON.parse(data) : [];
-    },
-
-  // Obtener una asignación por ID
-    async getById(id) {
-    const asignaciones = await this.getAll();
-    return asignaciones.find(a => a.id === id);
-    },
-
-  // Crear nueva asignación
-    async create(asignacion) {
-    const asignaciones = await this.getAll();
-    const contador = await this.getContador();
-    
-    asignacion.id = contador;
-    asignaciones.push(asignacion);
-    
-    localStorage.setItem('asignacionesGuardadas', JSON.stringify(asignaciones));
-    localStorage.setItem('contadorAsignaciones', contador + 1);
-    
-    return asignacion;
-    },
-
-  // Actualizar asignacion existente
-    async update(id, datosActualizados) {
-    const asignaciones = await this.getAll();
-    const index = asignaciones.findIndex(a => a.id === id);
-    
-    if (index !== -1) {
-    asignaciones[index] = { ...asignaciones[index], ...datosActualizados };
-    localStorage.setItem('asignacionesGuardadas', JSON.stringify(asignaciones));
-    return asignaciones[index];
-    }
-    return null;
-},
-
-  // Eliminar asignacion
-async delete(id) {
-    const asignaciones = await this.getAll();
-    const filtradas = asignaciones.filter(a => a.id !== id);
-    localStorage.setItem('asignacionesGuardadas', JSON.stringify(filtradas));
-    return true;
-},
-
-  // Obtener asignaciones por guardia
-async getByGuardia(guardiaId) {
-    const asignaciones = await this.getAll();
-    return asignaciones.filter(a => a.guardiaId === guardiaId);
-},
-
-  // Obtener contador de IDs
-async getContador() {
-    const contador = localStorage.getItem('contadorAsignaciones');
-    return contador ? parseInt(contador) : 1;
-}
-};
-// ==================== Variables Globales ====================
 let asignacionesGuardadas = [];
+let guardiasCargados = [];
+let rutasCargadas = [];
 
-// ==================== Inicializacion ====================
-document.addEventListener('DOMContentLoaded', async function() {
-  await cargarAsignaciones();
-
-  if (document.getElementById('container-asignaciones')) {
+// ==================== INICIALIZACIÓN ====================
+document.addEventListener("DOMContentLoaded", async function () {
+  if (document.getElementById("container-asignaciones")) {
     await inicializarAsignaciones();
   }
 });
 
 async function inicializarAsignaciones() {
-  await cargarGuardiasSelect();
-  await cargarRutasSelect();
+  await cargarGuardias();
+  await cargarRutas();
+  await cargarAsignaciones();
   await actualizarTablaAsignaciones();
 
-  const formAsignar = document.getElementById('form-asignar-ruta');
+  const formAsignar = document.getElementById("form-asignar-ruta");
   if (formAsignar) {
-    formAsignar.addEventListener('submit', async function(e) {
+    formAsignar.addEventListener("submit", async function (e) {
       e.preventDefault();
       await asignarRuta();
     });
   }
 }
-// ==================== Cargar selectores de rutas y guardias ====================
-async function cargarGuardiasSelect() {
-  const select = document.getElementById('select-guardia');
-  if (!select) return;
-  
-  let guardias = [];
-  if (window.UsuariosDB) {
-    guardias = await window.UsuariosDB.getGuardias();
-  } else if (window.obtenerGuardias) {
-    guardias = window.obtenerGuardias();
+
+// ==================== CARGAR DATOS ====================
+async function cargarGuardias() {
+  try {
+    const response = await fetch("api_usuarios.php?accion=obtener");
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      // Filtrar solo guardias (id_tipo = 1)
+      guardiasCargados = resultado.datos.filter((u) => u.id_tipo === 1);
+      actualizarSelectGuardias();
+      console.log("✅ Guardias cargados:", guardiasCargados.length);
+    } else {
+      console.error("Error al cargar guardias");
+      guardiasCargados = [];
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    guardiasCargados = [];
   }
+}
+
+async function cargarRutas() {
+  try {
+    const response = await fetch("api_rutas.php?accion=obtener");
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      rutasCargadas = resultado.datos;
+      actualizarSelectRutas();
+      console.log("✅ Rutas cargadas:", rutasCargadas.length);
+    } else {
+      console.error("Error al cargar rutas");
+      rutasCargadas = [];
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    rutasCargadas = [];
+  }
+}
+
+async function cargarAsignaciones() {
+  try {
+    const response = await fetch("api_asignaciones.php?accion=obtener");
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      asignacionesGuardadas = resultado.datos;
+      console.log("✅ Asignaciones cargadas:", asignacionesGuardadas.length);
+    } else {
+      console.error("Error al cargar asignaciones");
+      asignacionesGuardadas = [];
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    asignacionesGuardadas = [];
+  }
+}
+
+// ==================== ACTUALIZAR SELECTORES ====================
+function actualizarSelectGuardias() {
+  const select = document.getElementById("select-guardia");
+  if (!select) return;
 
   select.innerHTML = '<option value="">-- Selecciona un guardia --</option>';
-  
-  guardias.forEach(guardia => {
-    select.innerHTML += `<option value="${guardia.id}">${guardia.nombre} (${guardia.email})</option>`;
+
+  guardiasCargados.forEach((guardia) => {
+    const email = guardia.correo || "Sin correo";
+    select.innerHTML += `<option value="${guardia.id_usuario}">${guardia.nombre} (${email})</option>`;
   });
 
-  if (guardias.length === 0) {
+  if (guardiasCargados.length === 0) {
     select.innerHTML = '<option value="">No hay guardias registrados</option>';
   }
 }
 
-async function cargarRutasSelect() {
-  const select = document.getElementById('select-ruta');
+function actualizarSelectRutas() {
+  const select = document.getElementById("select-ruta");
   if (!select) return;
-  
-  const rutasGuardadas = JSON.parse(localStorage.getItem('rutasGuardadas') || '[]');
 
   select.innerHTML = '<option value="">-- Selecciona una ruta --</option>';
-  
-  rutasGuardadas.forEach(ruta => {
-    select.innerHTML += `<option value="${ruta.id}">${ruta.nombre} (${ruta.puntos.length} puntos)</option>`;
+
+  rutasCargadas.forEach((ruta) => {
+    const numPuntos = ruta.puntos ? ruta.puntos.length : 0;
+    select.innerHTML += `<option value="${ruta.id}">${ruta.nombre} (${numPuntos} puntos)</option>`;
   });
 
-  if (rutasGuardadas.length === 0) {
+  if (rutasCargadas.length === 0) {
     select.innerHTML = '<option value="">No hay rutas creadas</option>';
   }
 }
-// ==================== Asignar rutas ====================
+
+// ==================== ASIGNAR RUTA ====================
 async function asignarRuta() {
-  const guardiaId = parseInt(document.getElementById('select-guardia').value);
-  const rutaId = parseInt(document.getElementById('select-ruta').value);
-  const horaInicio = document.getElementById('hora-inicio').value;
-  const horaFin = document.getElementById('hora-fin').value;
-  const fecha = document.getElementById('fecha-asignacion').value;
-  const radioTolerancia = parseInt(document.getElementById('radio-tolerancia').value);
-
-  // Validaciones básicas
-  if (!guardiaId) return alert('⚠️ Por favor, selecciona un guardia.');
-  if (!rutaId) return alert('⚠️ Por favor, selecciona una ruta.');
-  if (!horaInicio || !horaFin) return alert('⚠️ Especifica hora de inicio y fin.');
-  if (!fecha) return alert('⚠️ Selecciona una fecha.');
-  if (!radioTolerancia || radioTolerancia < 5 || radioTolerancia > 500)
-    return alert('⚠️ Radio de tolerancia entre 5 y 500 metros.');
-  if (horaFin <= horaInicio)
-    return alert('⚠️ La hora de finalización debe ser posterior.');
-
-  // Obtener datos de guardia y ruta
-  let guardia = null;
-  if (window.UsuariosDB) guardia = await window.UsuariosDB.getById(guardiaId);
-  else if (window.obtenerUsuarios) {
-    const usuarios = window.obtenerUsuarios();
-    guardia = usuarios.find(g => g.id === guardiaId);
-  }
-
-  const rutasGuardadas = JSON.parse(localStorage.getItem('rutasGuardadas') || '[]');
-  const ruta = rutasGuardadas.find(r => r.id === rutaId);
-  if (!guardia || !ruta) return alert('⚠️ Error al obtener información.');
-
-  // Verificar conflicto de horario
-  const conflicto = asignacionesGuardadas.some(a => 
-    a.guardiaId === guardiaId && a.fecha === fecha &&
-    ((horaInicio >= a.horaInicio && horaInicio < a.horaFin) ||
-    (horaFin > a.horaInicio && horaFin <= a.horaFin) ||
-    (horaInicio <= a.horaInicio && horaFin >= a.horaFin))
+  const guardiaId = parseInt(document.getElementById("select-guardia").value);
+  const rutaId = parseInt(document.getElementById("select-ruta").value);
+  const tipoRondaId = parseInt(document.getElementById("tipo-ronda").value);
+  const fecha = document.getElementById("fecha-asignacion").value;
+  const horaInicio = document.getElementById("hora-inicio").value;
+  const radioTolerancia = parseInt(
+    document.getElementById("radio-tolerancia").value
   );
-  if (conflicto && !confirm('⚠️ Ya existe una asignación en ese horario. ¿Continuar?')) return;
 
-  // Crear objeto
-  const nuevaAsignacion = {
+  // Debug: Verificar valores capturados
+  console.log("Datos capturados:", {
     guardiaId,
-    guardiaNombre: guardia.nombre,
-    guardiaEmail: guardia.email,
     rutaId,
-    rutaNombre: ruta.nombre,
-    rutaPuntos: ruta.puntos.length,
+    tipoRondaId,
     fecha,
     horaInicio,
-    horaFin,
     radioTolerancia,
-    fechaCreacion: new Date().toLocaleString('es-ES')
-  };
+  });
+
+  // Validaciones
+  if (!guardiaId) {
+    alert("⚠️ Por favor, selecciona un guardia.");
+    return;
+  }
+
+  if (!rutaId) {
+    alert("⚠️ Por favor, selecciona una ruta.");
+    return;
+  }
+
+  if (!tipoRondaId) {
+    alert("⚠️ Por favor, selecciona el tipo de ronda.");
+    return;
+  }
+
+  if (!fecha) {
+    alert("⚠️ Selecciona una fecha.");
+    return;
+  }
+
+  if (!horaInicio || horaInicio.trim() === "") {
+    alert("⚠️ Selecciona la hora de inicio.");
+    return;
+  }
+
+  if (!radioTolerancia || radioTolerancia < 5 || radioTolerancia > 500) {
+    alert("⚠️ Radio de tolerancia debe estar entre 5 y 500 metros.");
+    return;
+  }
+
+  // Verificar conflicto de horario
+  const conflicto = asignacionesGuardadas.some(
+    (a) => a.guardiaId === guardiaId && a.fecha === fecha
+  );
+
+  if (conflicto) {
+    if (
+      !confirm(
+        "⚠️ Ya existe una asignación para este guardia en esta fecha. ¿Continuar?"
+      )
+    ) {
+      return;
+    }
+  }
 
   try {
-    await AsignacionesDB.create(nuevaAsignacion);
-    await cargarAsignaciones();
-    await actualizarTablaAsignaciones();
-    mostrarMensajeAsignacion('✅ Ruta asignada exitosamente', 'success');
-    document.getElementById('form-asignar-ruta').reset();
+    const response = await fetch("api_asignaciones.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accion: "crear",
+        guardiaId: guardiaId,
+        rutaId: rutaId,
+        tipoRondaId: tipoRondaId,
+        fecha: fecha,
+        horaInicio: horaInicio,
+        radioTolerancia: radioTolerancia,
+      }),
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      mostrarMensajeAsignacion("✅ Ruta asignada exitosamente", "success");
+      document.getElementById("form-asignar-ruta").reset();
+      await cargarAsignaciones();
+      await actualizarTablaAsignaciones();
+    } else {
+      alert("⚠️ " + resultado.mensaje);
+    }
   } catch (error) {
-    console.error('Error al guardar asignación:', error);
-    alert('❌ Error al guardar la asignación.');
+    console.error("Error:", error);
+    alert("❌ Error al asignar la ruta");
   }
 }
-// ==================== Actualizar tabla ====================
+
+// ==================== ACTUALIZAR TABLA DE ASIGNACIONES ====================
 async function actualizarTablaAsignaciones() {
-  const tbody = document.getElementById('tbody-asignaciones');
+  const tbody = document.getElementById("tbody-asignaciones");
   if (!tbody) return;
 
   if (asignacionesGuardadas.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="5" class="sin-datos">
+        <td colspan="6" class="sin-datos">
           No hay asignaciones registradas aún
         </td>
       </tr>
@@ -208,63 +231,365 @@ async function actualizarTablaAsignaciones() {
     return;
   }
 
+  // Ordenar por fecha descendente
   const asignacionesOrdenadas = [...asignacionesGuardadas].sort((a, b) => {
-    const fechaA = new Date(a.fecha + ' ' + a.horaInicio);
-    const fechaB = new Date(b.fecha + ' ' + b.horaInicio);
+    const fechaA = new Date(a.fecha);
+    const fechaB = new Date(b.fecha);
     return fechaB - fechaA;
   });
 
-  let html = '';
-  asignacionesOrdenadas.forEach(asignacion => {
+  let html = "";
+  asignacionesOrdenadas.forEach((asignacion) => {
+    const tipoRondaBadge =
+      asignacion.tipoRonda === "Externo"
+        ? '<span style="background: #28a745; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">🌍 Externo</span>'
+        : '<span style="background: #007bff; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px;">🏢 Interno</span>';
+
     html += `
       <tr>
-        <td><strong>${asignacion.guardiaNombre}</strong><br>
-          <small>${asignacion.guardiaEmail}</small>
+        <td>
+          <strong>${asignacion.guardiaNombre}</strong><br>
+          <small style="color: #6c757d;">${
+            asignacion.guardiaEmail || "Sin correo"
+          }</small>
         </td>
-        <td><strong>${asignacion.rutaNombre}</strong><br>
-          <small>${asignacion.rutaPuntos} puntos - Radio: ${asignacion.radioTolerancia}m</small>
+        <td>
+          <strong>${asignacion.rutaNombre}</strong><br>
+          <small style="color: #6c757d;">${
+            asignacion.rutaPuntos
+          } puntos - Radio: ${asignacion.radioTolerancia}m</small>
         </td>
-        <td>${formatearFecha(asignacion.fecha)}</td>
-        <td>${asignacion.horaInicio}</td>
-        <td>${asignacion.horaFin}</td>
+        <td>
+          ${formatearFecha(asignacion.fecha)}<br>
+          <small style="color: #6c757d;">⏰ ${asignacion.horaInicio}</small><br>
+          ${tipoRondaBadge}
+        </td>
+        <td>
+          <button class="btn-accion btn-ver" onclick="verDetalleAsignacion(${
+            asignacion.id
+          })">👁 Ver</button>
+          <button class="btn-accion btn-eliminar" onclick="eliminarAsignacion(${
+            asignacion.id
+          })">🗑</button>
+        </td>
       </tr>
     `;
   });
 
   tbody.innerHTML = html;
 }
-// ==================== Funciones extras ====================
+
+// ==================== VER DETALLE DE ASIGNACIÓN ====================
+async function verDetalleAsignacion(idAsignacion) {
+  const asignacion = asignacionesGuardadas.find((a) => a.id === idAsignacion);
+  if (!asignacion) return;
+
+  // Obtener detalles completos de la ruta
+  try {
+    const response = await fetch(
+      `api_rutas.php?accion=obtener_una&id=${asignacion.rutaId}`
+    );
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      const ruta = resultado.datos;
+      mostrarModalDetalleAsignacion(asignacion, ruta);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al cargar los detalles");
+  }
+}
+
+function mostrarModalDetalleAsignacion(asignacion, ruta) {
+  const modalExistente = document.getElementById("modal-detalle-asignacion");
+  if (modalExistente) modalExistente.remove();
+
+  const puntosList = ruta.puntos
+    .map(
+      (p, index) =>
+        `<div style="padding: 8px; background: #f8f9fa; margin: 5px 0; border-radius: 4px;">
+      <strong>${index + 1}.</strong> ${p.nombre} 
+      <small style="color: #6c757d;">(${p.lat}, ${p.lng})</small>
+    </div>`
+    )
+    .join("");
+
+  const modal = document.createElement("div");
+  modal.id = "modal-detalle-asignacion";
+  modal.className = "modal-asignacion";
+  modal.innerHTML = `
+    <div class="modal-asignacion-content">
+      <span class="close-modal" onclick="cerrarModalAsignacion()">&times;</span>
+      <h2>📋 Detalle de Asignación</h2>
+      
+      <div class="info-asignacion">
+        <div class="info-item">
+          <strong>👤 Guardia:</strong>
+          <span>${asignacion.guardiaNombre}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>📧 Correo:</strong>
+          <span>${asignacion.guardiaEmail || "No disponible"}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>🗺️ Ruta:</strong>
+          <span>${asignacion.rutaNombre}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>📍 Tipo de Ronda:</strong>
+          <span>${asignacion.tipoRonda}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>📅 Fecha:</strong>
+          <span>${formatearFecha(asignacion.fecha)}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>⏰ Hora de Inicio:</strong>
+          <span>${asignacion.horaInicio}</span>
+        </div>
+        
+        <div class="info-item">
+          <strong>📏 Radio de Tolerancia:</strong>
+          <span>${asignacion.radioTolerancia} metros</span>
+        </div>
+      </div>
+      
+      <h3 style="margin-top: 20px; color: #0044cc;">📍 Puntos de la Ruta</h3>
+      <div style="max-height: 300px; overflow-y: auto;">
+        ${puntosList}
+      </div>
+      
+      <div class="modal-acciones">
+        <button class="btn-modal btn-cerrar" onclick="cerrarModalAsignacion()">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  modal.style.display = "flex";
+
+  if (!document.getElementById("estilos-modal-asignacion")) {
+    agregarEstilosModalAsignacion();
+  }
+}
+
+function cerrarModalAsignacion() {
+  const modal = document.getElementById("modal-detalle-asignacion");
+  if (modal) {
+    modal.style.display = "none";
+    modal.remove();
+  }
+}
+
+// ==================== ELIMINAR ASIGNACIÓN ====================
+async function eliminarAsignacion(idAsignacion) {
+  const asignacion = asignacionesGuardadas.find((a) => a.id === idAsignacion);
+  if (!asignacion) return;
+
+  if (
+    !confirm(
+      `¿Eliminar la asignación de "${asignacion.rutaNombre}" a ${asignacion.guardiaNombre}?`
+    )
+  ) {
+    return;
+  }
+
+  try {
+    const response = await fetch("api_asignaciones.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accion: "eliminar",
+        id: idAsignacion,
+      }),
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      mostrarMensajeAsignacion(
+        "🗑️ Asignación eliminada correctamente",
+        "success"
+      );
+      await cargarAsignaciones();
+      await actualizarTablaAsignaciones();
+    } else {
+      alert("⚠️ " + resultado.mensaje);
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    alert("❌ Error al eliminar la asignación");
+  }
+}
+
+// ==================== FUNCIONES AUXILIARES ====================
 function formatearFecha(fecha) {
-  const date = new Date(fecha + 'T00:00:00');
-  return date.toLocaleDateString('es-ES', { 
-    weekday: 'short', 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
+  const date = new Date(fecha + "T00:00:00");
+  return date.toLocaleDateString("es-ES", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
 }
 
 function mostrarMensajeAsignacion(mensaje, tipo) {
-  const div = document.getElementById('mensaje-asignacion');
-  if (!div) return;
-  
-  div.textContent = mensaje;
-  div.className = tipo === 'success' ? 'mensaje-exito' : 'mensaje-error';
-  div.style.display = 'block';
-  setTimeout(() => div.style.display = 'none', 3000);
-}
-// ==================== Almacenamiento local ====================
-async function cargarAsignaciones() {
-  asignacionesGuardadas = await AsignacionesDB.getAll();
+  let mensajeDiv = document.getElementById("mensaje-asignacion");
+
+  if (!mensajeDiv) {
+    mensajeDiv = document.createElement("div");
+    mensajeDiv.id = "mensaje-asignacion";
+    const container = document.getElementById("container-asignaciones");
+    if (container) {
+      container.insertBefore(mensajeDiv, container.firstChild);
+    }
+  }
+
+  mensajeDiv.className = tipo === "success" ? "mensaje-exito" : "mensaje-error";
+  mensajeDiv.textContent = mensaje;
+  mensajeDiv.style.display = "block";
+
+  setTimeout(() => {
+    mensajeDiv.style.display = "none";
+  }, 3000);
 }
 
-async function obtenerAsignacionesGuardia(guardiaId) {
-  return await AsignacionesDB.getByGuardia(guardiaId);
+function agregarEstilosModalAsignacion() {
+  const style = document.createElement("style");
+  style.id = "estilos-modal-asignacion";
+  style.innerHTML = `
+    .modal-asignacion {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-asignacion-content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 85vh;
+      overflow-y: auto;
+      position: relative;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      animation: slideDown 0.3s ease;
+    }
+
+    .close-modal {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #999;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    .modal-asignacion-content h2 {
+      color: #0044cc;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #0044cc;
+      font-size: 1.5rem;
+    }
+
+    .info-asignacion {
+      margin: 20px 0;
+    }
+
+    .info-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 15px;
+      margin: 10px 0;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #0044cc;
+      transition: all 0.3s ease;
+    }
+
+    .info-item:hover {
+      background-color: #e3f2fd;
+      transform: translateX(5px);
+    }
+
+    .info-item strong {
+      color: #0044cc;
+      font-size: 1rem;
+    }
+
+    .info-item span {
+      color: #333;
+      font-weight: 500;
+    }
+
+    .modal-acciones {
+      display: flex;
+      gap: 10px;
+      margin-top: 25px;
+      justify-content: flex-end;
+    }
+
+    .btn-modal {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cerrar {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .btn-cerrar:hover {
+      background-color: #5a6268;
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .modal-asignacion-content {
+        width: 95%;
+        padding: 20px;
+        max-height: 90vh;
+      }
+
+      .info-item {
+        flex-direction: column;
+        gap: 5px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
 }
 
-// Funcion global
-window.obtenerAsignacionesGuardia = obtenerAsignacionesGuardia;
-
-// ==================== Modificaciones futuras ====================
-// api global para base de datos en servidor en linea
-// window.AsignacionesDB = AsignacionesDB;
+// Hacer funciones globales
+window.verDetalleAsignacion = verDetalleAsignacion;
+window.cerrarModalAsignacion = cerrarModalAsignacion;
+window.eliminarAsignacion = eliminarAsignacion;

@@ -1,7 +1,8 @@
+// script_mapa.js - Actualizado para usar APIs de base de datos
+
 // Variables globales
 const map = L.map("map").setView([20.702314, -103.473337], 17);
 
-// OpenStreetMap
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   attribution: "&copy; OpenStreetMap contributors",
   maxZoom: 19,
@@ -11,20 +12,65 @@ let marcadorTemporal = null;
 let puntosGuardados = [];
 let rutasGuardadas = [];
 let rutaTemporal = [];
-let contadorPuntos = 1;
-let contadorRutas = 1;
 let rutaActualPolyline = null;
-let marcadoresRuta = []; // Array para guardar marcadores de rutas
+let marcadoresRuta = [];
 
-// Inicialización
-cargarDatos();
+// ==================== INICIALIZACIÓN ====================
+document.addEventListener('DOMContentLoaded', async function() {
+  await cargarDatos();
+});
 
-// Event listeners
+// Event listeners del mapa
 map.on("click", function (e) {
   crearMarcadorTemporal(e.latlng.lat, e.latlng.lng);
 });
 
-// Funciones para puntos
+// ==================== FUNCIONES DE CARGA DE DATOS ====================
+async function cargarDatos() {
+  await cargarPuntos();
+  await cargarRutas();
+  actualizarSelectPuntos();
+}
+
+async function cargarPuntos() {
+  try {
+    const response = await fetch('api_coordenadas.php?accion=obtener');
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      puntosGuardados = resultado.datos;
+      actualizarTablaPuntos();
+      console.log('✅ Puntos cargados:', puntosGuardados.length);
+    } else {
+      console.error('Error al cargar puntos:', resultado.mensaje);
+      puntosGuardados = [];
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    puntosGuardados = [];
+  }
+}
+
+async function cargarRutas() {
+  try {
+    const response = await fetch('api_rutas.php?accion=obtener');
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      rutasGuardadas = resultado.datos;
+      actualizarTablaRutas();
+      console.log('✅ Rutas cargadas:', rutasGuardadas.length);
+    } else {
+      console.error('Error al cargar rutas:', resultado.mensaje);
+      rutasGuardadas = [];
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    rutasGuardadas = [];
+  }
+}
+
+// ==================== GESTIÓN DE PUNTOS ====================
 function crearMarcadorTemporal(lat, lng) {
   if (marcadorTemporal) {
     map.removeLayer(marcadorTemporal);
@@ -32,14 +78,12 @@ function crearMarcadorTemporal(lat, lng) {
 
   marcadorTemporal = L.marker([lat, lng]).addTo(map);
   marcadorTemporal
-    .bindPopup(
-      `
-                <b>Nuevo Punto</b><br>
-                Lat: ${lat}<br>
-                Lng: ${lng}<br>
-                <small>Asigna un nombre y guárdalo</small>
-            `
-    )
+    .bindPopup(`
+      <b>Nuevo Punto</b><br>
+      Lat: ${lat.toFixed(6)}<br>
+      Lng: ${lng.toFixed(6)}<br>
+      <small>Asigna un nombre y guárdalo</small>
+    `)
     .openPopup();
 
   marcadorTemporal.on("contextmenu", function (e) {
@@ -55,13 +99,7 @@ function limpiarMarcadorTemporal() {
   }
 }
 
-// Nueva función para limpiar TODO el mapa
-function limpiarMapaCompleto() {
-  limpiarMarcadorTemporal();
-  limpiarRutaActual();
-}
-
-function guardarPunto() {
+async function guardarPunto() {
   const nombrePunto = document.getElementById("nombre_punto").value.trim();
 
   if (!nombrePunto) {
@@ -74,34 +112,36 @@ function guardarPunto() {
     return;
   }
 
-  if (
-    puntosGuardados.some(
-      (p) => p.nombre.toLowerCase() === nombrePunto.toLowerCase()
-    )
-  ) {
-    alert("Ya existe un punto con ese nombre.");
-    return;
+  const lat = marcadorTemporal.getLatLng().lat;
+  const lng = marcadorTemporal.getLatLng().lng;
+
+  try {
+    const response = await fetch('api_coordenadas.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accion: 'crear',
+        nombre: nombrePunto,
+        lat: lat,
+        lng: lng
+      })
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      mostrarMensaje("✅ Punto guardado exitosamente", "success");
+      document.getElementById("nombre_punto").value = "";
+      limpiarMarcadorTemporal();
+      await cargarPuntos();
+      actualizarSelectPuntos();
+    } else {
+      alert("⚠️ " + resultado.mensaje);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert("❌ Error al guardar el punto");
   }
-
-  const lat = marcadorTemporal.getLatLng().lat.toFixed(6);
-  const lng = marcadorTemporal.getLatLng().lng.toFixed(6);
-
-  const punto = {
-    id: contadorPuntos++,
-    nombre: nombrePunto,
-    lat: parseFloat(lat),
-    lng: parseFloat(lng),
-    fecha: new Date().toLocaleString("es-ES"),
-  };
-
-  puntosGuardados.push(punto);
-  guardarDatos();
-  actualizarTablaPuntos();
-  actualizarSelectPuntos();
-  mostrarMensaje("✅ Punto guardado exitosamente", "success");
-
-  document.getElementById("nombre_punto").value = "";
-  limpiarMarcadorTemporal();
 }
 
 function actualizarTablaPuntos() {
@@ -109,28 +149,28 @@ function actualizarTablaPuntos() {
 
   if (puntosGuardados.length === 0) {
     tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="sin-datos">
-                            No hay puntos guardados aún
-                        </td>
-                    </tr>
-                `;
+      <tr>
+        <td colspan="4" class="sin-datos">
+          No hay puntos guardados aún
+        </td>
+      </tr>
+    `;
     return;
   }
 
   let html = "";
   puntosGuardados.forEach((punto) => {
     html += `
-                    <tr>
-                        <td><strong>${punto.nombre}</strong></td>
-                        <td>${punto.lat}, ${punto.lng}</td>
-                        <td>${punto.fecha}</td>
-                        <td>
-                            <button class="btn-accion btn-ver" onclick="verPunto(${punto.id})">👁 Ver</button>
-                            <button class="btn-accion btn-eliminar" onclick="eliminarPunto(${punto.id})">🗑</button>
-                        </td>
-                    </tr>
-                `;
+      <tr>
+        <td><strong>${punto.nombre}</strong></td>
+        <td>${punto.lat}, ${punto.lng}</td>
+        <td>${punto.fecha}</td>
+        <td>
+          <button class="btn-accion btn-ver" onclick="verPunto(${punto.id})">👁 Ver</button>
+          <button class="btn-accion btn-eliminar" onclick="eliminarPunto(${punto.id})">🗑</button>
+        </td>
+      </tr>
+    `;
   });
 
   tbody.innerHTML = html;
@@ -140,42 +180,54 @@ function verPunto(idPunto) {
   const punto = puntosGuardados.find((p) => p.id === idPunto);
   if (!punto) return;
 
-  // Solo limpiar el marcador temporal anterior (NO la ruta)
   limpiarMarcadorTemporal();
-
-  // Centrar el mapa en el punto
   map.setView([punto.lat, punto.lng], 17);
 
-  // Pequeño delay para asegurar que el mapa se centre correctamente
   setTimeout(() => {
     marcadorTemporal = L.marker([punto.lat, punto.lng]).addTo(map);
     marcadorTemporal
-      .bindPopup(
-        `
-                <b>${punto.nombre}</b><br>
-                Lat: ${punto.lat}<br>
-                Lng: ${punto.lng}<br>
-                <small>Creado: ${punto.fecha}</small>
-            `
-      )
+      .bindPopup(`
+        <b>${punto.nombre}</b><br>
+        Lat: ${punto.lat}<br>
+        Lng: ${punto.lng}<br>
+        <small>Creado: ${punto.fecha}</small>
+      `)
       .openPopup();
   }, 100);
 }
 
-function eliminarPunto(idPunto) {
+async function eliminarPunto(idPunto) {
   const punto = puntosGuardados.find((p) => p.id === idPunto);
   if (!punto) return;
 
-  if (confirm(`¿Eliminar el punto "${punto.nombre}"?`)) {
-    puntosGuardados = puntosGuardados.filter((p) => p.id !== idPunto);
-    guardarDatos();
-    actualizarTablaPuntos();
-    actualizarSelectPuntos();
-    mostrarMensaje("🗑 Punto eliminado correctamente", "success");
+  if (!confirm(`¿Eliminar el punto "${punto.nombre}"?`)) return;
+
+  try {
+    const response = await fetch('api_coordenadas.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accion: 'eliminar',
+        id: idPunto
+      })
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      mostrarMensaje("🗑 Punto eliminado correctamente", "success");
+      await cargarPuntos();
+      actualizarSelectPuntos();
+    } else {
+      alert("⚠️ " + resultado.mensaje);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert("❌ Error al eliminar el punto");
   }
 }
 
-// Funciones para rutas
+// ==================== GESTIÓN DE RUTAS ====================
 function actualizarSelectPuntos() {
   const select = document.getElementById("select_punto");
   select.innerHTML = '<option value="">-- Selecciona un punto --</option>';
@@ -197,7 +249,6 @@ function agregarPuntoRuta() {
   const punto = puntosGuardados.find((p) => p.id === puntoId);
   if (!punto) return;
 
-  // Verificar si ya está en la ruta
   if (rutaTemporal.some((p) => p.id === puntoId)) {
     alert("Este punto ya está en la ruta.");
     return;
@@ -213,20 +264,19 @@ function actualizarListaPuntosRuta() {
   const contenedor = document.getElementById("lista-puntos-ruta");
 
   if (rutaTemporal.length === 0) {
-    contenedor.innerHTML =
-      '<p class="sin-datos">No hay puntos seleccionados</p>';
+    contenedor.innerHTML = '<p class="sin-datos">No hay puntos seleccionados</p>';
     return;
   }
 
   let html = "";
   rutaTemporal.forEach((punto, index) => {
     html += `
-                    <div class="punto-seleccionado">
-                        <span class="orden-numero">${index + 1}</span>
-                        <strong>${punto.nombre}</strong>
-                        <button class="btn-quitar" onclick="quitarPuntoRuta(${index})">❌</button>
-                    </div>
-                `;
+      <div class="punto-seleccionado">
+        <span class="orden-numero">${index + 1}</span>
+        <strong>${punto.nombre}</strong>
+        <button class="btn-quitar" onclick="quitarPuntoRuta(${index})">✖</button>
+      </div>
+    `;
   });
 
   contenedor.innerHTML = html;
@@ -239,12 +289,10 @@ function quitarPuntoRuta(index) {
 }
 
 function actualizarRutaEnMapa() {
-  // Remover ruta anterior
   limpiarRutaActual();
 
   if (rutaTemporal.length < 2) return;
 
-  // Crear nueva ruta
   const coordenadas = rutaTemporal.map((punto) => [punto.lat, punto.lng]);
   rutaActualPolyline = L.polyline(coordenadas, {
     color: "#ff0000",
@@ -253,13 +301,10 @@ function actualizarRutaEnMapa() {
     dashArray: "10, 10",
   }).addTo(map);
 
-  // Ajustar vista del mapa
-  map.fitBounds(rutaActualPolyline.getBounds(), {
-    padding: [20, 20],
-  });
+  map.fitBounds(rutaActualPolyline.getBounds(), { padding: [20, 20] });
 }
 
-function guardarRuta() {
+async function guardarRuta() {
   const nombreRuta = document.getElementById("nombre_ruta").value.trim();
 
   if (!nombreRuta) {
@@ -272,28 +317,33 @@ function guardarRuta() {
     return;
   }
 
-  if (
-    rutasGuardadas.some(
-      (r) => r.nombre.toLowerCase() === nombreRuta.toLowerCase()
-    )
-  ) {
-    alert("Ya existe una ruta con ese nombre.");
-    return;
+  const puntosIds = rutaTemporal.map(p => p.id);
+
+  try {
+    const response = await fetch('api_rutas.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accion: 'crear',
+        nombre: nombreRuta,
+        descripcion: `Ruta con ${rutaTemporal.length} puntos`,
+        puntos: puntosIds
+      })
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      mostrarMensaje("✅ Ruta guardada exitosamente", "success");
+      limpiarRutaTemporal();
+      await cargarRutas();
+    } else {
+      alert("⚠️ " + resultado.mensaje);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert("❌ Error al guardar la ruta");
   }
-
-  const ruta = {
-    id: contadorRutas++,
-    nombre: nombreRuta,
-    puntos: [...rutaTemporal],
-    fecha: new Date().toLocaleString("es-ES"),
-  };
-
-  rutasGuardadas.push(ruta);
-  guardarDatos();
-  actualizarTablaRutas();
-  mostrarMensaje("✅ Ruta guardada exitosamente", "success");
-
-  limpiarRutaTemporal();
 }
 
 function limpiarRutaTemporal() {
@@ -308,12 +358,12 @@ function actualizarTablaRutas() {
 
   if (rutasGuardadas.length === 0) {
     tbody.innerHTML = `
-                    <tr>
-                        <td colspan="4" class="sin-datos">
-                            No hay rutas guardadas aún
-                        </td>
-                    </tr>
-                `;
+      <tr>
+        <td colspan="4" class="sin-datos">
+          No hay rutas guardadas aún
+        </td>
+      </tr>
+    `;
     return;
   }
 
@@ -321,16 +371,16 @@ function actualizarTablaRutas() {
   rutasGuardadas.forEach((ruta) => {
     const puntosList = ruta.puntos.map((p) => p.nombre).join(", ");
     html += `
-                    <tr>
-                        <td><strong>${ruta.nombre}</strong></td>
-                        <td>${puntosList} (${ruta.puntos.length} puntos)</td>
-                        <td>${ruta.fecha}</td>
-                        <td>
-                            <button class="btn-accion btn-ruta" onclick="verRuta(${ruta.id})">🗺️ Ver</button>
-                            <button class="btn-accion btn-eliminar" onclick="eliminarRuta(${ruta.id})">🗑</button>
-                        </td>
-                    </tr>
-                `;
+      <tr>
+        <td><strong>${ruta.nombre}</strong></td>
+        <td>${puntosList} (${ruta.puntos.length} puntos)</td>
+        <td>${ruta.fecha}</td>
+        <td>
+          <button class="btn-accion btn-ruta" onclick="verRuta(${ruta.id})">🗺️ Ver</button>
+          <button class="btn-accion btn-eliminar" onclick="eliminarRuta(${ruta.id})">🗑</button>
+        </td>
+      </tr>
+    `;
   });
 
   tbody.innerHTML = html;
@@ -340,75 +390,81 @@ function verRuta(idRuta) {
   const ruta = rutasGuardadas.find((r) => r.id === idRuta);
   if (!ruta) return;
 
-  // Limpiar vista anterior
   limpiarMarcadorTemporal();
   limpiarRutaActual();
 
-  // Mostrar ruta en el mapa
-  const coordenadas = ruta.puntos.map((punto) => [punto.lat, punto.lng]);
+  const coordenadas = ruta.puntos.map((punto) => [parseFloat(punto.lat), parseFloat(punto.lng)]);
   rutaActualPolyline = L.polyline(coordenadas, {
     color: "#2196f3",
     weight: 5,
     opacity: 0.8,
   }).addTo(map);
 
-  // Agregar marcadores numerados
   ruta.puntos.forEach((punto, index) => {
-    const marcador = L.marker([punto.lat, punto.lng], {
+    const marcador = L.marker([parseFloat(punto.lat), parseFloat(punto.lng)], {
       icon: L.divIcon({
         className: "custom-div-icon",
-        html: `<div style="background-color: #2196f3; color: white; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">${
-          index + 1
-        }</div>`,
+        html: `<div style="background-color: #2196f3; color: white; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">${index + 1}</div>`,
         iconSize: [25, 25],
         iconAnchor: [12.5, 12.5],
       }),
     }).addTo(map);
 
     marcador.bindPopup(`
-                    <b>${punto.nombre}</b><br>
-                    Orden: ${index + 1}<br>
-                    Ruta: ${ruta.nombre}
-                `);
-    
-    // Guardar marcador para poder eliminarlo después
+      <b>${punto.nombre}</b><br>
+      Orden: ${index + 1}<br>
+      Ruta: ${ruta.nombre}
+    `);
+
     marcadoresRuta.push(marcador);
   });
 
-  // Ajustar vista del mapa
-  map.fitBounds(rutaActualPolyline.getBounds(), {
-    padding: [50, 50],
-  });
+  map.fitBounds(rutaActualPolyline.getBounds(), { padding: [50, 50] });
 }
 
-// Nueva función para limpiar rutas y marcadores
+async function eliminarRuta(idRuta) {
+  const ruta = rutasGuardadas.find((r) => r.id === idRuta);
+  if (!ruta) return;
+
+  if (!confirm(`¿Eliminar la ruta "${ruta.nombre}"?`)) return;
+
+  try {
+    const response = await fetch('api_rutas.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accion: 'eliminar',
+        id: idRuta
+      })
+    });
+
+    const resultado = await response.json();
+
+    if (resultado.exito) {
+      mostrarMensaje("🗑 Ruta eliminada correctamente", "success");
+      await cargarRutas();
+    } else {
+      alert("⚠️ " + resultado.mensaje);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    alert("❌ Error al eliminar la ruta");
+  }
+}
+
 function limpiarRutaActual() {
-  // Limpiar polyline
   if (rutaActualPolyline) {
     map.removeLayer(rutaActualPolyline);
     rutaActualPolyline = null;
   }
-  
-  // Limpiar todos los marcadores de ruta
+
   marcadoresRuta.forEach(marcador => {
     map.removeLayer(marcador);
   });
   marcadoresRuta = [];
 }
 
-function eliminarRuta(idRuta) {
-  const ruta = rutasGuardadas.find((r) => r.id === idRuta);
-  if (!ruta) return;
-
-  if (confirm(`¿Eliminar la ruta "${ruta.nombre}"?`)) {
-    rutasGuardadas = rutasGuardadas.filter((r) => r.id !== idRuta);
-    guardarDatos();
-    actualizarTablaRutas();
-    mostrarMensaje("🗑 Ruta eliminada correctamente", "success");
-  }
-}
-
-// Funciones auxiliares
+// ==================== FUNCIONES AUXILIARES ====================
 function mostrarMensaje(mensaje, tipo) {
   const div = document.getElementById("mensaje-exito");
   div.textContent = mensaje;
@@ -416,25 +472,14 @@ function mostrarMensaje(mensaje, tipo) {
   setTimeout(() => (div.style.display = "none"), 3000);
 }
 
-function guardarDatos() {
-  localStorage.setItem("puntosGuardados", JSON.stringify(puntosGuardados));
-  localStorage.setItem("rutasGuardadas", JSON.stringify(rutasGuardadas));
-  localStorage.setItem("contadorPuntos", contadorPuntos);
-  localStorage.setItem("contadorRutas", contadorRutas);
-}
-
-function cargarDatos() {
-  const puntos = localStorage.getItem("puntosGuardados");
-  const rutas = localStorage.getItem("rutasGuardadas");
-  const contadorP = localStorage.getItem("contadorPuntos");
-  const contadorR = localStorage.getItem("contadorRutas");
-
-  if (puntos) puntosGuardados = JSON.parse(puntos);
-  if (rutas) rutasGuardadas = JSON.parse(rutas);
-  if (contadorP) contadorPuntos = parseInt(contadorP);
-  if (contadorR) contadorRutas = parseInt(contadorR);
-
-  actualizarTablaPuntos();
-  actualizarTablaRutas();
-  actualizarSelectPuntos();
-}
+// Hacer funciones globales
+window.guardarPunto = guardarPunto;
+window.limpiarMarcadorTemporal = limpiarMarcadorTemporal;
+window.verPunto = verPunto;
+window.eliminarPunto = eliminarPunto;
+window.agregarPuntoRuta = agregarPuntoRuta;
+window.quitarPuntoRuta = quitarPuntoRuta;
+window.guardarRuta = guardarRuta;
+window.limpiarRutaTemporal = limpiarRutaTemporal;
+window.verRuta = verRuta;
+window.eliminarRuta = eliminarRuta;
