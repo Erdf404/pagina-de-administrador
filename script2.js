@@ -6,7 +6,9 @@ document.addEventListener('DOMContentLoaded', function () {
     || document.referrer.includes('Modificar-usuario.php') // Verificar si la página anterior fue la de modificar usuario
     || document.referrer.includes('Eliminar-usuario.php') // Verificar si la página anterior fue la de eliminar usuario
     || document.referrer.includes('Busqueda-guardia.php') // Verificar si la página anterior fue la de búsqueda de guardias
-    || document.referrer.includes('Rondines.php'); // Verificar si la página anterior fue la de rondines
+    || document.referrer.includes('Rondines.php') // Verificar si la página anterior fue la de rondines
+    || document.referrer.includes('Rutas.php') // Verificar si la página anterior fue la de rutas
+    || document.referrer.includes('Asignar-rutas.php'); // Verificar si la página anterior fue la de asignar rutas
 
     // Permitir el acceso si se vino del login o por botón
     if (!accesoPermitido && !desdeLogin) {
