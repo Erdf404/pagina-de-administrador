@@ -23,6 +23,8 @@
           <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
           <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
           <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
+          <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
+          <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas
           <!-- Botones para navegar a diferentes secciones -->
         </div>
       </div>
