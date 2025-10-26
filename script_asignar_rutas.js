@@ -308,9 +308,9 @@ function mostrarModalDetalleAsignacion(asignacion, ruta) {
   const puntosList = ruta.puntos
     .map(
       (p, index) =>
-        `<div style="padding: 8px; background: #f8f9fa; margin: 5px 0; border-radius: 4px;">
+        `<div style="padding: 8px; background: #0044cc; margin: 5px 0; border-radius: 4px;">
       <strong>${index + 1}.</strong> ${p.nombre} 
-      <small style="color: #6c757d;">(${p.lat}, ${p.lng})</small>
+      <small style="color: #e9eef3ff;">(${p.lat}, ${p.lng})</small>
     </div>`
     )
     .join("");

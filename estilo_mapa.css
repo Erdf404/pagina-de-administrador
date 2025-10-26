@@ -567,3 +567,180 @@ color: #0f5132;
 grid-template-columns: 1fr;
 }
 }
+/* ==================== HEADER ==================== */
+/* Estilo del encabezado - ALTURA FIJA Y UNIFORME */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #0044cc;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 80px;
+  min-height: 80px;
+}
+
+/* Logo con tamaño controlado */
+#logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+#logo img {
+  height: 50px;
+  width: auto;
+  max-height: 50px;
+}
+
+/* Contenedor de información de usuario */
+#user-info {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ==================== DROPDOWN DE USUARIO ==================== */
+.user-dropdown {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* Botón de usuario - TAMAÑO UNIFORME */
+.user-button {
+  background-color: #ffffff;
+  color: #0044cc;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  height: 40px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+/* Efecto hover del botón de usuario */
+.user-button:hover {
+  background-color: #f0f8ff;
+  transform: translateY(-1px);
+}
+
+/* Estilo del menú desplegable */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 5px;
+}
+
+/* Estilo de los botones del menú desplegable */
+.dropdown-menu button {
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s ease;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+/* Efecto hover de los botones del menú desplegable */
+.dropdown-menu button:hover {
+  background-color: #f0f8ff;
+}
+
+/* Mostrar el menú desplegable al hacer clic en el botón */
+.user-dropdown.active .dropdown-menu {
+  display: flex;
+}
+
+/* ==================== CALENDARIO (BOTÓN BUSCAR) ==================== */
+.calendario {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+}
+
+.calendario button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: #0044cc;
+  color: white;
+  border: 2px solid white;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.calendario button:hover {
+  background-color: #0033aa;
+  transform: translateY(-1px);
+}
+
+/* ==================== RESPONSIVE PARA HEADER ==================== */
+@media (max-width: 768px) {
+  header {
+    height: 70px;
+    padding: 10px 15px;
+  }
+  
+  #logo img {
+    height: 40px;
+  }
+  
+  .user-button {
+    font-size: 12px;
+    padding: 8px 12px;
+    height: 35px;
+    min-width: 100px;
+  }
+  
+  .calendario button {
+    padding: 10px 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    height: auto;
+    min-height: 80px;
+  }
+  
+  .user-button {
+    font-size: 11px;
+    padding: 6px 10px;
+    height: 30px;
+    min-width: 80px;
+  }
+  
+  .calendario button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}

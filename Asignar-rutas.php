@@ -6,7 +6,7 @@
   <title>Asignar Rutas a Guardias</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="estilo_mapa.css" />
-  <link rel="stylesheet" href="estilos.css" />
+
 </head>
 
 <body>

@@ -1,0 +1,279 @@
+// script_rondines.js - Gestión de rondines ejecutados
+
+let rondinesGuardados = [];
+let guardiaSeleccionado = null;
+
+// Inicialización
+document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelector('.guardias')) {
+        inicializarRondines();
+    }
+});
+
+async function inicializarRondines() {
+    // Verificar si viene desde búsqueda de guardia
+    const guardiaId = sessionStorage.getItem('guardiaSeleccionado');
+    const nombreGuardia = sessionStorage.getItem('nombreGuardia');
+    
+    if (guardiaId) {
+        guardiaSeleccionado = parseInt(guardiaId);
+        mostrarNombreGuardia(nombreGuardia);
+    }
+    
+    await cargarRondines();
+}
+
+function mostrarNombreGuardia(nombre) {
+    const calendario = document.querySelector('.calendario');
+    if (calendario && nombre) {
+        calendario.innerHTML = `
+            <span style="color: #0044cc; font-weight: bold; margin-right: 15px;">
+                👤 ${nombre}
+            </span>
+            <button type="button" onclick="verTodos()">Ver Todos</button>
+        `;
+    }
+}
+
+async function cargarRondines() {
+    try {
+        let url = 'api_rondines.php?accion=obtener';
+        if (guardiaSeleccionado) {
+            url += `&guardiaId=${guardiaSeleccionado}`;
+        }
+        
+        const response = await fetch(url);
+        const resultado = await response.json();
+        
+        if (resultado.exito) {
+            rondinesGuardados = resultado.datos;
+            actualizarTablaRondines();
+        } else {
+            console.error('Error al cargar rondines');
+            rondinesGuardados = [];
+            actualizarTablaRondines();
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        rondinesGuardados = [];
+        actualizarTablaRondines();
+    }
+}
+
+function actualizarTablaRondines() {
+    const tbody = document.querySelector('.guardias tbody');
+    if (!tbody) return;
+    
+    if (rondinesGuardados.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: #6c757d;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">📋</div>
+                    <strong>No hay rondines registrados</strong>
+                    <br><br>
+                    <small>Los rondines ejecutados aparecerán aquí</small>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    let html = '';
+    rondinesGuardados.forEach(rondin => {
+        const estado = rondin.horaFinal ? 'Completado' : 'En progreso';
+        const estadoClass = rondin.horaFinal ? 'completado' : 'en-progreso';
+        const tipoIcon = rondin.tipoRonda === 'Externo' ? '🌍' : '🏢';
+        
+        html += `
+            <tr>
+                <td>
+                    <strong>${formatearFecha(rondin.fecha)}</strong>
+                    <br>
+                    <small style="color: #6c757d;">${rondin.guardiaNombre}</small>
+                </td>
+                <td>${rondin.horaInicio}</td>
+                <td>${rondin.horaFinal || '-'}</td>
+                <td>
+                    ${tipoIcon} ${rondin.tipoRonda}
+                    <br>
+                    <small style="color: #6c757d;">${rondin.rutaNombre}</small>
+                </td>
+                <td>
+                    <button class="mapa-boton" onclick="verMapaRondin(${rondin.id})">
+                        🗺️ Mostrar mapa
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tbody.innerHTML = html;
+}
+
+async function verMapaRondin(rondinId) {
+    try {
+        const response = await fetch(`api_rondines.php?accion=obtener_coordenadas&id=${rondinId}`);
+        const resultado = await response.json();
+        
+        if (resultado.exito && resultado.datos.length > 0) {
+            const rondin = rondinesGuardados.find(r => r.id === rondinId);
+            mostrarModalMapa(rondin, resultado.datos);
+        } else {
+            alert('⚠️ No hay coordenadas registradas para este rondín');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('❌ Error al cargar las coordenadas');
+    }
+}
+
+function mostrarModalMapa(rondin, coordenadas) {
+    const modalExistente = document.getElementById('modal-mapa-rondin');
+    if (modalExistente) modalExistente.remove();
+    
+    const listaCoordenadas = coordenadas.map((c, i) => `
+        <div style="padding: 8px; background: ${c.verificador ? '#d4edda' : '#f8d7da'}; 
+                    margin: 5px 0; border-radius: 4px;">
+            <strong>${i + 1}.</strong> ${c.hora} - 
+            ${c.verificador ? '✅' : '❌'} 
+            ${c.lat ? `(${c.lat}, ${c.lng})` : 'Sin ubicación'}
+        </div>
+    `).join('');
+    
+    const modal = document.createElement('div');
+    modal.id = 'modal-mapa-rondin';
+    modal.className = 'modal-rondin';
+    modal.innerHTML = `
+        <div class="modal-rondin-content">
+            <span class="close-modal" onclick="cerrarModalRondin()">&times;</span>
+            <h2>🗺️ Recorrido del Rondín</h2>
+            
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                <strong>👤 Guardia:</strong> ${rondin.guardiaNombre}<br>
+                <strong>📅 Fecha:</strong> ${formatearFecha(rondin.fecha)}<br>
+                <strong>⏰ Inicio:</strong> ${rondin.horaInicio} | 
+                <strong>Fin:</strong> ${rondin.horaFinal || 'En progreso'}<br>
+                <strong>🗺️ Ruta:</strong> ${rondin.rutaNombre}
+            </div>
+            
+            <h3>📍 Puntos Registrados</h3>
+            <div style="max-height: 400px; overflow-y: auto;">
+                ${listaCoordenadas}
+            </div>
+            
+            <button class="btn-cerrar" onclick="cerrarModalRondin()">Cerrar</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    modal.style.display = 'flex';
+    
+    if (!document.getElementById('estilos-modal-rondin')) {
+        agregarEstilosModal();
+    }
+}
+
+function cerrarModalRondin() {
+    const modal = document.getElementById('modal-mapa-rondin');
+    if (modal) {
+        modal.style.display = 'none';
+        modal.remove();
+    }
+}
+
+function verTodos() {
+    guardiaSeleccionado = null;
+    sessionStorage.removeItem('guardiaSeleccionado');
+    sessionStorage.removeItem('nombreGuardia');
+    
+    const calendario = document.querySelector('.calendario');
+    if (calendario) {
+        calendario.innerHTML = '<button type="submit">Buscar</button>';
+    }
+    
+    cargarRondines();
+}
+
+function formatearFecha(fecha) {
+    const date = new Date(fecha + 'T00:00:00');
+    return date.toLocaleDateString('es-ES', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+function agregarEstilosModal() {
+    const style = document.createElement('style');
+    style.id = 'estilos-modal-rondin';
+    style.innerHTML = `
+        .modal-rondin {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-rondin-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #999;
+            cursor: pointer;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        .modal-rondin-content h2 {
+            color: #0044cc;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #0044cc;
+        }
+        
+        .btn-cerrar {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+        }
+        
+        .btn-cerrar:hover {
+            background-color: #5a6268;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+// Funciones globales
+window.verMapaRondin = verMapaRondin;
+window.cerrarModalRondin = cerrarModalRondin;
+window.verTodos = verTodos;

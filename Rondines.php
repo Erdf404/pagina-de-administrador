@@ -30,7 +30,7 @@
           <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
           <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
           <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
-          <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas
+          <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas</button>
           <!-- Botones para navegar a diferentes secciones -->
         </div>
       </div>
@@ -51,18 +51,18 @@
 
       <tbody>
         <tr>
-          <td>Nombres de guardias</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td class="mapa-boton"> Mostrar mapa</td>
+          <td colspan="5" style="text-align: center; padding: 40px; color: #6c757d;">
+            <div style="font-size: 3rem; margin-bottom: 10px;">📋</div>
+            <strong>Cargando rondines...</strong>
+          </td>
         </tr>
       </tbody>
     </table>
   </main>
-    <!-- agrega el script2.js -->
-    <script src="script2.js"></script>
-  <!-- agrega el script.js -->
+
+  <!-- Scripts -->
+  <script src="script_rondines.js"></script>
+  <script src="script2.js"></script>
   <script src="script.js"></script>
 </body>
 
