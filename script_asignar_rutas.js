@@ -117,7 +117,12 @@ function actualizarSelectRutas() {
 
   rutasCargadas.forEach((ruta) => {
     const numPuntos = ruta.puntos ? ruta.puntos.length : 0;
-    select.innerHTML += `<option value="${ruta.id}">${ruta.nombre} (${numPuntos} puntos)</option>`;
+    
+    // Detectar el tipo de ruta basado en sus puntos
+    const tipoRuta = detectarTipoRuta(ruta);
+    const iconoTipo = tipoRuta === 'GPS' ? '📍' : '🔳';
+    
+    select.innerHTML += `<option value="${ruta.id}" data-tipo="${tipoRuta}">${iconoTipo} ${ruta.nombre} (${numPuntos} puntos - ${tipoRuta})</option>`;
   });
 
   if (rutasCargadas.length === 0) {
