@@ -3,13 +3,13 @@
 require_once 'config.php';
 
 if (verificarSesion()) {
-    header('Location: Busqueda-guardia.php');
-    exit();
+  header('Location: Busqueda-guardia.php');
+  exit();
 }
 
 $mensaje = '';
 if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_cerrada') {
-    $mensaje = 'Sesión cerrada exitosamente';
+  $mensaje = 'Sesión cerrada exitosamente';
 }
 ?>
 <!DOCTYPE html>
@@ -31,6 +31,12 @@ if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_cerrada') {
   <div class="box">
     <h1>Iniciar Sesión</h1>
     <!-- Título de la sección de inicio de sesión -->
+    <?php if ($mensaje): ?>
+      <div style="padding: 12px; margin-bottom: 15px; background: #d4edda; color: #155724; border-radius: 6px;">
+        ✅ <?php echo htmlspecialchars($mensaje); ?>
+      </div>
+    <?php endif; ?>
+    <!-- Mostrar mensaje de sesion cerrada exitosamente -->
 
     <form method="post">
       <input type="email" placeholder="Usuario" required />
