@@ -29,4 +29,51 @@ function cerrarSesion() {
     }
     session_destroy();
 }
+
+// Función para verificar permisos según tipo de usuario
+function tienePermiso($permiso) {
+    if (!verificarSesion()) {
+        return false;
+    }
+    
+    $tipo_usuario = $_SESSION['tipo_usuario'] ?? 0;
+    
+    // Definir permisos por tipo de usuario
+    // 1 = Guardia, 2 = Admin A1, 3 = Admin A2, 4 = Admin A3
+    $permisos = [
+        1 => ['ver_rondines_propios'], // Guardia: SOLO sus rondines
+        
+        2 => [ // Admin A1: Ver todo, crear rutas, asignar
+            'ver_rondines_propios',
+            'ver_todos_rondines',
+            'ver_guardias',
+            'crear_rutas',
+            'asignar_rutas'
+        ],
+        
+        3 => [ // Admin A2: A1 + modificar usuarios
+            'ver_rondines_propios',
+            'ver_todos_rondines',
+            'ver_guardias',
+            'crear_rutas',
+            'asignar_rutas',
+            'modificar_usuarios'
+        ],
+        
+        4 => [ // Admin A3: Todo
+            'ver_rondines_propios',
+            'ver_todos_rondines',
+            'ver_guardias',
+            'crear_rutas',
+            'asignar_rutas',
+            'modificar_usuarios',
+            'agregar_usuarios',
+            'eliminar_usuarios'
+        ]
+    ];
+    
+    $permisos_usuario = $permisos[$tipo_usuario] ?? [];
+    return in_array($permiso, $permisos_usuario);
+}
+
 ?>
