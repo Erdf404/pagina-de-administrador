@@ -211,19 +211,14 @@ async function asignarRuta() {
     document.getElementById("radio-tolerancia").value
   );
 
-  // Debug: Verificar valores capturados
-  console.log("Datos capturados:", {
-    guardiaId,
-    rutaId,
-    tipoRondaId,
-    fecha,
-    horaInicio,
-    radioTolerancia,
-  });
-
   // Validaciones
   if (!guardiaId) {
     alert("⚠️ Por favor, selecciona un guardia.");
+    return;
+  }
+
+  if (!tipoRondaId) {
+    alert("⚠️ Por favor, selecciona el tipo de ronda.");
     return;
   }
 
@@ -232,9 +227,19 @@ async function asignarRuta() {
     return;
   }
 
-  if (!tipoRondaId) {
-    alert("⚠️ Por favor, selecciona el tipo de ronda.");
-    return;
+  // Validar que la ruta sea del tipo correcto
+  const ruta = rutasCargadas.find(r => r.id === rutaId);
+  if (ruta) {
+    const tipoRuta = detectarTipoRuta(ruta);
+    const tipoEsperado = tipoRondaId === 1 ? 'GPS' : 'QR';
+    
+    if (tipoRuta !== tipoEsperado) {
+      const mensajeError = tipoRondaId === 1 
+        ? '⚠️ Para rondas Externas debes seleccionar una ruta con coordenadas GPS.'
+        : '⚠️ Para rondas Internas debes seleccionar una ruta con códigos QR.';
+      alert(mensajeError);
+      return;
+    }
   }
 
   if (!fecha) {
