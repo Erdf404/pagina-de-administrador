@@ -1,3 +1,5 @@
+<?php require_once 'verificar_sesion.php'; ?> 
+<!-- Verifica si el usuario ha iniciado sesión -->
 <!DOCTYPE html>
 <html lang="es">
 
