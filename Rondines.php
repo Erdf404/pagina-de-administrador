@@ -26,7 +26,7 @@
         <button class="user-button">☰</button>
         <div class="dropdown-menu">
           <button>Datos del usuario actual</button>
-          <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
+          <button onclick="window.location.href='cerrar_sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
           <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
           <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>

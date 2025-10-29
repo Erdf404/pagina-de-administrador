@@ -29,8 +29,8 @@
         <!-- Botón para desplegar el menú de usuario -->
         <div class="dropdown-menu">
           <button>Datos del usuario actual</button>
+          <button onclick="window.location.href='cerrar_sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
-          <button onclick="window.location.href='Inicio_Sesion.php'">Cerrar sesión</button>
           <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
           <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
           <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
