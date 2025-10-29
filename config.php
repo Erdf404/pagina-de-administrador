@@ -76,4 +76,24 @@ function tienePermiso($permiso) {
     return in_array($permiso, $permisos_usuario);
 }
 
+// Función para obtener tipo de usuario actual
+function obtenerTipoUsuario() {
+    return $_SESSION['tipo_usuario'] ?? 0;
+}
+
+// Función para obtener ID de usuario actual
+function obtenerIdUsuario() {
+    return $_SESSION['usuario_id'] ?? 0;
+}
+
+// Función para verificar si es guardia
+function esGuardia() {
+    return obtenerTipoUsuario() === 1;
+}
+
+// Función para verificar si es administrador
+function esAdministrador() {
+    $tipo = obtenerTipoUsuario();
+    return $tipo >= 2 && $tipo <= 4;
+}
 ?>
