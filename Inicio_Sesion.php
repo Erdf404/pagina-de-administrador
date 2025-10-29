@@ -1,3 +1,17 @@
+<?php
+// Verifica si el usuario ya tiene una sesión activa
+require_once 'config.php';
+
+if (verificarSesion()) {
+    header('Location: Busqueda-guardia.php');
+    exit();
+}
+
+$mensaje = '';
+if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_cerrada') {
+    $mensaje = 'Sesión cerrada exitosamente';
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 <!-- Declaración del tipo de documento y el idioma de la página -->
