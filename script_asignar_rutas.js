@@ -130,6 +130,76 @@ function actualizarSelectRutas() {
   }
 }
 
+// ==================== FILTRAR RUTAS POR TIPO DE RONDA ====================
+function filtrarRutasPorTipo() {
+  const tipoRondaSelect = document.getElementById("tipo-ronda");
+  const rutaSelect = document.getElementById("select-ruta");
+  
+  if (!tipoRondaSelect || !rutaSelect) return;
+  
+  const tipoRondaId = parseInt(tipoRondaSelect.value);
+  
+  // Limpiar selección actual
+  rutaSelect.value = "";
+  
+  // Si no hay tipo seleccionado, mostrar todas las rutas
+  if (!tipoRondaId) {
+    actualizarSelectRutas();
+    return;
+  }
+  
+  // Filtrar según el tipo:
+  // 1 = Externo -> Solo rutas GPS
+  // 2 = Interno -> Solo rutas QR
+  const tipoFiltro = tipoRondaId === 1 ? 'GPS' : 'QR';
+  
+  rutaSelect.innerHTML = '<option value="">-- Selecciona una ruta --</option>';
+  
+  let rutasFiltradas = 0;
+  
+  rutasCargadas.forEach((ruta) => {
+    const tipoRuta = detectarTipoRuta(ruta);
+    
+    if (tipoRuta === tipoFiltro) {
+      const numPuntos = ruta.puntos ? ruta.puntos.length : 0;
+      const iconoTipo = tipoRuta === 'GPS' ? '📍' : '🔳';
+      
+      rutaSelect.innerHTML += `<option value="${ruta.id}" data-tipo="${tipoRuta}">${iconoTipo} ${ruta.nombre} (${numPuntos} puntos - ${tipoRuta})</option>`;
+      rutasFiltradas++;
+    }
+  });
+  
+  if (rutasFiltradas === 0) {
+    const tipoTexto = tipoFiltro === 'GPS' ? 'GPS (Externo)' : 'QR (Interno)';
+    rutaSelect.innerHTML = `<option value="">No hay rutas tipo ${tipoTexto}</option>`;
+  }
+}
+
+// ==================== DETECTAR TIPO DE RUTA ====================
+function detectarTipoRuta(ruta) {
+  if (!ruta.puntos || ruta.puntos.length === 0) {
+    return 'GPS'; // Por defecto
+  }
+  
+  // Una ruta es QR si TODOS sus puntos tienen codigo_qr
+  const todosQR = ruta.puntos.every(punto => punto.codigo_qr !== null && punto.codigo_qr !== undefined);
+  
+  // Una ruta es GPS si TODOS sus puntos tienen lat/lng
+  const todosGPS = ruta.puntos.every(punto => punto.lat !== null && punto.lng !== null);
+  
+  if (todosQR) {
+    return 'QR';
+  } else if (todosGPS) {
+    return 'GPS';
+  } else {
+    // Ruta mixta - clasificar por mayoría
+    const puntosQR = ruta.puntos.filter(p => p.codigo_qr !== null).length;
+    const puntosGPS = ruta.puntos.filter(p => p.lat !== null && p.lng !== null).length;
+    return puntosQR > puntosGPS ? 'QR' : 'GPS';
+  }
+}
+
+
 // ==================== ASIGNAR RUTA ====================
 async function asignarRuta() {
   const guardiaId = parseInt(document.getElementById("select-guardia").value);
