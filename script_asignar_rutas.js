@@ -294,6 +294,8 @@ async function asignarRuta() {
       document.getElementById("form-asignar-ruta").reset();
       await cargarAsignaciones();
       await actualizarTablaAsignaciones();
+      // Restaurar el selector de rutas al estado inicial
+      actualizarSelectRutas();
     } else {
       alert("⚠️ " + resultado.mensaje);
     }
