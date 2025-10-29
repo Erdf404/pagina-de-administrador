@@ -6,6 +6,9 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Incluir configuración y funciones comunes
+require_once 'config.php';
+
 // Configuracion de la base de datos
 $host = 'localhost';
 $dbname = 'sistema_rondas';
@@ -116,6 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['valido' => false, 'mensaje' => 'Contraseña incorrecta']);
         exit;
       }
+      // Configurar sesión
+      $_SESSION['usuario_id'] = $usuario['id_usuario'];
+      $_SESSION['usuario_nombre'] = $usuario['nombre'];
+      $_SESSION['usuario_correo'] = $usuario['correo'];
+      $_SESSION['tipo_usuario'] = $usuario['id_tipo'];
+      $_SESSION['ultima_actividad'] = time();
+      session_regenerate_id(true);
 
       // Login exitoso - No enviar la contraseña al cliente
       unset($usuario['contrasena']);
@@ -262,5 +272,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['exito' => false, 'mensaje' => 'Acción no válida']);
   }
 }
-
-?>
