@@ -1,12 +1,12 @@
 <?php
-// api_coordenadas.php - API para gestión de puntos/coordenadas
+// api_coordenadas.php - API para gestión de puntos/coordenadas (GPS y QR)
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Configuración de la base de datos
+// Configuración de la base de datos (cambiar para que sea encriptado en .env)
 $host = 'localhost';
 $dbname = 'sistema_rondas';
 $usuario_bd = 'root';
@@ -35,19 +35,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     exit;
   }
 
-  // Obtener todas las coordenadas
+  // Obtener todas las coordenadas (GPS y QR)
   if ($accion === 'obtener') {
     try {
       $stmt = $pdo->query("
-                SELECT 
-                    id_coordenada_admin as id,
-                    nombre_coordenada as nombre,
-                    latitud as lat,
-                    longitud as lng,
-                    DATE_FORMAT(NOW(), '%d/%m/%Y %H:%i') as fecha
-                FROM Coordenadas_admin 
-                ORDER BY id_coordenada_admin DESC
-            ");
+        SELECT 
+          id_coordenada_admin as id,
+          nombre_coordenada as nombre,
+          latitud as lat,
+          longitud as lng,
+          codigo_qr,
+          CASE 
+            WHEN codigo_qr IS NOT NULL THEN 'QR'
+            ELSE 'GPS'
+          END as tipo,
+          DATE_FORMAT(NOW(), '%d/%m/%Y %H:%i') as fecha
+        FROM Coordenadas_admin 
+        ORDER BY id_coordenada_admin DESC
+      ");
+      $coordenadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      echo json_encode(['exito' => true, 'datos' => $coordenadas]);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+    }
+  }
+
+  // Obtener solo coordenadas GPS
+  elseif ($accion === 'obtener_gps') {
+    try {
+      $stmt = $pdo->query("
+        SELECT 
+          id_coordenada_admin as id,
+          nombre_coordenada as nombre,
+          latitud as lat,
+          longitud as lng,
+          'GPS' as tipo,
+          DATE_FORMAT(NOW(), '%d/%m/%Y %H:%i') as fecha
+        FROM Coordenadas_admin 
+        WHERE codigo_qr IS NULL
+        ORDER BY id_coordenada_admin DESC
+      ");
+      $coordenadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+      echo json_encode(['exito' => true, 'datos' => $coordenadas]);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+    }
+  }
+
+  // Obtener solo coordenadas QR
+  elseif ($accion === 'obtener_qr') {
+    try {
+      $stmt = $pdo->query("
+        SELECT 
+          id_coordenada_admin as id,
+          nombre_coordenada as nombre,
+          codigo_qr,
+          'QR' as tipo,
+          DATE_FORMAT(NOW(), '%d/%m/%Y %H:%i') as fecha
+        FROM Coordenadas_admin 
+        WHERE codigo_qr IS NOT NULL
+        ORDER BY id_coordenada_admin DESC
+      ");
       $coordenadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
       echo json_encode(['exito' => true, 'datos' => $coordenadas]);
@@ -62,14 +112,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     try {
       $stmt = $pdo->prepare("
-                SELECT 
-                    id_coordenada_admin as id,
-                    nombre_coordenada as nombre,
-                    latitud as lat,
-                    longitud as lng
-                FROM Coordenadas_admin 
-                WHERE id_coordenada_admin = ?
-            ");
+        SELECT 
+          id_coordenada_admin as id,
+          nombre_coordenada as nombre,
+          latitud as lat,
+          longitud as lng,
+          codigo_qr,
+          CASE 
+            WHEN codigo_qr IS NOT NULL THEN 'QR'
+            ELSE 'GPS'
+          END as tipo
+        FROM Coordenadas_admin 
+        WHERE id_coordenada_admin = ?
+      ");
       $stmt->execute([$id]);
       $coordenada = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -102,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
   }
 
-  // ==================== CREAR COORDENADA ====================
+  // ==================== CREAR COORDENADA GPS ====================
   if ($accion === 'crear') {
     $nombre = trim($datos['nombre']);
     $lat = floatval($datos['lat']);
@@ -129,18 +184,78 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
 
-      // Insertar nueva coordenada
+      // Insertar nueva coordenada GPS
       $stmt = $pdo->prepare("
-                INSERT INTO Coordenadas_admin (nombre_coordenada, latitud, longitud) 
-                VALUES (?, ?, ?)
-            ");
+        INSERT INTO Coordenadas_admin (nombre_coordenada, latitud, longitud, codigo_qr) 
+        VALUES (?, ?, ?, NULL)
+      ");
       $stmt->execute([$nombre, $lat, $lng]);
 
       $nuevoId = $pdo->lastInsertId();
 
       echo json_encode([
         'exito' => true,
-        'mensaje' => 'Coordenada guardada exitosamente',
+        'mensaje' => 'Coordenada GPS guardada exitosamente',
+        'id' => $nuevoId
+      ]);
+    } catch (PDOException $e) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Error al guardar: ' . $e->getMessage()]);
+    }
+  }
+
+  // ==================== CREAR COORDENADA QR ====================
+  elseif ($accion === 'crear_qr') {
+    $nombre = trim($datos['nombre']);
+    $codigoQR = trim($datos['codigo_qr']);
+
+    // Validaciones
+    if (empty($nombre)) {
+      echo json_encode(['exito' => false, 'mensaje' => 'El nombre es requerido']);
+      exit;
+    }
+
+    if (empty($codigoQR)) {
+      echo json_encode(['exito' => false, 'mensaje' => 'El código QR es requerido']);
+      exit;
+    }
+
+    // Validar formato del código QR
+    if (!preg_match('/^QR_[A-Z0-9_]+$/', $codigoQR)) {
+      echo json_encode(['exito' => false, 'mensaje' => 'Formato de código QR inválido. Debe seguir el patrón QR_LUGAR_NUMERO']);
+      exit;
+    }
+
+    try {
+      // Verificar si ya existe una coordenada con ese nombre
+      $stmt = $pdo->prepare("SELECT COUNT(*) FROM Coordenadas_admin WHERE nombre_coordenada = ?");
+      $stmt->execute([$nombre]);
+
+      if ($stmt->fetchColumn() > 0) {
+        echo json_encode(['exito' => false, 'mensaje' => 'Ya existe un punto con ese nombre']);
+        exit;
+      }
+
+      // Verificar si ya existe ese código QR
+      $stmt = $pdo->prepare("SELECT COUNT(*) FROM Coordenadas_admin WHERE codigo_qr = ?");
+      $stmt->execute([$codigoQR]);
+
+      if ($stmt->fetchColumn() > 0) {
+        echo json_encode(['exito' => false, 'mensaje' => 'Ya existe un punto con ese código QR']);
+        exit;
+      }
+
+      // Insertar nueva coordenada QR (sin latitud/longitud)
+      $stmt = $pdo->prepare("
+        INSERT INTO Coordenadas_admin (nombre_coordenada, latitud, longitud, codigo_qr) 
+        VALUES (?, NULL, NULL, ?)
+      ");
+      $stmt->execute([$nombre, $codigoQR]);
+
+      $nuevoId = $pdo->lastInsertId();
+
+      echo json_encode([
+        'exito' => true,
+        'mensaje' => 'Código QR guardado exitosamente',
         'id' => $nuevoId
       ]);
     } catch (PDOException $e) {
@@ -152,16 +267,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   elseif ($accion === 'actualizar') {
     $id = intval($datos['id']);
     $nombre = trim($datos['nombre']);
-    $lat = floatval($datos['lat']);
-    $lng = floatval($datos['lng']);
+    $lat = isset($datos['lat']) ? floatval($datos['lat']) : null;
+    $lng = isset($datos['lng']) ? floatval($datos['lng']) : null;
 
     try {
       // Verificar que no exista otro punto con el mismo nombre
       $stmt = $pdo->prepare("
-                SELECT COUNT(*) 
-                FROM Coordenadas_admin 
-                WHERE nombre_coordenada = ? AND id_coordenada_admin != ?
-            ");
+        SELECT COUNT(*) 
+        FROM Coordenadas_admin 
+        WHERE nombre_coordenada = ? AND id_coordenada_admin != ?
+      ");
       $stmt->execute([$nombre, $id]);
 
       if ($stmt->fetchColumn() > 0) {
@@ -171,10 +286,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
       // Actualizar
       $stmt = $pdo->prepare("
-                UPDATE Coordenadas_admin 
-                SET nombre_coordenada = ?, latitud = ?, longitud = ?
-                WHERE id_coordenada_admin = ?
-            ");
+        UPDATE Coordenadas_admin 
+        SET nombre_coordenada = ?, latitud = ?, longitud = ?
+        WHERE id_coordenada_admin = ?
+      ");
       $stmt->execute([$nombre, $lat, $lng, $id]);
 
       echo json_encode(['exito' => true, 'mensaje' => 'Coordenada actualizada']);

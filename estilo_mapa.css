@@ -744,3 +744,465 @@ header {
     font-size: 13px;
   }
 }
+/* ==================== ESTILOS PARA PESTAÑAS ==================== */
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #0044cc;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: none;
+  background: #f0f0f0;
+  color: #666;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+  top: 3px;
+}
+
+.tab-button:hover {
+  background: #e0e0e0;
+  color: #0044cc;
+}
+
+.tab-button.active {
+  background: #0044cc;
+  color: white;
+  box-shadow: 0 -2px 8px rgba(0, 68, 204, 0.3);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== ESTILOS PARA PUNTOS EN RUTA ==================== */
+.punto-seleccionado {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.punto-seleccionado:hover {
+  transform: translateX(5px);
+}
+
+.orden-numero {
+  background: rgba(255, 255, 255, 0.3);
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.btn-quitar {
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-quitar:hover {
+  background: rgba(255, 77, 77, 0.9);
+  transform: scale(1.1);
+}
+
+/* ==================== ESTILOS PARA CÓDIGOS QR ==================== */
+#qr-preview {
+  border: 3px solid #0044cc;
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.qr-container canvas {
+  border: 4px solid #0044cc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 68, 204, 0.2);
+}
+
+#qr-nombre-preview {
+  font-size: 18px;
+  color: #0044cc;
+  font-weight: bold;
+}
+
+#qr-codigo-preview {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/* ==================== ESTILOS PARA FILTROS ==================== */
+#filtro-tipo-punto {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #0044cc;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#filtro-tipo-punto:hover {
+  background: #f0f8ff;
+  border-color: #0066ff;
+}
+
+#filtro-tipo-punto:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 68, 204, 0.2);
+}
+
+/* ==================== BOTONES DE ACCIÓN MEJORADOS ==================== */
+.btn-accion {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  margin: 2px;
+}
+
+.btn-ver {
+  background: #2196f3;
+  color: white;
+}
+
+.btn-ver:hover {
+  background: #1976d2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.btn-eliminar {
+  background: #f44336;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
+}
+
+.btn-ruta {
+  background: #4caf50;
+  color: white;
+}
+
+.btn-ruta:hover {
+  background: #388e3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* ==================== BADGES DE TIPO ==================== */
+.badge-tipo {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.badge-gps {
+  background: #4caf50;
+  color: white;
+}
+
+.badge-qr {
+  background: #ff9800;
+  color: white;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .tabs-container {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .tab-button {
+    width: 100%;
+    border-radius: 8px;
+    top: 0;
+  }
+
+  .punto-seleccionado {
+    flex-wrap: wrap;
+  }
+
+  .btn-quitar {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  #qr-preview {
+    padding: 15px;
+  }
+
+  .qr-container canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* ==================== ANIMACIONES ADICIONALES ==================== */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.btn-accion:active {
+  animation: pulse 0.3s ease;
+}
+
+/* ==================== ESTILOS PARA TABLAS MEJORADAS ==================== */
+.tabla tbody tr {
+  transition: all 0.3s ease;
+}
+
+.tabla tbody tr:hover {
+  background: #f0f8ff;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 68, 204, 0.1);
+}
+
+.sin-datos {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  padding: 30px !important;
+}
+
+/* ==================== ESTILOS PARA CÓDIGOS EN TABLA ==================== */
+code {
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+/* ==================== LOADING STATES ==================== */
+.loading {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #0044cc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ==================== INSTRUCCIONES MEJORADAS ==================== */
+.instrucciones {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  line-height: 1.8;
+}
+
+.instrucciones strong {
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ==================== MENSAJES ==================== */
+.mensaje-exito, .mensaje-error {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  animation: slideDown 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mensaje-exito {
+  background: #4caf50;
+  color: white;
+  border-left: 5px solid #2e7d32;
+}
+
+.mensaje-error {
+  background: #f44336;
+  color: white;
+  border-left: 5px solid #c62828;
+}
+
+/* ==================== MEJORAS VISUALES GENERALES ==================== */
+.panel {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: box-shadow 0.3s ease;
+}
+
+.panel:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.panel h3, .panel h4 {
+  color: #0044cc;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section label {
+  display: block;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section select {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-section input:focus,
+.form-section select:focus {
+  outline: none;
+  border-color: #0044cc;
+  box-shadow: 0 0 0 3px rgba(0, 68, 204, 0.1);
+}
+
+.botones-control {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+
+.success {
+  background: #4caf50;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.success:hover {
+  background: #388e3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.peligro {
+  background: #f44336;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.peligro:hover {
+  background: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
+}
