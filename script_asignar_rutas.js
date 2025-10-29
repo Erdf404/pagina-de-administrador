@@ -24,6 +24,14 @@ async function inicializarAsignaciones() {
       await asignarRuta();
     });
   }
+
+  // Agregar listener al selector de tipo de ronda
+  const tipoRonda = document.getElementById("tipo-ronda");
+  if (tipoRonda) {
+    tipoRonda.addEventListener("change", function() {
+      filtrarRutasPorTipo();
+    });
+  }
 }
 
 // ==================== CARGAR DATOS ====================
