@@ -171,6 +171,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // ==================== AGREGAR USUARIO ====================
   elseif ($accion === 'agregar') {
+    // Verificar permisos
+    if (!tienePermiso('agregar_usuarios')) {
+      http_response_code(403);
+      echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
+      exit;
+    }
     $tipoUsuario = $datos['tipoUsuario'];
     $tipoAdmin = isset($datos['tipoAdmin']) ? $datos['tipoAdmin'] : '';
     $nombre = $datos['nombre'];
@@ -206,6 +212,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // ==================== MODIFICAR USUARIO ====================
   elseif ($accion === 'modificar') {
+    // Verificar permisos
+    if (!tienePermiso('modificar_usuarios')) {
+      http_response_code(403);
+      echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
+      exit;
+    }
     $idUsuario = $datos['idUsuario'];
     $nombre = $datos['nombre'];
     $email = $datos['email'];
@@ -247,6 +259,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // ==================== ELIMINAR USUARIO ====================
   elseif ($accion === 'eliminar') {
+    // Verificar permisos
+    if (!tienePermiso('eliminar_usuarios')) {
+      http_response_code(403);
+      echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
+      exit;
+    }
     $idUsuario = $datos['idUsuario'];
 
     try {
