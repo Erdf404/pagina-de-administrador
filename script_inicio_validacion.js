@@ -124,7 +124,7 @@ async function loginExitoso(usuario) {
 
   // Redirigir tras un pequeño delay
   setTimeout(() => {
-    window.location.href = 'Busqueda-guardia.php';
+    window.location.href = 'Rondines.php';
   }, 1000);
 }
 

@@ -6,6 +6,23 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Incluir archivo de configuración y funciones comunes
+require_once 'config.php';
+
+// Verificar sesión
+if (!verificarSesion()) {
+    http_response_code(401);
+    echo json_encode(['exito' => false, 'mensaje' => 'Sesión no válida']);
+    exit;
+}
+
+// Verificar permisos según la API
+if (!tienePermiso('crear_rutas')) { // Cambiar según la API
+    http_response_code(403);
+    echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
+    exit;
+}
+
 $host = 'localhost';
 $dbname = 'sistema_rondas';
 $usuario_bd = 'root';
