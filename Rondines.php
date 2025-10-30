@@ -18,7 +18,13 @@
     </div>
 
     <div class="calendario">
-      <button type="submit">Buscar</button>
+      <!-- Mostrar nombre del guardia si viene de búsqueda -->
+      <span id="nombre-guardia-display" class="nombre-guardia-header" style="display: none;"></span>
+      
+      <!-- Botón Ver Todos solo para administradores -->
+      <?php if (esAdministrador()): ?>
+        <button type="button" id="btn-ver-todos" onclick="verTodos()" style="display: none;">Ver Todos</button>
+      <?php endif; ?>
     </div>
 
     <div id="user-info">
@@ -58,6 +64,22 @@
   </header>
 
   <main>
+    <!-- Filtros de fecha -->
+    <div class="filtros-rondines">
+      <div class="filtro-fecha">
+        <label for="fecha-inicio">Desde:</label>
+        <input type="date" id="fecha-inicio" />
+      </div>
+      
+      <div class="filtro-fecha">
+        <label for="fecha-fin">Hasta:</label>
+        <input type="date" id="fecha-fin" />
+      </div>
+      
+      <button class="btn-filtrar" onclick="filtrarPorFecha()">🔍 Filtrar</button>
+      <button class="btn-limpiar" onclick="limpiarFiltros()">✖ Limpiar</button>
+    </div>
+
     <table class="guardias">
       <thead>
         <tr>
