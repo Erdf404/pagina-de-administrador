@@ -1,10 +1,12 @@
 <?php
+// Iniciar sesión si no está iniciada
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
+// Definir tiempo de inactividad para cierre de sesión (en segundos)
 define('SESSION_TIMEOUT', 28800); // 8 horas
 
+// Función para verificar si la sesión está activa y no ha expirado
 function verificarSesion() {
     if (!isset($_SESSION['usuario_id'])) {
         return false;
@@ -22,6 +24,7 @@ function verificarSesion() {
     return true;
 }
 
+// Función para cerrar sesión
 function cerrarSesion() {
     $_SESSION = array();
     if (isset($_COOKIE[session_name()])) {
