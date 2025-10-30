@@ -22,11 +22,6 @@
         <div class="dropdown-menu">
           <button>Datos del usuario actual</button>
           <button onclick="window.location.href='cerrar_sesion.php'">Cerrar sesión</button>
-          <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
-          <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
-          <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
-          <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
-          <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
           <!-- Solo para Guardias -->
           <?php if (esGuardia()): ?>
             <button onclick="window.location.href='Rondines.php'">Mis Rondines</button>
