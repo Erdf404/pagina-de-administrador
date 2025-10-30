@@ -1,10 +1,19 @@
 <?php
 // api_rondines.php - API para gestión de rondines ejecutados
 
+require_once 'config.php';
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
+// Verificar sesión
+if (!verificarSesion()) {
+    http_response_code(401);
+    echo json_encode(['exito' => false, 'mensaje' => 'Sesión no válida']);
+    exit;
+}
 
 $host = 'localhost';
 $dbname = 'sistema_rondas';
@@ -54,16 +63,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 INNER JOIN Ronda_asignada ra ON ru.id_ronda_asignada = ra.id_ronda_asignada
                 INNER JOIN Rutas r ON ra.id_ruta = r.id_ruta
                 INNER JOIN Tipo_ronda tr ON ra.id_tipo = tr.id_tipo
+                WHERE 1=1
             ";
             
-            if ($guardiaId > 0) {
-                $sql .= " WHERE ru.id_usuario = ?";
-                $stmt = $pdo->prepare($sql . " ORDER BY ru.fecha DESC, ru.hora_inicio DESC");
-                $stmt->execute([$guardiaId]);
-            } else {
-                $stmt = $pdo->query($sql . " ORDER BY ru.fecha DESC, ru.hora_inicio DESC");
+            // 🔐 FILTRO POR PERMISOS
+            if (esGuardia()) {
+                // Guardias SOLO ven sus propios rondines
+                $sql .= " AND ru.id_usuario = " . obtenerIdUsuario();
+            } elseif ($guardiaId > 0 && tienePermiso('ver_todos_rondines')) {
+                // Admins pueden filtrar por guardia específico
+                $sql .= " AND ru.id_usuario = " . intval($guardiaId);
             }
+            // Si es admin y no hay filtro, ve todos
             
+            $sql .= " ORDER BY ru.fecha DESC, ru.hora_inicio DESC";
+            
+            $stmt = $pdo->query($sql);
             $rondines = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
             echo json_encode(['exito' => true, 'datos' => $rondines]);
@@ -77,6 +92,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $rondinId = isset($_GET['id']) ? intval($_GET['id']) : 0;
         
         try {
+            // 🔐 Verificar que el usuario tenga permiso para ver este rondín
+            if (esGuardia()) {
+                // Verificar que el rondín pertenezca al guardia
+                $stmt = $pdo->prepare("
+                    SELECT id_usuario FROM rondas_usuarios WHERE id_ronda_usuario = ?
+                ");
+                $stmt->execute([$rondinId]);
+                $rondin = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if (!$rondin || $rondin['id_usuario'] != obtenerIdUsuario()) {
+                    http_response_code(403);
+                    echo json_encode(['exito' => false, 'mensaje' => 'No tienes permiso para ver este rondín']);
+                    exit;
+                }
+            }
+            
             $stmt = $pdo->prepare("
                 SELECT 
                     id,
@@ -98,3 +129,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
     }
 }
+?>
