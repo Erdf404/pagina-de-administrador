@@ -1,12 +1,14 @@
 // script_rondines.js - Gestión de rondines ejecutados
 
 let rondinesGuardados = [];
+let rondinesFiltrados = [];
 let guardiaSeleccionado = null;
 
 // Inicialización
 document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('.guardias')) {
         inicializarRondines();
+        inicializarFechas();
     }
 });
 
@@ -23,15 +25,32 @@ async function inicializarRondines() {
     await cargarRondines();
 }
 
+function inicializarFechas() {
+    // Establecer fecha de hoy como fecha fin por defecto
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha-fin').value = hoy;
+    
+    // Establecer fecha de inicio como hace 30 días
+    const hace30dias = new Date();
+    hace30dias.setDate(hace30dias.getDate() - 30);
+    document.getElementById('fecha-inicio').value = hace30dias.toISOString().split('T')[0];
+}
+
 function mostrarNombreGuardia(nombre) {
-    const calendario = document.querySelector('.calendario');
-    if (calendario && nombre) {
-        calendario.innerHTML = `
-            <span style="color: #0044cc; font-weight: bold; margin-right: 15px;">
-                👤 ${nombre}
-            </span>
-            <button type="button" onclick="verTodos()">Ver Todos</button>
-        `;
+    const displayNombre = document.getElementById('nombre-guardia-display');
+    const btnVerTodos = document.getElementById('btn-ver-todos');
+    
+    if (displayNombre && nombre) {
+        displayNombre.textContent = `👤 ${nombre}`;
+        displayNombre.style.display = 'inline-block';
+        displayNombre.style.color = '#ffffff'; // Color blanco
+        displayNombre.style.fontWeight = 'bold';
+        displayNombre.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.3)'; // Sombra para mejor legibilidad
+    }
+    
+    // Mostrar botón "Ver Todos" solo si es administrador
+    if (btnVerTodos) {
+        btnVerTodos.style.display = 'inline-block';
     }
 }
 
@@ -47,24 +66,72 @@ async function cargarRondines() {
         
         if (resultado.exito) {
             rondinesGuardados = resultado.datos;
+            rondinesFiltrados = rondinesGuardados;
             actualizarTablaRondines();
         } else {
             console.error('Error al cargar rondines');
             rondinesGuardados = [];
+            rondinesFiltrados = [];
             actualizarTablaRondines();
         }
     } catch (error) {
         console.error('Error:', error);
         rondinesGuardados = [];
+        rondinesFiltrados = [];
         actualizarTablaRondines();
     }
+}
+
+function filtrarPorFecha() {
+    const fechaInicio = document.getElementById('fecha-inicio').value;
+    const fechaFin = document.getElementById('fecha-fin').value;
+    
+    if (!fechaInicio && !fechaFin) {
+        alert('⚠️ Selecciona al menos una fecha');
+        return;
+    }
+    
+    // Filtrar rondines por rango de fechas
+    rondinesFiltrados = rondinesGuardados.filter(rondin => {
+        const fechaRondin = rondin.fecha; // Formato YYYY-MM-DD
+        
+        if (fechaInicio && fechaFin) {
+            return fechaRondin >= fechaInicio && fechaRondin <= fechaFin;
+        } else if (fechaInicio) {
+            return fechaRondin >= fechaInicio;
+        } else if (fechaFin) {
+            return fechaRondin <= fechaFin;
+        }
+        
+        return true;
+    });
+    
+    actualizarTablaRondines();
+    
+    // Mostrar mensaje con resultados
+    if (rondinesFiltrados.length === 0) {
+        mostrarMensaje('No se encontraron rondines en el rango de fechas seleccionado', 'info');
+    } else {
+        mostrarMensaje(`✅ Se encontraron ${rondinesFiltrados.length} rondines`, 'success');
+    }
+}
+
+function limpiarFiltros() {
+    // Restaurar fechas por defecto
+    inicializarFechas();
+    
+    // Mostrar todos los rondines
+    rondinesFiltrados = rondinesGuardados;
+    actualizarTablaRondines();
+    
+    mostrarMensaje('Filtros limpiados', 'info');
 }
 
 function actualizarTablaRondines() {
     const tbody = document.querySelector('.guardias tbody');
     if (!tbody) return;
     
-    if (rondinesGuardados.length === 0) {
+    if (rondinesFiltrados.length === 0) {
         tbody.innerHTML = `
             <tr>
                 <td colspan="5" style="text-align: center; padding: 40px; color: #6c757d;">
@@ -79,9 +146,7 @@ function actualizarTablaRondines() {
     }
     
     let html = '';
-    rondinesGuardados.forEach(rondin => {
-        const estado = rondin.horaFinal ? 'Completado' : 'En progreso';
-        const estadoClass = rondin.horaFinal ? 'completado' : 'en-progreso';
+    rondinesFiltrados.forEach(rondin => {
         const tipoIcon = rondin.tipoRonda === 'Externo' ? '🌍' : '🏢';
         
         html += `
@@ -116,7 +181,7 @@ async function verMapaRondin(rondinId) {
         const resultado = await response.json();
         
         if (resultado.exito && resultado.datos.length > 0) {
-            const rondin = rondinesGuardados.find(r => r.id === rondinId);
+            const rondin = rondinesFiltrados.find(r => r.id === rondinId);
             mostrarModalMapa(rondin, resultado.datos);
         } else {
             alert('⚠️ No hay coordenadas registradas para este rondín');
@@ -136,7 +201,7 @@ function mostrarModalMapa(rondin, coordenadas) {
                     margin: 5px 0; border-radius: 4px;">
             <strong>${i + 1}.</strong> ${c.hora} - 
             ${c.verificador ? '✅' : '❌'} 
-            ${c.lat ? `(${c.lat}, ${c.lng})` : 'Sin ubicación'}
+            ${c.lat ? `(${c.lat}, ${c.lng})` : c.qr ? `QR: ${c.qr}` : 'Sin ubicación'}
         </div>
     `).join('');
     
@@ -186,10 +251,11 @@ function verTodos() {
     sessionStorage.removeItem('guardiaSeleccionado');
     sessionStorage.removeItem('nombreGuardia');
     
-    const calendario = document.querySelector('.calendario');
-    if (calendario) {
-        calendario.innerHTML = '<button type="submit">Buscar</button>';
-    }
+    const displayNombre = document.getElementById('nombre-guardia-display');
+    const btnVerTodos = document.getElementById('btn-ver-todos');
+    
+    if (displayNombre) displayNombre.style.display = 'none';
+    if (btnVerTodos) btnVerTodos.style.display = 'none';
     
     cargarRondines();
 }
@@ -202,6 +268,41 @@ function formatearFecha(fecha) {
         month: 'short',
         day: 'numeric'
     });
+}
+
+function mostrarMensaje(mensaje, tipo) {
+    let mensajeDiv = document.getElementById('mensaje-rondines');
+    
+    if (!mensajeDiv) {
+        mensajeDiv = document.createElement('div');
+        mensajeDiv.id = 'mensaje-rondines';
+        const main = document.querySelector('main');
+        if (main) main.insertBefore(mensajeDiv, main.firstChild);
+    }
+    
+    const colores = {
+        success: { bg: '#d4edda', color: '#155724', border: '#c3e6cb' },
+        info: { bg: '#d1ecf1', color: '#0c5460', border: '#bee5eb' },
+        error: { bg: '#f8d7da', color: '#721c24', border: '#f5c6cb' }
+    };
+    
+    const estilo = colores[tipo] || colores.info;
+    
+    mensajeDiv.style.cssText = `
+        padding: 12px 20px;
+        margin-bottom: 15px;
+        background: ${estilo.bg};
+        color: ${estilo.color};
+        border: 1px solid ${estilo.border};
+        border-radius: 6px;
+        text-align: center;
+        font-weight: bold;
+    `;
+    mensajeDiv.textContent = mensaje;
+    
+    setTimeout(() => {
+        mensajeDiv.style.display = 'none';
+    }, 3000);
 }
 
 function agregarEstilosModal() {
@@ -277,3 +378,5 @@ function agregarEstilosModal() {
 window.verMapaRondin = verMapaRondin;
 window.cerrarModalRondin = cerrarModalRondin;
 window.verTodos = verTodos;
+window.filtrarPorFecha = filtrarPorFecha;
+window.limpiarFiltros = limpiarFiltros;
