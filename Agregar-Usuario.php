@@ -1,4 +1,4 @@
-<?php require_once 'verificar_sesion.php'; ?>
+<?php require_once 'verificar_permiso.php'; ?>
 <!-- Verifica si el usuario ha iniciado sesión -->
 <!DOCTYPE html>
 <html lang="es">
