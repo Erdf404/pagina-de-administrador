@@ -21,12 +21,6 @@
         <div class="dropdown-menu">
           <button>Datos del usuario actual</button>
           <button onclick="window.location.href='cerrar_sesion.php'">Cerrar sesión</button>
-          <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
-          <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
-          <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
-          <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
-          <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
-          <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas
             <!-- Solo para Guardias -->
             <?php if (esGuardia()): ?>
               <button onclick="window.location.href='Rondines.php'">Mis Rondines</button>
@@ -38,11 +32,6 @@
               <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
               <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
               <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas</button>
-            <?php endif; ?>
-
-            <!-- Solo Admin A2 y A3 -->
-            <?php if (tienePermiso('modificar_usuarios')): ?>
-              <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
             <?php endif; ?>
 
             <!-- Solo Admin A3 -->
