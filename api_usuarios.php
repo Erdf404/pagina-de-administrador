@@ -8,13 +8,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 // Incluir configuración y funciones comunes
 require_once 'config.php';
-require_once 'config.php';
 
-if (!verificarSesion()) {
-    http_response_code(401);
-    echo json_encode(['exito' => false, 'mensaje' => 'Sesión no válida']);
-    exit;
-}
 
 // Configuracion de la base de datos
 $host = 'localhost';
