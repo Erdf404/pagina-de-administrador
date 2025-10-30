@@ -594,3 +594,129 @@ main {
 .visible {
   display: block;
 }
+/* ==================== ESTILOS PARA RONDINES.PHP ==================== */
+
+/* Contenedor de filtros de fecha */
+.filtros-rondines {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  padding: 15px 20px;
+  background: white;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 95%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+/* Grupo de filtro individual */
+.filtro-fecha {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Labels de los filtros */
+.filtro-fecha label {
+  font-weight: bold;
+  color: #0044cc;
+  white-space: nowrap;
+}
+
+/* Inputs de fecha */
+.filtro-fecha input[type="date"] {
+  padding: 8px 12px;
+  border: 2px solid #0044cc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: white;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filtro-fecha input[type="date"]:focus {
+  outline: none;
+  border-color: #0033aa;
+  box-shadow: 0 0 0 3px rgba(0, 68, 204, 0.1);
+}
+
+/* Botón filtrar */
+.btn-filtrar {
+  padding: 10px 20px;
+  background: #0044cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-filtrar:hover {
+  background: #0033aa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 68, 204, 0.3);
+}
+
+/* Botón limpiar */
+.btn-limpiar {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-limpiar:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+/* ==================== RESPONSIVE PARA FILTROS ==================== */
+@media (max-width: 768px) {
+  .filtros-rondines {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 15px;
+  }
+  
+  .filtro-fecha {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  
+  .filtro-fecha input[type="date"] {
+    width: 100%;
+  }
+  
+  .btn-filtrar,
+  .btn-limpiar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtros-rondines {
+    padding: 10px;
+  }
+  
+  .filtro-fecha label {
+    font-size: 14px;
+  }
+  
+  .filtro-fecha input[type="date"] {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
