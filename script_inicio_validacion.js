@@ -114,18 +114,34 @@ async function validarLogin() {
     mostrarCargando(false);
   }
 }
-// ==================== Login exitoso ====================
+
+// ==================== Login exitoso con redirección por tipo de usuario ====================
 async function loginExitoso(usuario) {
+  // Guardar datos en sessionStorage
   sessionStorage.setItem('usuarioActual', JSON.stringify(usuario));
   sessionStorage.setItem('accesoPermitido', 'true');
   sessionStorage.setItem('loginTimestamp', new Date().getTime());
 
+  //  REDIRECCIÓN SEGÚN TIPO DE USUARIO
+  let paginaDestino = 'Rondines.php'; // Por defecto (Guardias)
+  
+  // Determinar página según tipo de usuario
+  // 1 = Guardia, 2 = Admin A1, 3 = Admin A2, 4 = Admin A3
+  if (usuario.id_tipo === 1) {
+    // Guardia -> Solo puede ver sus rondines
+    paginaDestino = 'Rondines.php';
+  } else if (usuario.id_tipo >= 2 && usuario.id_tipo <= 4) {
+    // Administradores -> Van a buscar guardias
+    paginaDestino = 'Busqueda-guardia.php';
+  }
+
+  // Mensaje de bienvenida
   mostrarMensaje(`✅ ¡Bienvenido, ${usuario.nombre}!`, 'exito');
 
-  // Redirigir tras un pequeño delay
+  // Redirigir tras 1.5 segundos para que se vea el mensaje
   setTimeout(() => {
-    window.location.href = 'Rondines.php';
-  }, 1000);
+    window.location.href = paginaDestino;
+  }, 1500);
 }
 
 // ==================== Validación de formato de email ====================
@@ -283,7 +299,7 @@ function cerrarSesion() {
   sessionStorage.removeItem('loginTimestamp');
   sessionStorage.removeItem('guardiaSeleccionado');
   sessionStorage.removeItem('nombreGuardia');
-  window.location.href = 'Inicio_Sesion.php';
+  window.location.href = 'cerrar_sesion.php';
 }
 
 // ==================== Funciones globales ====================
