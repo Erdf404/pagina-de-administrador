@@ -1,4 +1,4 @@
-<?php require_once 'verificar_sesion.php'; ?> 
+<?php require_once 'verificar_sesion.php'; ?>
 <!-- Verifica si el usuario ha iniciado sesión -->
 <!DOCTYPE html>
 <html lang="es">
@@ -17,11 +17,11 @@
     </div>
 
     <div class="placeholder">
-    <form method="POST" action="" onsubmit="event.preventDefault(); buscarUsuario(this.busqueda.value);">
+      <form method="POST" action="" onsubmit="event.preventDefault(); buscarUsuario(this.busqueda.value);">
         <input type="text" name="busqueda" placeholder="Buscar guardia......" />
         <button type="submit">Buscar</button>
-    </form>
-</div>
+      </form>
+    </div>
 
     <div id="user-info">
       <div class="user-dropdown">
@@ -30,13 +30,29 @@
         <div class="dropdown-menu">
           <button>Datos del usuario actual</button>
           <button onclick="window.location.href='cerrar_sesion.php'">Cerrar sesión</button>
-          <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
-          <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
-          <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
-          <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
-          <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
-          <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas
-          <!-- Botones para navegar a diferentes secciones -->
+            <!-- Solo para Guardias -->
+            <?php if (esGuardia()): ?>
+              <button onclick="window.location.href='Rondines.php'">Mis Rondines</button>
+            <?php endif; ?>
+
+            <!-- Solo para Administradores -->
+            <?php if (esAdministrador()): ?>
+              <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
+              <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
+              <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
+              <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas</button>
+            <?php endif; ?>
+
+            <!-- Solo Admin A2 y A3 -->
+            <?php if (tienePermiso('modificar_usuarios')): ?>
+              <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
+            <?php endif; ?>
+
+            <!-- Solo Admin A3 -->
+            <?php if (tienePermiso('agregar_usuarios')): ?>
+              <button onclick="window.location.href='Agregar-Usuario.php'">Agregar usuario</button>
+            <?php endif; ?>
+            <!-- Botones para navegar a diferentes secciones -->
         </div>
       </div>
     </div>
@@ -44,10 +60,10 @@
 
   <main>
     <div class="filtros">
-    <button class="filtro filtro-a" onclick="filtrarPorTipo('A')">A</button>
-    <button class="filtro filtro-g" onclick="filtrarPorTipo('G')">G</button>
-    <button class="filtro" onclick="cargarTablaEliminar()">Todos</button>
-</div>
+      <button class="filtro filtro-a" onclick="filtrarPorTipo('A')">A</button>
+      <button class="filtro filtro-g" onclick="filtrarPorTipo('G')">G</button>
+      <button class="filtro" onclick="cargarTablaEliminar()">Todos</button>
+    </div>
 
 
     <table class="guardias">
@@ -70,9 +86,9 @@
       </tbody>
     </table>
   </main>
-    <!-- agrega el script2.js -->
-    <script src="script2.js"></script>
-    
+  <!-- agrega el script2.js -->
+  <script src="script2.js"></script>
+
   <!-- agrega el script.js -->
   <script src="script.js"></script>
 
