@@ -35,7 +35,14 @@ function cambiarTab(tab) {
   
   // Mostrar tab seleccionado
   document.getElementById(`tab-${tab}`).classList.add('active');
-  event.target.classList.add('active');
+  
+  // Activar el botón correspondiente
+  const buttons = document.querySelectorAll('.tab-button');
+  const tabNames = ['gps', 'qr', 'rutas'];
+  const tabIndex = tabNames.indexOf(tab);
+  if (tabIndex >= 0 && buttons[tabIndex]) {
+    buttons[tabIndex].classList.add('active');
+  }
   
   // Actualizar mapa si es necesario
   if (tab === 'gps') {
@@ -753,30 +760,41 @@ function verRuta(idRuta) {
   const ruta = rutasGuardadas.find(r => r.id === idRuta);
   if (!ruta) return;
 
-  limpiarMarcadorTemporal();
-  limpiarRutaActual();
-
-  // Dibujar línea solo con puntos GPS
-  const puntosGPS = ruta.puntos.filter(p => !p.codigo_qr && p.lat && p.lng);
+  // Verificar si la ruta tiene puntos GPS
+  const puntosGPS = ruta.puntos.filter(p => p.lat !== null && p.lng !== null);
   
-  if (puntosGPS.length >= 2) {
-    const coordenadas = puntosGPS.map(punto => [parseFloat(punto.lat), parseFloat(punto.lng)]);
-    rutaActualPolyline = L.polyline(coordenadas, {
-      color: "#2196f3",
-      weight: 5,
-      opacity: 0.8,
-    }).addTo(map);
+  // Si NO tiene puntos GPS (solo QR), mostrar alerta
+  if (puntosGPS.length === 0) {
+    alert('⚠️ Esta ruta solo contiene códigos QR.\n\nLos códigos QR no tienen coordenadas GPS y no se pueden visualizar en el mapa.');
+    return;
   }
 
-  // Agregar marcadores para puntos GPS
-  ruta.puntos.forEach((punto, index) => {
-    if (!punto.codigo_qr && punto.lat && punto.lng) {
+  // SI tiene puntos GPS, cambiar al tab GPS
+  cambiarTab('gps');
+  
+  // Esperar a que el tab cambie
+  setTimeout(() => {
+    limpiarMarcadorTemporal();
+    limpiarRutaActual();
+
+    // Dibujar línea con puntos GPS
+    if (puntosGPS.length >= 2) {
+      const coordenadas = puntosGPS.map(punto => [parseFloat(punto.lat), parseFloat(punto.lng)]);
+      rutaActualPolyline = L.polyline(coordenadas, {
+        color: "#2196f3",
+        weight: 5,
+        opacity: 0.8,
+      }).addTo(map);
+    }
+
+    // Agregar marcadores
+    puntosGPS.forEach((punto, index) => {
       const marcador = L.marker([parseFloat(punto.lat), parseFloat(punto.lng)], {
         icon: L.divIcon({
           className: "custom-div-icon",
-          html: `<div style="background-color: #2196f3; color: white; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">${index + 1}</div>`,
-          iconSize: [25, 25],
-          iconAnchor: [12.5, 12.5],
+          html: `<div style="background-color: #2196f3; color: white; border-radius: 50%; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">${index + 1}</div>`,
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
         }),
       }).addTo(map);
 
@@ -788,14 +806,17 @@ function verRuta(idRuta) {
       `);
 
       marcadoresRuta.push(marcador);
-    }
-  });
+    });
 
-  if (puntosGPS.length >= 2 && rutaActualPolyline) {
-    map.fitBounds(rutaActualPolyline.getBounds(), { padding: [50, 50] });
-  } else if (puntosGPS.length === 1) {
-    map.setView([parseFloat(puntosGPS[0].lat), parseFloat(puntosGPS[0].lng)], 17);
-  }
+    // Ajustar vista
+    if (puntosGPS.length >= 2 && rutaActualPolyline) {
+      map.fitBounds(rutaActualPolyline.getBounds(), { padding: [50, 50] });
+    } else if (puntosGPS.length === 1) {
+      map.setView([parseFloat(puntosGPS[0].lat), parseFloat(puntosGPS[0].lng)], 17);
+    }
+    
+    mostrarMensaje(`📍 Mostrando ruta: ${ruta.nombre}`, 'success');
+  }, 100);
 }
 
 async function eliminarRuta(idRuta) {
