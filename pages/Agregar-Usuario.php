@@ -91,9 +91,7 @@
             <!-- Botón para enviar el formulario y agregar el usuario -->
         </form>
     </main>
-    <!-- agrega el script2.js -->
-    <script src="../assets/js/script2.js"></script>
-
+    <!-- Scripts -->
     <!-- agrega el script.js -->
     <script src="../assets/js/script.js"></script>
 

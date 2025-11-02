@@ -76,8 +76,6 @@
   </main>
   <!-- agrega el script_busqueda_guardia.js -->
   <script src="../assets/js/script_busqueda_guardia.js"></script>
-  <!-- agrega el script2.js -->
-  <script src="../assets/js/script2.js"></script>
   <!-- agrega el script.js -->
   <script src="../assets/js/script.js"></script>
 </body>

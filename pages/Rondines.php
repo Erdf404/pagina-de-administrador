@@ -104,7 +104,6 @@
 
   <!-- Scripts -->
   <script src="../assets/js/script_rondines.js"></script>
-  <script src="../assets/js/script2.js"></script>
   <script src="../assets/js/script.js"></script>
 </body>
 
