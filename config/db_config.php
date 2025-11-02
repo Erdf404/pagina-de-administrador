@@ -1,10 +1,24 @@
 <?php
-// db_config.php - Configuración segura de base de datos usando .env
+// config/db_config.php - Configuración segura de base de datos usando .env
 
-// Carga las variables de entorno desde el archivo .env
-function cargarEnv($ruta = __DIR__ . '/.env') {
+// Definir rutas base del proyecto
+define('BASE_PATH', dirname(__DIR__)); // Raíz del proyecto
+define('CONFIG_PATH', __DIR__); // Carpeta config
+define('API_PATH', BASE_PATH . '/api');
+define('PAGES_PATH', BASE_PATH . '/pages');
+define('ASSETS_PATH', BASE_PATH . '/assets');
+define('INCLUDES_PATH', BASE_PATH . '/includes');
+
+/**
+ * Carga las variables de entorno desde el archivo .env
+ */
+function cargarEnv($ruta = null) {
+    if ($ruta === null) {
+        $ruta = BASE_PATH . '/.env'; // Buscar .env en la raíz
+    }
+    
     if (!file_exists($ruta)) {
-        throw new Exception("Archivo .env no encontrado");
+        throw new Exception("Archivo .env no encontrado en: $ruta");
     }
 
     $lineas = file($ruta, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);

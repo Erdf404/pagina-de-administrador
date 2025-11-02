@@ -118,13 +118,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnsCerrarSesion = document.querySelectorAll('.dropdown-menu button');
     
     btnsCerrarSesion.forEach(btn => {
-        if (btn.textContent.includes('Cerrar sesión') || btn.textContent.includes('Cerrar sesiÃ³n')) {
+        if (btn.textContent.includes('Cerrar sesión') || btn.textContent.includes('Cerrar sesión')) {
             btn.removeAttribute('onclick');
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 if (confirm('¿Deseas cerrar sesión?')) {
                     sessionStorage.clear();
-                    window.location.href = 'cerrar_sesion.php';
+                    window.location.href = '../pages/cerrar_sesion.php';
                 }
             });
         }

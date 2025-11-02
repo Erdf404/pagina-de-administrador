@@ -1,9 +1,18 @@
 <?php
 // Verifica si el usuario ya tiene una sesión activa
-require_once 'config.php';
+// Verifica si el usuario ya tiene una sesión activa
+require_once __DIR__ . '/../config/config.php';
 
 if (verificarSesion()) {
-  header('Location: Busqueda-guardia.php');
+  // Redirigir según tipo de usuario
+  $tipo = obtenerTipoUsuario();
+  if ($tipo === 1) {
+      // Guardia -> Rondines
+      header('Location: ../pages/Rondines.php');
+  } else {
+      // Admin -> Busqueda guardias
+      header('Location: ../pages/Busqueda-guardia.php');
+  }
   exit();
 }
 
@@ -22,12 +31,12 @@ if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_cerrada') {
   <!-- Metaetiqueta para la configuración de la vista en dispositivos móviles -->
   <title>Página de Inicio de Sesión</title>
   <!-- Título de la página web -->
-  <link rel="stylesheet" href="Inicio.css" />
+  <link rel="stylesheet" href="../assets/css/Inicio.css" />
   <!-- Enlace al archivo CSS para estilos -->
 </head>
 
 <body>
-  <img src="logo-tsj.png" alt="Logo del TSJ" class="logo" />
+  <img src="../assets/img/logo-tsj.png" alt="Logo del TSJ" class="logo" />
   <div class="box">
     <h1>Iniciar Sesión</h1>
     <!-- Título de la sección de inicio de sesión -->
@@ -80,9 +89,9 @@ if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_cerrada') {
     </div>
   </div>
   <!-- agrega el script.js -->
-  <script src="script.js"></script>
+  <script src="../assets/js/script.js"></script>
   <!-- agrega el script_inicio_validacion.js -->
-  <script src="script_inicio_validacion.js"></script>
+  <script src="../assets/js/script_inicio_validacion.js"></script>
 </body>
 
 </html>

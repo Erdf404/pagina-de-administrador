@@ -56,7 +56,7 @@ function mostrarNombreGuardia(nombre) {
 
 async function cargarRondines() {
     try {
-        let url = 'api_rondines.php?accion=obtener';
+        let url = '../api/api_rondines.php?accion=obtener';
         if (guardiaSeleccionado) {
             url += `&guardiaId=${guardiaSeleccionado}`;
         }
@@ -177,7 +177,7 @@ function actualizarTablaRondines() {
 
 async function verMapaRondin(rondinId) {
     try {
-        const response = await fetch(`api_rondines.php?accion=obtener_coordenadas&id=${rondinId}`);
+        const response = await fetch(`../api/api_rondines.php?accion=obtener_coordenadas&id=${rondinId}`);
         const resultado = await response.json();
         
         if (resultado.exito && resultado.datos.length > 0) {

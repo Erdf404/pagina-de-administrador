@@ -1,4 +1,4 @@
-<?php require_once 'verificar_permiso.php'; ?>
+<?php require_once __DIR__ . '/../includes/verificar_permiso.php'; ?>
 <!-- Verifica si el usuario ha iniciado sesión -->
 <!DOCTYPE html>
 <html lang="es">
@@ -7,42 +7,42 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agregar Usuario</title>
-    <link rel="stylesheet" href="estilos.css" />
+    <link rel="stylesheet" href="../assets/css/estilos.css" />
     <!-- Enlace al archivo CSS para estilos -->
 </head>
 
 <body>
     <header>
         <div id="logo">
-            <img src="logo-tsj.png" alt="Logo del TSJ" />
+            <img src="../assets/img/logo-tsj.png" alt="Logo del TSJ" />
         </div>
         <div id="user-info">
             <div class="user-dropdown">
                 <button class="user-button">☰</button>
                 <div class="dropdown-menu">
                     <button>Datos del usuario actual</button>
-                    <button onclick="window.location.href='cerrar_sesion.php'">Cerrar sesión</button>
+                    <button onclick="window.location.href='../pages/cerrar_sesion.php'">Cerrar sesión</button>
                         <!-- Solo para Guardias -->
                         <?php if (esGuardia()): ?>
-                            <button onclick="window.location.href='Rondines.php'">Mis Rondines</button>
+                            <button onclick="window.location.href='../pages/Rondines.php'">Mis Rondines</button>
                         <?php endif; ?>
 
                         <!-- Solo para Administradores -->
                         <?php if (esAdministrador()): ?>
-                            <button onclick="window.location.href='Busqueda-guardia.php'">Buscar guardias</button>
-                            <button onclick="window.location.href='Rondines.php'">Buscar rondines</button>
-                            <button onclick="window.location.href='Rutas.php'">Crear rutas</button>
-                            <button onclick="window.location.href='Asignar-rutas.php'">Asignar rutas</button>
+                            <button onclick="window.location.href='../pages/Busqueda-guardia.php'">Buscar guardias</button>
+                            <button onclick="window.location.href='../pages/Rondines.php'">Buscar rondines</button>
+                            <button onclick="window.location.href='../pages/Rutas.php'">Crear rutas</button>
+                            <button onclick="window.location.href='../pages/Asignar-rutas.php'">Asignar rutas</button>
                         <?php endif; ?>
 
                         <!-- Solo Admin A2 y A3 -->
                         <?php if (tienePermiso('modificar_usuarios')): ?>
-                            <button onclick="window.location.href='Modificar-usuario.php'">Modificar usuario</button>
+                            <button onclick="window.location.href='../pages/Modificar-usuario.php'">Modificar usuario</button>
                         <?php endif; ?>
 
                         <!-- Solo Admin A3 -->
                         <?php if (tienePermiso('eliminar_usuarios')): ?>
-                            <button onclick="window.location.href='Eliminar-usuario.php'">Eliminar usuario</button>
+                            <button onclick="window.location.href='../pages/Eliminar-usuario.php'">Eliminar usuario</button>
                         <?php endif; ?>
                         <!-- Botones para navegar a diferentes secciones -->
                 </div>
@@ -52,7 +52,7 @@
     <main>
         <h1>Agregar Usuario</h1>
         <!-- Título de la sección de agregar usuario -->
-        <form action="Agregar-Usuario.php" method="post">
+        <form action="../includes/Agregar-Usuario.php" method="post">
             <!-- Formulario para agregar un nuevo usuario -->
             <label for="tipo-usuario">Seleccionar Tipo de Usuario:</label>
             <!-- Etiqueta para el campo de selección de tipo de usuario -->
@@ -92,13 +92,13 @@
         </form>
     </main>
     <!-- agrega el script2.js -->
-    <script src="script2.js"></script>
+    <script src="../assets/js/script2.js"></script>
 
     <!-- agrega el script.js -->
-    <script src="script.js"></script>
+    <script src="../assets/js/script.js"></script>
 
     <!-- agrega el script_usuarios.js -->
-    <script src="script_usuarios.js"></script>
+    <script src="../assets/js/script_usuarios.js"></script>
 </body>
 
 </html>

@@ -63,7 +63,7 @@ async function agregarUsuario() {
     }
 
     try {
-        const response = await fetch('api_usuarios.php', {
+        const response = await fetch('../api/api_usuarios.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ async function modificarUsuario(idUsuario) {
     }
 
     try {
-        const response = await fetch('api_usuarios.php', {
+        const response = await fetch('../api/api_usuarios.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -263,7 +263,7 @@ async function eliminarUsuario(idUsuario) {
     }
 
     try {
-        const response = await fetch('api_usuarios.php', {
+        const response = await fetch('../api/api_usuarios.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -389,7 +389,7 @@ function buscarUsuarioEliminar(termino) {
 // ==================== FUNCIONES DE CARGA DE DATOS ====================
 async function cargarUsuarios() {
     try {
-        const response = await fetch('api_usuarios.php?accion=obtener');
+        const response = await fetch('../api/api_usuarios.php?accion=obtener');
         const resultado = await response.json();
 
         if (resultado.exito) {

@@ -15,7 +15,7 @@ async function cargarGuardias() {
     console.log('Cargando guardias desde la base de datos...');
     
     try {
-        const response = await fetch('api_usuarios.php?accion=obtener');
+        const response = await fetch('../api/api_usuarios.php?accion=obtener');
         const resultado = await response.json();
 
         if (resultado.exito) {
@@ -60,7 +60,7 @@ function cargarTablaGuardias() {
                     <br><br>
                     <small>Los guardias registrados aparecerán aquí</small>
                     <br><br>
-                    <button onclick="window.location.href='Agregar-Usuario.php'" 
+                    <button onclick="window.location.href='../pages/Agregar-Usuario.php'" 
                             style="padding: 10px 20px; background: #0044cc; color: white; border: none; 
                                   border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px;">
                         ➕ Agregar Guardia
@@ -187,7 +187,7 @@ function verRondinesGuardia(idGuardia) {
     sessionStorage.setItem('accesoPermitido', 'true');
     
     // Redirigir a la página de rondines
-    window.location.href = 'Rondines.php';
+    window.location.href = '../pages/Rondines.php';
 }
 
 // ==================== BÚSQUEDA DE GUARDIAS ====================

@@ -7,8 +7,8 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Incluir archivos de configuración
-require_once 'db_config.php';
-require_once 'config.php';
+require_once __DIR__ . '/../config/db_config.php';
+require_once __DIR__ . '/../config/config.php';
 
 
 // Verificar sesión

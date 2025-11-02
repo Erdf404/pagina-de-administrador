@@ -60,7 +60,7 @@ async function cargarDatos() {
 
 async function cargarPuntosGPS() {
   try {
-    const response = await fetch('api_coordenadas.php?accion=obtener_gps');
+    const response = await fetch('../api/api_coordenadas.php?accion=obtener_gps');
     const resultado = await response.json();
 
     if (resultado.exito) {
@@ -79,7 +79,7 @@ async function cargarPuntosGPS() {
 
 async function cargarPuntosQR() {
   try {
-    const response = await fetch('api_coordenadas.php?accion=obtener_qr');
+    const response = await fetch('../api/api_coordenadas.php?accion=obtener_qr');
     const resultado = await response.json();
 
     if (resultado.exito) {
@@ -98,7 +98,7 @@ async function cargarPuntosQR() {
 
 async function cargarRutas() {
   try {
-    const response = await fetch('api_rutas.php?accion=obtener');
+    const response = await fetch('../api/api_rutas.php?accion=obtener');
     const resultado = await response.json();
 
     if (resultado.exito) {
@@ -161,7 +161,7 @@ async function guardarPunto() {
   const lng = marcadorTemporal.getLatLng().lng;
 
   try {
-    const response = await fetch('api_coordenadas.php', {
+    const response = await fetch('../api/api_coordenadas.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -248,7 +248,7 @@ async function eliminarPunto(idPunto) {
   if (!confirm(`¿Eliminar el punto GPS "${punto.nombre}"?`)) return;
 
   try {
-    const response = await fetch('api_coordenadas.php', {
+    const response = await fetch('../api/api_coordenadas.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -382,7 +382,7 @@ async function guardarQR() {
   }
 
   try {
-    const response = await fetch('api_coordenadas.php', {
+    const response = await fetch('../api/api_coordenadas.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -537,7 +537,7 @@ async function eliminarQR(idQR) {
   if (!qr || !confirm(`¿Eliminar el código QR "${qr.nombre}"?`)) return;
 
   try {
-    const response = await fetch('api_coordenadas.php', {
+    const response = await fetch('../api/api_coordenadas.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ accion: 'eliminar', id: idQR })
@@ -686,7 +686,7 @@ async function guardarRuta() {
   const puntosIds = rutaTemporal.map(p => p.id);
 
   try {
-    const response = await fetch('api_rutas.php', {
+    const response = await fetch('../api/api_rutas.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -824,7 +824,7 @@ async function eliminarRuta(idRuta) {
   if (!ruta || !confirm(`¿Eliminar la ruta "${ruta.nombre}"?`)) return;
 
   try {
-    const response = await fetch('api_rutas.php', {
+    const response = await fetch('../api/api_rutas.php', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ accion: 'eliminar', id: idRuta })

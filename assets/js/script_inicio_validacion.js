@@ -7,7 +7,7 @@ const UsuariosDB = {
   // Validar credenciales de usuario mediante API
   async validarCredenciales(email, password) {
     try {
-      const response = await fetch('api_usuarios.php', {
+      const response = await fetch('../api/api_usuarios.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ const UsuariosDB = {
   // Recuperar contraseña (enviar email)
   async recuperarPassword(email) {
     try {
-      const response = await fetch('api_usuarios.php', {
+      const response = await fetch('../api/api_usuarios.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -123,16 +123,16 @@ async function loginExitoso(usuario) {
   sessionStorage.setItem('loginTimestamp', new Date().getTime());
 
   //  REDIRECCIÓN SEGÚN TIPO DE USUARIO
-  let paginaDestino = 'Rondines.php'; // Por defecto (Guardias)
+  let paginaDestino = '../pages/Rondines.php'; // Por defecto (Guardias)
   
   // Determinar página según tipo de usuario
   // 1 = Guardia, 2 = Admin A1, 3 = Admin A2, 4 = Admin A3
   if (usuario.id_tipo === 1) {
     // Guardia -> Solo puede ver sus rondines
-    paginaDestino = 'Rondines.php';
+    paginaDestino = '../pages/Rondines.php';
   } else if (usuario.id_tipo >= 2 && usuario.id_tipo <= 4) {
     // Administradores -> Van a buscar guardias
-    paginaDestino = 'Busqueda-guardia.php';
+    paginaDestino = '../pages/Busqueda-guardia.php';
   }
 
   // Mensaje de bienvenida
@@ -299,7 +299,7 @@ function cerrarSesion() {
   sessionStorage.removeItem('loginTimestamp');
   sessionStorage.removeItem('guardiaSeleccionado');
   sessionStorage.removeItem('nombreGuardia');
-  window.location.href = 'cerrar_sesion.php';
+  window.location.href = '../pages/cerrar_sesion.php';
 }
 
 // ==================== Funciones globales ====================

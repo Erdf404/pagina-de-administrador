@@ -37,7 +37,7 @@ async function inicializarAsignaciones() {
 // ==================== CARGAR DATOS ====================
 async function cargarGuardias() {
   try {
-    const response = await fetch("api_usuarios.php?accion=obtener");
+    const response = await fetch('../api/api_usuarios.php?accion=obtener');
     const resultado = await response.json();
 
     if (resultado.exito) {
@@ -57,7 +57,7 @@ async function cargarGuardias() {
 
 async function cargarRutas() {
   try {
-    const response = await fetch("api_rutas.php?accion=obtener");
+    const response = await fetch("../api/api_rutas.php?accion=obtener");
     const resultado = await response.json();
 
     if (resultado.exito) {
@@ -76,7 +76,7 @@ async function cargarRutas() {
 
 async function cargarAsignaciones() {
   try {
-    const response = await fetch("api_asignaciones.php?accion=obtener");
+    const response = await fetch("../api/api_asignaciones.php?accion=obtener");
     const resultado = await response.json();
 
     if (resultado.exito) {
@@ -273,7 +273,7 @@ async function asignarRuta() {
   }
 
   try {
-    const response = await fetch("api_asignaciones.php", {
+    const response = await fetch("../api/api_asignaciones.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -377,7 +377,7 @@ async function verDetalleAsignacion(idAsignacion) {
   // Obtener detalles completos de la ruta
   try {
     const response = await fetch(
-      `api_rutas.php?accion=obtener_una&id=${asignacion.rutaId}`
+      `../api/api_rutas.php?accion=obtener_una&id=${asignacion.rutaId}`
     );
     const resultado = await response.json();
 
@@ -493,7 +493,7 @@ async function eliminarAsignacion(idAsignacion) {
   }
 
   try {
-    const response = await fetch("api_asignaciones.php", {
+    const response = await fetch("../api/api_asignaciones.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

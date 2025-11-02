@@ -7,9 +7,8 @@ header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Incluir configuración de base de datos y funciones comunes
-require_once 'db_config.php';
-require_once 'config.php';
-
+require_once __DIR__ . '/../config/db_config.php';
+require_once __DIR__ . '/../config/config.php';
 
 // Función para obtener el id_tipo según el tipo de usuario
 function obtenerIdTipo($tipoUsuario, $tipoAdmin)

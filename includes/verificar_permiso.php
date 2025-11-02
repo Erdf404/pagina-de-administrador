@@ -1,14 +1,14 @@
 <?php
-// verificar_permiso.php
-require_once 'config.php';
+// includes/verificar_permiso.php
+require_once __DIR__ . '/../config/config.php';
 
 // Verificar que haya sesión activa
 if (!verificarSesion()) {
-    header('Location: Inicio_Sesion.php');
+    header('Location: ' . BASE_PATH . '/pages/Inicio_Sesion.php');
     exit();
 }
 
-// Definir permisos requeridos por página
+// Definir permisos requeridos por página 
 $permisos_pagina = [
     'Agregar-Usuario.php' => 'agregar_usuarios',
     'Modificar-usuario.php' => 'modificar_usuarios',
@@ -125,12 +125,12 @@ if (isset($permisos_pagina[$pagina_actual])) {
                 </p>
                 
                 <?php if (esGuardia()): ?>
-                    <a href="Rondines.php" class="btn">Ir a Mis Rondines</a>
+                    <a href="../pages/Rondines.php" class="btn">Ir a Mis Rondines</a>
                 <?php else: ?>
-                    <a href="Busqueda-guardia.php" class="btn">Volver al Inicio</a>
+                    <a href="../pages/Busqueda-guardia.php" class="btn">Volver al Inicio</a>
                 <?php endif; ?>
                 
-                <a href="cerrar_sesion.php" class="btn btn-secondary">Cerrar Sesión</a>
+                <a href="../pages/cerrar_sesion.php" class="btn btn-secondary">Cerrar Sesión</a>
             </div>
         </body>
         </html>
