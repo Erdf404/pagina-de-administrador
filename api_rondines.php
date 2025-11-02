@@ -1,34 +1,21 @@
 <?php
 // api_rondines.php - API para gestión de rondines ejecutados
 
-require_once 'config.php';
-
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
+// Incluir archivos de configuración
+require_once 'db_config.php';
+require_once 'config.php';
+
 
 // Verificar sesión
 if (!verificarSesion()) {
     http_response_code(401);
     echo json_encode(['exito' => false, 'mensaje' => 'Sesión no válida']);
     exit;
-}
-
-$host = 'localhost';
-$dbname = 'sistema_rondas';
-$usuario_bd = 'root';
-$password_bd = 'admin';
-
-function conectarBD() {
-    global $host, $dbname, $usuario_bd, $password_bd;
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $usuario_bd, $password_bd);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $pdo;
-    } catch (PDOException $e) {
-        return null;
-    }
 }
 
 // ==================== GET: Obtener rondines ====================
@@ -65,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 INNER JOIN Tipo_ronda tr ON ra.id_tipo = tr.id_tipo
                 WHERE 1=1
             ";
-            
-            // 🔐 FILTRO POR PERMISOS
+
+            // 🔒 FILTRO POR PERMISOS
             if (esGuardia()) {
                 // Guardias SOLO ven sus propios rondines
                 $sql .= " AND ru.id_usuario = " . obtenerIdUsuario();
@@ -92,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $rondinId = isset($_GET['id']) ? intval($_GET['id']) : 0;
         
         try {
-            // 🔐 Verificar que el usuario tenga permiso para ver este rondín
+            // 🔒 Verificar que el usuario tenga permiso para ver este rondín
             if (esGuardia()) {
                 // Verificar que el rondín pertenezca al guardia
                 $stmt = $pdo->prepare("

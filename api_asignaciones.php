@@ -7,6 +7,7 @@ header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Incluir archivo de configuración y funciones comunes
+require_once 'db_config.php';
 require_once 'config.php';
 
 // Verificar sesión
@@ -17,26 +18,10 @@ if (!verificarSesion()) {
 }
 
 // Verificar permisos según la API
-if (!tienePermiso('crear_rutas')) { // Cambiar según la API
+if (!tienePermiso('crear_rutas')) {
     http_response_code(403);
     echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
     exit;
-}
-
-$host = 'localhost';
-$dbname = 'sistema_rondas';
-$usuario_bd = 'root';
-$password_bd = 'admin';
-
-function conectarBD() {
-    global $host, $dbname, $usuario_bd, $password_bd;
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $usuario_bd, $password_bd);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        return $pdo;
-    } catch (PDOException $e) {
-        return null;
-    }
 }
 
 // ==================== GET: Obtener asignaciones ====================
@@ -183,9 +168,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $horaInicio = isset($datos['horaInicio']) ? trim($datos['horaInicio']) : '';
         $radioTolerancia = floatval($datos['radioTolerancia']);
 
-        // Debug: registrar datos recibidos (remover en producción)
-        error_log("Datos recibidos - Guardia: $guardiaId, Ruta: $rutaId, Tipo: $tipoRondaId, Fecha: $fecha, Hora: $horaInicio, Radio: $radioTolerancia");
-
         // Validaciones
         if ($guardiaId <= 0) {
             echo json_encode(['exito' => false, 'mensaje' => 'Guardia inválido']);
@@ -208,7 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (empty($horaInicio)) {
-            echo json_encode(['exito' => false, 'mensaje' => 'Hora de inicio requerida. Valor recibido: ' . var_export($horaInicio, true)]);
+            echo json_encode(['exito' => false, 'mensaje' => 'Hora de inicio requerida']);
             exit;
         }
 

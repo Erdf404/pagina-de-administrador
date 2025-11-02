@@ -7,7 +7,15 @@ header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Incluir archivo de configuración y funciones comunes
+require_once 'db_config.php';
 require_once 'config.php';
+
+// ✅ YA NO SE NECESITAN ESTAS LÍNEAS:
+// $host = 'localhost';
+// $dbname = 'sistema_rondas';
+// $usuario_bd = 'root';
+// $password_bd = 'admin';
+// function conectarBD() { ... }
 
 // Verificar sesión
 if (!verificarSesion()) {
@@ -17,29 +25,10 @@ if (!verificarSesion()) {
 }
 
 // Verificar permisos según la API
-if (!tienePermiso('crear_rutas')) { // Cambiar según la API
+if (!tienePermiso('crear_rutas')) {
     http_response_code(403);
     echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
     exit;
-}
-
-// Configuración de la base de datos (cambiar para que sea encriptado en .env)
-$host = 'localhost';
-$dbname = 'sistema_rondas';
-$usuario_bd = 'root';
-$password_bd = 'admin';
-
-// Función para conectar a la base de datos
-function conectarBD()
-{
-  global $host, $dbname, $usuario_bd, $password_bd;
-  try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $usuario_bd, $password_bd);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    return $pdo;
-  } catch (PDOException $e) {
-    return null;
-  }
 }
 
 // ==================== GET: Obtener coordenadas ====================
@@ -344,3 +333,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['exito' => false, 'mensaje' => 'Acción no válida']);
   }
 }
+?>

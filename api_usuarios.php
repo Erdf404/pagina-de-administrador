@@ -6,28 +6,10 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Incluir configuración y funciones comunes
+// Incluir configuración de base de datos y funciones comunes
+require_once 'db_config.php';
 require_once 'config.php';
 
-
-// Configuracion de la base de datos
-$host = 'localhost';
-$dbname = 'sistema_rondas';
-$usuario_bd = 'root'; // Nombre de usuario de la base de datos
-$password_bd = 'admin';    //contraseña de la base de datos
-
-// Función para conectar a la base de datos
-function conectarBD()
-{
-  global $host, $dbname, $usuario_bd, $password_bd;
-  try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $usuario_bd, $password_bd);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    return $pdo;
-  } catch (PDOException $e) {
-    return null;
-  }
-}
 
 // Función para obtener el id_tipo según el tipo de usuario
 function obtenerIdTipo($tipoUsuario, $tipoAdmin)
@@ -291,3 +273,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(['exito' => false, 'mensaje' => 'Acción no válida']);
   }
 }
+?>
