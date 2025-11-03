@@ -49,6 +49,7 @@ function tienePermiso($permiso) {
         2 => [ // Encargado: Rondines y asignación de rutas
             'ver_rondines_propios',
             'ver_todos_rondines',
+            'ver_guardias',
             'asignar_rutas'
         ],
         
@@ -81,6 +82,10 @@ function obtenerIdUsuario() {
 // Función para verificar si es guardia
 function esGuardia() {
     return obtenerTipoUsuario() === 1;
+}
+//Función para verificar si es encargado
+function esEncargado() {
+    return obtenerTipoUsuario() === 2;
 }
 
 // Función para verificar si es administrador
