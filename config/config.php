@@ -42,28 +42,17 @@ function tienePermiso($permiso) {
     $tipo_usuario = $_SESSION['tipo_usuario'] ?? 0;
     
     // Definir permisos por tipo de usuario
-    // 1 = Guardia, 2 = Admin A1, 3 = Admin A2, 4 = Admin A3
+    // 1 = Guardia, 2 = Encargado, 3 = Admin,
     $permisos = [
         1 => ['ver_rondines_propios'], // Guardia: SOLO sus rondines
         
-        2 => [ // Admin A1: Ver todo, crear rutas, asignar
+        2 => [ // Encargado: Rondines y asignación de rutas
             'ver_rondines_propios',
             'ver_todos_rondines',
-            'ver_guardias',
-            'crear_rutas',
             'asignar_rutas'
         ],
         
-        3 => [ // Admin A2: A1 + modificar usuarios
-            'ver_rondines_propios',
-            'ver_todos_rondines',
-            'ver_guardias',
-            'crear_rutas',
-            'asignar_rutas',
-            'modificar_usuarios'
-        ],
-        
-        4 => [ // Admin A3: Todo
+        3 => [ // Admin: Todo
             'ver_rondines_propios',
             'ver_todos_rondines',
             'ver_guardias',
@@ -97,6 +86,6 @@ function esGuardia() {
 // Función para verificar si es administrador
 function esAdministrador() {
     $tipo = obtenerTipoUsuario();
-    return $tipo >= 2 && $tipo <= 4;
+    return $tipo >= 2 && $tipo <= 3;
 }
 ?>
