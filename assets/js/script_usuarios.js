@@ -52,10 +52,6 @@ async function agregarUsuario() {
         return;
     }
 
-    if (tipoUsuario === 'administrador' && !tipoAdmin) {
-        alert('⚠️ Por favor, selecciona el tipo de administrador.');
-        return;
-    }
 
     if (!nombre || !email || !password) {
         alert('⚠️ Por favor, completa todos los campos.');
@@ -71,7 +67,6 @@ async function agregarUsuario() {
             body: JSON.stringify({
                 accion: 'agregar',
                 tipoUsuario: tipoUsuario,
-                tipoAdmin: tipoAdmin,
                 nombre: nombre,
                 email: email,
                 password: password
@@ -120,25 +115,19 @@ async function cargarTablaModificar() {
 
     let html = '';
     usuariosGuardados.forEach(usuario => {
-        const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
-        const tipoUsuarioSelect = esAdmin ? 'administrador' : 'usuario';
-        
+        let tipoSeleccionado = 'usuario';
+        if (usuario.id_tipo === 2) tipoSeleccionado = 'encargado';
+        if (usuario.id_tipo === 3) tipoSeleccionado = 'administrador';
+    
         html += `
             <tr data-usuario-id="${usuario.id_usuario}">
                 <td><input type="text" value="${usuario.nombre}" data-campo="nombre" /></td>
                 <td><input type="email" value="${usuario.correo || ''}" data-campo="email" /></td>
                 <td>
-                    <select onchange="mostrarTipoAdmin(this)" data-campo="tipoUsuario">
-                        <option value="usuario" ${!esAdmin ? 'selected' : ''}>Guardia</option>
-                        <option value="administrador" ${esAdmin ? 'selected' : ''}>Administrador</option>
-                    </select>
-                </td>
-                <td>
-                    <select class="tipo-admin" data-campo="tipoAdmin" style="display: ${esAdmin ? 'block' : 'none'};">
-                        <option value="">Seleccionar...</option>
-                        <option value="A1" ${usuario.id_tipo === 2 ? 'selected' : ''}>A1</option>
-                        <option value="A2" ${usuario.id_tipo === 3 ? 'selected' : ''}>A2</option>
-                        <option value="A3" ${usuario.id_tipo === 4 ? 'selected' : ''}>A3</option>
+                    <select data-campo="tipoUsuario">
+                        <option value="usuario" ${tipoSeleccionado === 'usuario' ? 'selected' : ''}>Guardia</option>
+                        <option value="encargado" ${tipoSeleccionado === 'encargado' ? 'selected' : ''}>Encargado</option>
+                        <option value="administrador" ${tipoSeleccionado === 'administrador' ? 'selected' : ''}>Administrador</option>
                     </select>
                 </td>
                 <td><input type="password" placeholder="Nueva contraseña (opcional)" data-campo="password" /></td>
@@ -178,7 +167,6 @@ async function modificarUsuario(idUsuario) {
                 nombre: nombre,
                 email: email,
                 tipoUsuario: tipoUsuario,
-                tipoAdmin: tipoAdmin,
                 password: password
             })
         });
@@ -221,14 +209,9 @@ async function cargarTablaEliminar() {
 
     let html = '';
     usuariosGuardados.forEach(usuario => {
-        const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
         let tipoDisplay = 'Guardia';
-        
-        if (esAdmin) {
-            if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
-            else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
-            else if (usuario.id_tipo === 4) tipoDisplay = 'Administrador (A3)';
-        }
+        if (usuario.id_tipo === 2) tipoDisplay = 'Encargado';
+        if (usuario.id_tipo === 3) tipoDisplay = 'Administrador';
         
         html += `
             <tr>
@@ -296,7 +279,7 @@ function filtrarPorTipo(tipo) {
     let usuariosFiltrados = usuariosGuardados;
 
     if (tipo === 'A') {
-        usuariosFiltrados = usuariosGuardados.filter(u => u.id_tipo >= 2 && u.id_tipo <= 4);
+        usuariosFiltrados = usuariosGuardados.filter(u => u.id_tipo >= 2 && u.id_tipo <= 3);
     } else if (tipo === 'G') {
         usuariosFiltrados = usuariosGuardados.filter(u => u.id_tipo === 1);
     }
@@ -320,7 +303,6 @@ function filtrarPorTipo(tipo) {
         if (esAdmin) {
             if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
             else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
-            else if (usuario.id_tipo === 4) tipoDisplay = 'Administrador (A3)';
         }
         
         html += `
@@ -367,12 +349,9 @@ function buscarUsuarioEliminar(termino) {
     usuariosFiltrados.forEach(usuario => {
         const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
         let tipoDisplay = 'Guardia';
+        if (usuario.id_tipo === 2) tipoDisplay = 'Encargado';
+        if (usuario.id_tipo === 3) tipoDisplay = 'Administrador';
         
-        if (esAdmin) {
-            if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
-            else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
-            else if (usuario.id_tipo === 4) tipoDisplay = 'Administrador (A3)';
-        }
         
         html += `
             <tr>

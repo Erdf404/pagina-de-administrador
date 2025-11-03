@@ -56,7 +56,6 @@
           <th>Nombre</th>
           <th>Correo Electrónico</th>
           <th>Tipo de Usuario</th>
-          <th>Tipo de Administrador</th>
           <th>Contraseña</th>
           <th>Guardar</th>
         </tr>

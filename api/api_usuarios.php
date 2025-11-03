@@ -11,18 +11,17 @@ require_once __DIR__ . '/../config/db_config.php';
 require_once __DIR__ . '/../config/config.php';
 
 // Función para obtener el id_tipo según el tipo de usuario
-function obtenerIdTipo($tipoUsuario, $tipoAdmin)
+function obtenerIdTipo($tipoUsuario, $tipoEncargado = false)
 {
   if ($tipoUsuario === 'usuario') {
     return 1; // Guardia
+  } elseif ($tipoUsuario === 'encargado') {
+    return 2; // Encargado
   } elseif ($tipoUsuario === 'administrador') {
-    if ($tipoAdmin === 'A1') return 2;
-    if ($tipoAdmin === 'A2') return 3;
-    if ($tipoAdmin === 'A3') return 4;
+    return 3; // Admin
   }
   return 1; // Por defecto guardia
 }
-
 // Función para obtener el nombre del tipo de usuario
 function obtenerNombreTipo($id_tipo)
 {
@@ -30,11 +29,9 @@ function obtenerNombreTipo($id_tipo)
     case 1:
       return 'Guardia';
     case 2:
-      return 'Administrador A1';
+      return 'Encargado';
     case 3:
-      return 'Administrador A2';
-    case 4:
-      return 'Administrador A3';
+      return 'Administrador';
     default:
       return 'Usuario';
   }

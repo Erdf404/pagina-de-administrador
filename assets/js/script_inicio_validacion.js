@@ -126,11 +126,11 @@ async function loginExitoso(usuario) {
   let paginaDestino = '../pages/Rondines.php'; // Por defecto (Guardias)
   
   // Determinar página según tipo de usuario
-  // 1 = Guardia, 2 = Admin A1, 3 = Admin A2, 4 = Admin A3
+  // 1 = Guardia, 2 = Encargado, 3 = Admin
   if (usuario.id_tipo === 1) {
     // Guardia -> Solo puede ver sus rondines
     paginaDestino = '../pages/Rondines.php';
-  } else if (usuario.id_tipo >= 2 && usuario.id_tipo <= 4) {
+  } else if (usuario.id_tipo >= 2 && usuario.id_tipo <= 3) {
     // Administradores -> Van a buscar guardias
     paginaDestino = '../pages/Busqueda-guardia.php';
   }
