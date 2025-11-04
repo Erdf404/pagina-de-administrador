@@ -38,6 +38,13 @@
             <button onclick="window.location.href='../pages/Rondines.php'">Mis Rondines</button>
           <?php endif; ?>
 
+            <!-- Solo para Encargados -->
+            <?php if (esEncargado()): ?>
+              <button onclick="window.location.href='../pages/Rondines.php'">Buscar Rondines</button>
+              <button onclick="window.location.href='../pages/Busqueda-guardia.php'">Buscar guardias</button>
+              <button onclick="window.location.href='../pages/Asignar-rutas.php'">Asignar rutas</button>
+            <?php endif; ?>
+            
           <!-- Solo para Administradores -->
           <?php if (esAdministrador()): ?>
             <button onclick="window.location.href='../pages/Busqueda-guardia.php'">Buscar guardias</button>

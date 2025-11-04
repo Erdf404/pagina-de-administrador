@@ -41,15 +41,7 @@
               <button onclick="window.location.href='../pages/Rondines.php'">Buscar rondines</button>
               <button onclick="window.location.href='../pages/Rutas.php'">Crear rutas</button>
               <button onclick="window.location.href='../pages/Asignar-rutas.php'">Asignar rutas</button>
-            <?php endif; ?>
-
-            <!-- Solo Admin A2 y A3 -->
-            <?php if (tienePermiso('modificar_usuarios')): ?>
               <button onclick="window.location.href='../pages/Modificar-usuario.php'">Modificar usuario</button>
-            <?php endif; ?>
-
-            <!-- Solo Admin A3 -->
-            <?php if (tienePermiso('agregar_usuarios')): ?>
               <button onclick="window.location.href='../pages/Agregar-Usuario.php'">Agregar usuario</button>
             <?php endif; ?>
             <!-- Botones para navegar a diferentes secciones -->
