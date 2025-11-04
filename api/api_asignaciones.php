@@ -2,7 +2,7 @@
 // api_asignaciones.php - API para asignar rutas a guardias
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *'); // agregar https://dominio.com cuando esté en producción
 header('Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 

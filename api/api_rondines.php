@@ -2,7 +2,7 @@
 // api_rondines.php - API para gestión de rondines ejecutados
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: *'); // agregar https://dominio.com cuando esté en producción
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
