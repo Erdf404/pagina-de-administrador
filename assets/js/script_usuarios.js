@@ -298,12 +298,9 @@ function filtrarPorTipo(tipo) {
     let html = '';
     usuariosFiltrados.forEach(usuario => {
         const esAdmin = usuario.id_tipo >= 2 && usuario.id_tipo <= 4;
-        let tipoDisplay = 'Guardia';
-        
-        if (esAdmin) {
-            if (usuario.id_tipo === 2) tipoDisplay = 'Administrador (A1)';
-            else if (usuario.id_tipo === 3) tipoDisplay = 'Administrador (A2)';
-        }
+        let tipoDisplay = 'Guardia';        
+        if (usuario.id_tipo === 2) tipoDisplay = 'Encargado';
+        if (usuario.id_tipo === 3) tipoDisplay = 'Administrador';
         
         html += `
             <tr>
