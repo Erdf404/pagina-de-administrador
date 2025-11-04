@@ -22,21 +22,21 @@
                 <div class="dropdown-menu">
                     <button>Datos del usuario actual</button>
                     <button onclick="window.location.href='../pages/cerrar_sesion.php'">Cerrar sesión</button>
-                        <!-- Solo para Guardias -->
-                        <?php if (esGuardia()): ?>
-                            <button onclick="window.location.href='../pages/Rondines.php'">Mis Rondines</button>
-                        <?php endif; ?>
+                    <!-- Solo para Guardias -->
+                    <?php if (esGuardia()): ?>
+                        <button onclick="window.location.href='../pages/Rondines.php'">Mis Rondines</button>
+                    <?php endif; ?>
 
-                        <!-- Solo para Administradores -->
-                        <?php if (esAdministrador()): ?>
-                            <button onclick="window.location.href='../pages/Busqueda-guardia.php'">Buscar guardias</button>
-                            <button onclick="window.location.href='../pages/Rondines.php'">Buscar rondines</button>
-                            <button onclick="window.location.href='../pages/Rutas.php'">Crear rutas</button>
-                            <button onclick="window.location.href='../pages/Asignar-rutas.php'">Asignar rutas</button>
-                            <button onclick="window.location.href='../pages/Modificar-usuario.php'">Modificar usuario</button>
-                            <button onclick="window.location.href='../pages/Eliminar-usuario.php'">Eliminar usuario</button>
-                        <?php endif; ?>
-                        <!-- Botones para navegar a diferentes secciones -->
+                    <!-- Solo para Administradores -->
+                    <?php if (esAdministrador()): ?>
+                        <button onclick="window.location.href='../pages/Busqueda-guardia.php'">Buscar guardias</button>
+                        <button onclick="window.location.href='../pages/Rondines.php'">Buscar rondines</button>
+                        <button onclick="window.location.href='../pages/Rutas.php'">Crear rutas</button>
+                        <button onclick="window.location.href='../pages/Asignar-rutas.php'">Asignar rutas</button>
+                        <button onclick="window.location.href='../pages/Modificar-usuario.php'">Modificar usuario</button>
+                        <button onclick="window.location.href='../pages/Eliminar-usuario.php'">Eliminar usuario</button>
+                    <?php endif; ?>
+                    <!-- Botones para navegar a diferentes secciones -->
                 </div>
             </div>
         </div>
@@ -48,23 +48,13 @@
             <!-- Formulario para agregar un nuevo usuario -->
             <label for="tipo-usuario">Seleccionar Tipo de Usuario:</label>
             <!-- Etiqueta para el campo de selección de tipo de usuario -->
-            <select id="tipo-usuario" name="tipo-usuario" required onchange="mostrarOpcionesAdministrador()">
-                <!-- Campo de selección para el tipo de usuario -->
+            <select id="tipo-usuario" name="tipo-usuario" required>
                 <option value="" disabled selected>Seleccionar...</option>
-                <option value="administrador">Administrador</option>
                 <option value="usuario">Guardia</option>
+                <option value="encargado">Encargado</option>
+                <option value="administrador">Administrador</option>
             </select>
-            <!-- Opciones de tipo de usuario: Administrador o Usuario -->
 
-            <div id="admin-options">
-                <label for="tipo-admin">Tipo de Administrador:</label>
-                <select id="tipo-admin" name="tipo-admin">
-                    <option value="" disabled selected>Seleccionar tipo de administrador...</option>
-                    <option value="A1">A1</option>
-                    <option value="A2">A2</option>
-                    <option value="A3">A3</option>
-                </select>
-            </div>
             <!-- Opciones adicionales para el tipo de administrador, visible solo si se selecciona Administrador -->
 
             <label for="nombre">Nombre:</label>

@@ -41,7 +41,6 @@ function inicializarAgregarUsuario() {
 
 async function agregarUsuario() {
     const tipoUsuario = document.getElementById('tipo-usuario').value;
-    const tipoAdmin = document.getElementById('tipo-admin').value;
     const nombre = document.getElementById('nombre').value.trim();
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
@@ -80,11 +79,9 @@ async function agregarUsuario() {
             
             // Limpiar formulario
             document.getElementById('tipo-usuario').value = '';
-            document.getElementById('tipo-admin').value = '';
             document.getElementById('nombre').value = '';
             document.getElementById('email').value = '';
             document.getElementById('password').value = '';
-            document.getElementById('admin-options').style.display = 'none';
         } else {
             alert('⚠️ ' + resultado.mensaje);
         }

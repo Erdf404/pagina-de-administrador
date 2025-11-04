@@ -1,10 +1,11 @@
 <?php
 // includes/verificar_permiso.php
 require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../config/db_config.php'; 
 
 // Verificar que haya sesión activa
 if (!verificarSesion()) {
-    header('Location: ' . BASE_PATH . '/pages/Inicio_Sesion.php');
+    header('Location: ../pages/Inicio_Sesion.php');
     exit();
 }
 
@@ -115,7 +116,7 @@ if (isset($permisos_pagina[$pagina_actual])) {
                     <strong>Usuario:</strong> <?php echo htmlspecialchars($_SESSION['usuario_nombre']); ?><br>
                     <strong>Tipo:</strong> 
                     <?php 
-                    $tipos = [1 => 'Guardia', 2 => 'Admin A1', 3 => 'Admin A2', 4 => 'Admin A3'];
+                    $tipos = [1 => 'Guardia', 2 => 'Encargado', 3 => 'Administrador'];
                     echo $tipos[$_SESSION['tipo_usuario']] ?? 'Desconocido';
                     ?>
                 </div>
