@@ -66,7 +66,7 @@
             <!-- Campo de entrada para el correo electrónico del usuario -->
 
             <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" placeholder="Ingresa una contraseña segura" required />
+            <input type="text" id="password" name="password" placeholder="Ingresa una contraseña segura" required />
             <!-- Campo de entrada para la contraseña del usuario -->
 
             <button type="submit">Agregar Usuario</button>

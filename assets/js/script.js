@@ -130,3 +130,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
+// Script para mostrar/ocultar contraseña en Modificar Usuario
+function togglePasswordModificar(idUsuario) {
+    const input = document.querySelector(`tr[data-usuario-id="${idUsuario}"] input[data-campo="password"]`);
+    const icon = document.querySelector(`tr[data-usuario-id="${idUsuario}"] .toggle-password-icon`);
+    
+    if (input && icon) {
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = '👁';
+        } else {
+            input.type = 'password';
+            icon.textContent = '👁';
+        }
+    }
+}
+
+// Hacer la función global
+window.togglePasswordModificar = togglePasswordModificar;
+
+// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//

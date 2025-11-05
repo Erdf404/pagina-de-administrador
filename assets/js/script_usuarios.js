@@ -127,7 +127,12 @@ async function cargarTablaModificar() {
                         <option value="administrador" ${tipoSeleccionado === 'administrador' ? 'selected' : ''}>Administrador</option>
                     </select>
                 </td>
-                <td><input type="password" placeholder="Nueva contraseña (opcional)" data-campo="password" /></td>
+                <td>
+                    <div style="position: relative; display: inline-block; width: 100%;">
+                        <input type="password" placeholder="Opcional" data-campo="password" style="padding-right: 35px; width: 100%;" />
+                        <span class="toggle-password-icon" onclick="togglePasswordModificar(${usuario.id_usuario})" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none;">👁</span>
+                    </div>
+                </td>
                 <td><button class="guardar-btn" onclick="modificarUsuario(${usuario.id_usuario})">Guardar</button></td>
             </tr>
         `;
