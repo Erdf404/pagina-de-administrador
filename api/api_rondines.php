@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 WHERE 1=1
             ";
 
-            // 🔒 FILTRO POR PERMISOS
+            // FILTRO POR PERMISOS
             if (esGuardia()) {
                 // Guardias SOLO ven sus propios rondines
                 $sql .= " AND ru.id_usuario = " . obtenerIdUsuario();
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $rondinId = isset($_GET['id']) ? intval($_GET['id']) : 0;
         
         try {
-            // 🔒 Verificar que el usuario tenga permiso para ver este rondín
+            //  Verificar que el usuario tenga permiso para ver este rondín
             if (esGuardia()) {
                 // Verificar que el rondín pertenezca al guardia
                 $stmt = $pdo->prepare("

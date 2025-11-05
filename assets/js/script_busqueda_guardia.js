@@ -438,7 +438,7 @@ function agregarEstilosModal() {
     document.head.appendChild(style);
 }
 
-// Hacer funciones globales
+// ==================== Funciones globales ====================
 window.verDetalleGuardia = verDetalleGuardia;
 window.cerrarModalGuardia = cerrarModalGuardia;
 window.verRondinesGuardia = verRondinesGuardia;

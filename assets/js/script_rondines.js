@@ -374,7 +374,7 @@ function agregarEstilosModal() {
     document.head.appendChild(style);
 }
 
-// Funciones globales
+// ==================== Funciones globales ====================
 window.verMapaRondin = verMapaRondin;
 window.cerrarModalRondin = cerrarModalRondin;
 window.verTodos = verTodos;

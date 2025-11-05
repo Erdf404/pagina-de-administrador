@@ -1,5 +1,5 @@
 
-// script_inicio_validacion.js - Validación de inicio de sesión optimizado
+// script_inicio_validacion.js - Validación de inicio de sesión
 
 // ==================== Capa de datos Usuarios ====================
 const UsuariosDB = {

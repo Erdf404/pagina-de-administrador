@@ -9,9 +9,7 @@ define('PAGES_PATH', BASE_PATH . '/pages');
 define('ASSETS_PATH', BASE_PATH . '/assets');
 define('INCLUDES_PATH', BASE_PATH . '/includes');
 
-/**
- * Carga las variables de entorno desde el archivo .env
- */
+// Carga las variables de entorno desde el archivo .env
 function cargarEnv($ruta = null) {
     if ($ruta === null) {
         $ruta = BASE_PATH . '/.env'; // Buscar .env en la raíz

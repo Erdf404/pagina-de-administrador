@@ -10,12 +10,6 @@ header('Access-Control-Allow-Headers: Content-Type');
 require_once __DIR__ . '/../config/db_config.php';
 require_once __DIR__ . '/../config/config.php';
 
-// ✅ YA NO SE NECESITAN ESTAS LÍNEAS:
-// $host = 'localhost';
-// $dbname = 'sistema_rondas';
-// $usuario_bd = 'root';
-// $password_bd = 'admin';
-// function conectarBD() { ... }
 
 // Verificar sesión
 if (!verificarSesion()) {

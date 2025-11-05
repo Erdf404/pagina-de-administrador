@@ -389,7 +389,7 @@ function obtenerGuardias() {
     return usuariosGuardados.filter(u => u.id_tipo === 1);
 }
 
-// Hacer funciones globales
+// ==================== Funciones globales ====================
 window.modificarUsuario = modificarUsuario;
 window.eliminarUsuario = eliminarUsuario;
 window.filtrarPorTipo = filtrarPorTipo;

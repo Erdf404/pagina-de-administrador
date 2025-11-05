@@ -148,7 +148,7 @@ function togglePasswordModificar(idUsuario) {
     }
 }
 
-// Hacer la función global
+// ==================== Funciones globales ====================l
 window.togglePasswordModificar = togglePasswordModificar;
 
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//

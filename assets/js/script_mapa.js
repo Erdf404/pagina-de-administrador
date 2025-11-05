@@ -864,7 +864,7 @@ function mostrarMensaje(mensaje, tipo) {
   setTimeout(() => div.style.display = 'none', 4000);
 }
 
-// Hacer funciones globales
+// ==================== Funciones globales ====================
 window.cambiarTab = cambiarTab;
 window.guardarPunto = guardarPunto;
 window.limpiarMarcadorTemporal = limpiarMarcadorTemporal;

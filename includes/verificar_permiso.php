@@ -17,7 +17,7 @@ $permisos_pagina = [
     'Busqueda-guardia.php' => 'ver_guardias',
     'Rutas.php' => 'crear_rutas',
     'Asignar-rutas.php' => 'asignar_rutas',
-    'Rondines.php' => 'ver_rondines_propios' // Todos pueden ver (pero filtrado)
+    'Rondines.php' => 'ver_rondines_propios' 
 ];
 
 // Obtener nombre de la página actual

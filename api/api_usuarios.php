@@ -135,10 +135,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
       }
 
-      // proxima implementacion: el envío de email real
-      // por ahora solo simulamos el envío
-      // generar token de recuperación (opcional para implementación futura)
-
       echo json_encode([
         'exito' => true,
         'mensaje' => "Se envió un enlace de recuperación a $email"

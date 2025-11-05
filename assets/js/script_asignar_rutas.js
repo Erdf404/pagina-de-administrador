@@ -1,4 +1,4 @@
-// script_asignar_rutas.js - Actualizado con APIs de base de datos
+// script_asignar_rutas.js
 
 let asignacionesGuardadas = [];
 let guardiasCargados = [];
@@ -679,7 +679,7 @@ function agregarEstilosModalAsignacion() {
   document.head.appendChild(style);
 }
 
-// Hacer funciones globales
+// ==================== Funciones globales ====================
 window.verDetalleAsignacion = verDetalleAsignacion;
 window.cerrarModalAsignacion = cerrarModalAsignacion;
 window.eliminarAsignacion = eliminarAsignacion;
