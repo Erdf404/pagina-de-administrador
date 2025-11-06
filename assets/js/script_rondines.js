@@ -165,7 +165,7 @@ function actualizarTablaRondines() {
                 </td>
                 <td>
                     <button class="mapa-boton" onclick="verMapaRondin(${rondin.id})">
-                        🗺️ Mostrar mapa
+                         Mostrar Resumen
                     </button>
                 </td>
             </tr>
@@ -213,7 +213,7 @@ function mostrarModalMapa(rondin, coordenadas) {
             <span class="close-modal" onclick="cerrarModalRondin()">&times;</span>
             <h2>🗺️ Recorrido del Rondín</h2>
             
-            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 8px; margin: 15px 0; color: #ffffff;">
                 <strong>👤 Guardia:</strong> ${rondin.guardiaNombre}<br>
                 <strong>📅 Fecha:</strong> ${formatearFecha(rondin.fecha)}<br>
                 <strong>⏰ Inicio:</strong> ${rondin.horaInicio} | 
@@ -221,7 +221,7 @@ function mostrarModalMapa(rondin, coordenadas) {
                 <strong>🗺️ Ruta:</strong> ${rondin.rutaNombre}
             </div>
             
-            <h3>📍 Puntos Registrados</h3>
+            <h3 style="margin-top: 20px; color: #0044cc;">📍 Puntos Registrados</h3
             <div style="max-height: 400px; overflow-y: auto;">
                 ${listaCoordenadas}
             </div>

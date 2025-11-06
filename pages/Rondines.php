@@ -94,7 +94,7 @@
           <th>Hora de inicio</th>
           <th>Hora de fin</th>
           <th>Tipo de recorrido</th>
-          <th>Mapa</th>
+          <th>Resumen</th>
         </tr>
       </thead>
 
