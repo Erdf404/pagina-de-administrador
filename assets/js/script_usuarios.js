@@ -129,7 +129,7 @@ async function cargarTablaModificar() {
                 </td>
                 <td>
                     <div style="position: relative; display: inline-block; width: 100%;">
-                        <input type="password" placeholder="Opcional" data-campo="password" style="padding-right: 35px; width: 100%;" />
+                        <input type="password" placeholder="Generar nueva contraseña" data-campo="password" style="padding-right: 35px; width: 100%;" />
                         <span class="toggle-password-icon" onclick="togglePasswordModificar(${usuario.id_usuario})" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; user-select: none;">👁</span>
                     </div>
                 </td>
