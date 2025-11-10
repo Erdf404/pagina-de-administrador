@@ -56,53 +56,11 @@
       <!-- Encabezados de la tabla -->
       <tbody>
         <tr>
-          <td><input type="text" value="Juan Pérez" /></td>
-          <!-- Campo de entrada para el nombre del usuario -->
-          <td><input type="email" value="juan@example.com" /></td>
-          <!-- Campo de entrada para el correo electrónico del usuario -->
-          <td>
-            <select onchange="mostrarTipoAdmin(this)">
-              <option value="usuario">Usuario</option>
-              <option value="administrador" selected>Administrador</option>
-            </select>
+          <td colspan="5" style="text-align: center; padding: 20px; color: #6c757d;">
+            Cargando usuarios...
           </td>
-          <!-- Campo de selección para el tipo de usuario -->
-          <td>
-            <select class="tipo-admin">
-              <option value="">Seleccionar...</option>
-              <option value="A1" selected>A1</option>
-              <option value="A2">A2</option>
-              <option value="A3">A3</option>
-            </select>
-            <!-- Campo de selección para el tipo de administrador -->
-          </td>
-          <td><input type="password" placeholder="Opcional" /></td>
-          <!-- Campo de entrada para la contraseña del usuario, opcional -->
-          <td><button class="guardar-btn">Guardar</button></td>
-          <!-- Botón para guardar los cambios del usuario -->
         </tr>
-        <!-- Fila de ejemplo para un usuario existente -->
-        <tr>
-          <td><input type="text" value="María López" /></td>
-          <td><input type="email" value="maria@example.com" /></td>
-          <td>
-            <select onchange="mostrarTipoAdmin(this)">
-              <option value="usuario" selected>Usuario</option>
-              <option value="administrador">Administrador</option>
-            </select>
-          </td>
-          <td>
-            <select class="tipo-admin" style="display: none;">
-              <option value="">Seleccionar...</option>
-              <option value="A1">A1</option>
-              <option value="A2">A2</option>
-              <option value="A3">A3</option>
-            </select>
-          </td>
-          <td><input type="password" placeholder="Opcional" /></td>
-          <td><button class="guardar-btn">Guardar</button></td>
-        </tr>
-        <!-- segundo  ejemplo de un usuario ya existente en la tabla -->
+        <!-- Los usuarios se cargarán dinámicamente desde JavaScript -->
       </tbody>
     </table>
   </main>
