@@ -11,7 +11,7 @@ require_once __DIR__ . '/../config/db_config.php';
 require_once __DIR__ . '/../config/config.php';
 
 // Función para obtener el id_tipo según el tipo de usuario
-function obtenerIdTipo($tipoUsuario, $tipoEncargado = false)
+function obtenerIdTipo($tipoUsuario)
 {
   if ($tipoUsuario === 'usuario') {
     return 1; // Guardia
@@ -170,7 +170,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       // Obtener id_tipo
-      $id_tipo = obtenerIdTipo($tipoUsuario, $tipoAdmin);
+      $id_tipo = obtenerIdTipo($tipoUsuario);
 
       // Hash de la contraseña
       $password_hash = password_hash($password, PASSWORD_DEFAULT);
@@ -212,7 +212,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
 
       // Obtener id_tipo
-      $id_tipo = obtenerIdTipo($tipoUsuario, $tipoAdmin);
+      $id_tipo = obtenerIdTipo($tipoUsuario);
 
       // Actualizar usuario
       if (!empty($password)) {

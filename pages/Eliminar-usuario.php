@@ -28,7 +28,6 @@
         <button class="user-button">☰</button>
         <!-- Botón para desplegar el menú de usuario -->
         <div class="dropdown-menu">
-          <button>Datos del usuario actual</button>
           <button onclick="window.location.href='../pages/cerrar_sesion.php'">Cerrar sesión</button>
             <!-- Solo para Guardias -->
             <?php if (esGuardia()): ?>

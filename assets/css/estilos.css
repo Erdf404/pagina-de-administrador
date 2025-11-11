@@ -15,11 +15,6 @@ body {
   min-height: 100vh;
 }
 
-/* Fondo blanco para páginas con tablas */
-body.table-page {
-  background: #f9f9f9;
-  color: #333;
-}
 
 /* ==================== HEADER ==================== */
 /* Estilo del encabezado - ALTURA FIJA Y UNIFORME */
@@ -441,15 +436,6 @@ button[type="submit"]:hover {
   transform: scale(1.05);
 }
 
-/* ==================== OPCIONES DE ADMINISTRADOR ==================== */
-#admin-options {
-  display: none;
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 2px solid #0044cc;
-}
 
 /* ==================== CALENDARIO ==================== */
 .calendario {
@@ -574,26 +560,6 @@ main {
   animation: fadeIn 0.5s ease-out;
 }
 
-/* ==================== UTILIDADES ==================== */
-.text-center {
-  text-align: center;
-}
-
-.mt-20 {
-  margin-top: 20px;
-}
-
-.mb-20 {
-  margin-bottom: 20px;
-}
-
-.hidden {
-  display: none;
-}
-
-.visible {
-  display: block;
-}
 /* ==================== ESTILOS PARA RONDINES.PHP ==================== */
 
 /* Contenedor de filtros de fecha */

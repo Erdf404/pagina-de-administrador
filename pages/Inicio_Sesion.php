@@ -16,10 +16,6 @@ if (verificarSesion()) {
   exit();
 }
 
-$mensaje = '';
-if (isset($_GET['mensaje']) && $_GET['mensaje'] === 'sesion_cerrada') {
-  $mensaje = 'Sesión cerrada exitosamente';
-}
 ?>
 <!DOCTYPE html>
 <html lang="es">

@@ -149,7 +149,6 @@ async function modificarUsuario(idUsuario) {
     const nombre = fila.querySelector('[data-campo="nombre"]').value.trim();
     const email = fila.querySelector('[data-campo="email"]').value.trim();
     const tipoUsuario = fila.querySelector('[data-campo="tipoUsuario"]').value;
-    const tipoAdmin = fila.querySelector('[data-campo="tipoAdmin"]').value;
     const password = fila.querySelector('[data-campo="password"]').value;
 
     if (!nombre || !email) {
@@ -380,18 +379,9 @@ async function cargarUsuarios() {
     }
 }
 
-// ==================== FUNCIONES AUXILIARES ====================
-function obtenerUsuarios() {
-    return usuariosGuardados;
-}
 
-function obtenerGuardias() {
-    return usuariosGuardados.filter(u => u.id_tipo === 1);
-}
 
 // ==================== Funciones globales ====================
 window.modificarUsuario = modificarUsuario;
 window.eliminarUsuario = eliminarUsuario;
 window.filtrarPorTipo = filtrarPorTipo;
-window.obtenerUsuarios = obtenerUsuarios;
-window.obtenerGuardias = obtenerGuardias;

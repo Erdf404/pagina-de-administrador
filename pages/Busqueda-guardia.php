@@ -19,7 +19,7 @@
 
     <div class="placeholder">
       <form method="POST" action="">
-        <input type="text" name="busqueda" placeholder="Buscar guardia......" ? />
+        <input type="text" name="busqueda" placeholder="Buscar guardia......"/>
         <button type="submit">Buscar</button>
       </form>
     </div>
@@ -28,7 +28,6 @@
       <div class="user-dropdown">
         <button class="user-button">☰</button>
         <div class="dropdown-menu">
-          <button>Datos del usuario actual</button>
           <button onclick="window.location.href='../pages/cerrar_sesion.php'">Cerrar sesión</button>
             <!-- Solo para Guardias -->
             <?php if (esGuardia()): ?>

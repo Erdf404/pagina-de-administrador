@@ -90,29 +90,6 @@ function initUserDropdown() {
     }
 }
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// Script para mostrar u ocultar el campo de tipo de administrador según el tipo de usuario seleccionado
-function mostrarTipoAdmin(selectElement) {
-const fila = selectElement.closest('tr');
-const tipoAdminSelect = fila.querySelector('.tipo-admin');
-if (selectElement.value === 'administrador') {
-        tipoAdminSelect.style.display = 'block';
-} else {
-        tipoAdminSelect.style.display = 'none';
-}
-    }
-// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
-// Script para mostrar u ocultar las opciones de administrador según la selección del tipo de usuario
-function mostrarOpcionesAdministrador() {
-            const tipoUsuario = document.getElementById('tipo-usuario').value;
-            const adminOptions = document.getElementById('admin-options');
-
-            if (tipoUsuario === 'administrador') {
-                adminOptions.style.display = 'block';
-            } else {
-                adminOptions.style.display = 'none';
-            }
-        }
-// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------//
 // Script para manejar el cierre de sesión con confirmación
 document.addEventListener('DOMContentLoaded', function() {
     const btnsCerrarSesion = document.querySelectorAll('.dropdown-menu button');
