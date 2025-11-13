@@ -12,7 +12,107 @@ body {
   background: linear-gradient(135deg, #313183, #9f9fc7);
   color: #f0f8ff;
   min-height: 100vh;
-  padding: 20px;
+  padding: 0;
+}
+
+/* ==================== HEADER ==================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #0044cc;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 80px;
+  min-height: 80px;
+}
+
+#logo {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+#logo img {
+  height: 50px;
+  width: auto;
+  max-height: 50px;
+}
+
+#user-info {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ==================== DROPDOWN DE USUARIO ==================== */
+.user-dropdown {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.user-button {
+  background-color: #ffffff;
+  color: #0044cc;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  height: 40px;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.user-button:hover {
+  background-color: #f0f8ff;
+  transform: translateY(-1px);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  display: none;
+  flex-direction: column;
+  min-width: 180px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-top: 5px;
+}
+
+.dropdown-menu button {
+  background: none;
+  border: none;
+  padding: 12px 16px;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: background-color 0.2s ease;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-menu button:hover {
+  background-color: #f0f8ff;
+}
+
+.user-dropdown.active .dropdown-menu {
+  display: flex;
 }
 
 /* ==================== CONTENEDOR PRINCIPAL ==================== */
@@ -35,19 +135,63 @@ h1 {
   font-weight: 700;
 }
 
+/* ==================== PESTAÑAS ==================== */
+.tabs-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  border-bottom: 3px solid #0044cc;
+  padding-bottom: 0;
+}
+
+.tab-button {
+  padding: 12px 24px;
+  border: none;
+  background: #f0f0f0;
+  color: #666;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+  top: 3px;
+}
+
+.tab-button:hover {
+  background: #e0e0e0;
+  color: #0044cc;
+}
+
+.tab-button.active {
+  background: #0044cc;
+  color: white;
+  box-shadow: 0 -2px 8px rgba(0, 68, 204, 0.3);
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+}
+
 /* ==================== INSTRUCCIONES ==================== */
 .instrucciones {
-  background-color: #e3f2fd;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
   padding: 20px;
-  border-left: 4px solid #0044cc;
-  margin-bottom: 25px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  line-height: 1.8;
 }
 
 .instrucciones strong {
-  color: #0044cc;
-  font-size: 1.1rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* ==================== LAYOUT ==================== */
@@ -96,6 +240,28 @@ h1 {
   outline: none;
   border-color: #0044cc;
   box-shadow: 0 0 0 3px rgba(0, 68, 204, 0.1);
+}
+
+.form-asignar {
+  background-color: #f8f9fa;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+  border: 2px solid #0044cc;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-row-triple {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
 }
 
 /* ==================== BOTONES ==================== */
@@ -217,6 +383,14 @@ h1 {
   transition: all 0.3s ease;
 }
 
+.sin-datos {
+  text-align: center;
+  padding: 40px;
+  color: #6c757d;
+  font-style: italic;
+  font-size: 1.1rem;
+}
+
 /* ==================== BOTONES DE ACCIÓN ==================== */
 .btn-accion {
   padding: 8px 12px;
@@ -275,63 +449,54 @@ h1 {
   font-weight: bold;
 }
 
-.sin-datos {
-  text-align: center;
-  padding: 40px;
-  color: #6c757d;
-  font-style: italic;
-  font-size: 1.1rem;
-}
-
 /* ==================== GESTIÓN DE RUTAS ==================== */
 .punto-seleccionado {
-  background-color: #e8f5e8;
-  border-left: 4px solid #28a745;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 6px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
 }
 
 .punto-seleccionado:hover {
   transform: translateX(5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.punto-seleccionado .btn-quitar {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 4px 8px;
-  font-size: 11px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.punto-seleccionado .btn-quitar:hover {
-  background-color: #c82333;
-  transform: scale(1.1);
 }
 
 .orden-numero {
-  background-color: #0044cc;
+  background: rgba(255, 255, 255, 0.3);
   color: white;
+  font-weight: bold;
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.btn-quitar {
+  margin-left: auto;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid white;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
   font-weight: bold;
-  margin-right: 10px;
-  box-shadow: 0 2px 4px rgba(0, 68, 204, 0.3);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.btn-quitar:hover {
+  background: rgba(255, 77, 77, 0.9);
+  transform: scale(1.1);
 }
 
 #puntos-ruta-seleccionados {
@@ -352,6 +517,34 @@ h1 {
 #lista-puntos-ruta {
   max-height: 200px;
   overflow-y: auto;
+}
+
+/* ==================== CÓDIGOS QR ==================== */
+#qr-preview {
+  border: 3px solid #0044cc;
+  animation: slideDown 0.4s ease;
+}
+
+.qr-container canvas {
+  border: 4px solid #0044cc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 68, 204, 0.2);
+}
+
+#qr-nombre-preview {
+  font-size: 18px;
+  color: #0044cc;
+  font-weight: bold;
+}
+
+#qr-codigo-preview {
+  font-size: 12px;
+  color: #666;
+  background: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 5px;
 }
 
 /* ==================== RESPONSIVE ==================== */
@@ -380,6 +573,22 @@ h1 {
     padding: 15px;
   }
   
+  header {
+    height: 70px;
+    padding: 10px 15px;
+  }
+  
+  #logo img {
+    height: 40px;
+  }
+  
+  .user-button {
+    font-size: 12px;
+    padding: 8px 12px;
+    height: 35px;
+    min-width: 100px;
+  }
+  
   .container {
     padding: 20px;
   }
@@ -387,6 +596,17 @@ h1 {
   h1 {
     font-size: 1.5rem;
     margin-bottom: 20px;
+  }
+  
+  .tabs-container {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .tab-button {
+    width: 100%;
+    border-radius: 8px;
+    top: 0;
   }
   
   .instrucciones {
@@ -412,9 +632,47 @@ h1 {
     font-size: 11px;
     margin: 1px;
   }
+
+  .form-row,
+  .form-row-triple {
+    grid-template-columns: 1fr;
+  }
+
+  .punto-seleccionado {
+    flex-wrap: wrap;
+  }
+
+  .btn-quitar {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  #qr-preview {
+    padding: 15px;
+  }
+
+  .qr-container canvas {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 @media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    height: auto;
+    min-height: 80px;
+  }
+  
+  .user-button {
+    font-size: 11px;
+    padding: 6px 10px;
+    height: 30px;
+    min-width: 80px;
+  }
+  
   .container {
     padding: 15px;
   }
@@ -477,373 +735,6 @@ h1 {
   }
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.panel, .panel-creacion {
-  animation: slideIn 0.5s ease-out;
-}
-
-/* ==================== UTILIDADES ==================== */
-.text-center {
-  text-align: center;
-}
-
-.mt-20 {
-  margin-top: 20px;
-}
-
-.mb-20 {
-  margin-bottom: 20px;
-}
-
-.hidden {
-  display: none;
-}
-
-.visible {
-  display: block;
-}
-
-
-/* ==================== ESTILOS ADICIONALES PARA FORMULARIOS ==================== */
-.form-asignar {
-background-color: #f8f9fa;
-padding: 25px;
-border-radius: 12px;
-margin-bottom: 30px;
-border: 2px solid #0044cc;
-}
-
-.form-row {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 15px;
-margin-bottom: 15px;
-}
-
-.form-row-triple {
-display: grid;
-grid-template-columns: 1fr 1fr 1fr;
-gap: 15px;
-margin-bottom: 15px;
-}
-
-.estado-badge {
-padding: 6px 12px;
-border-radius: 20px;
-font-size: 12px;
-font-weight: bold;
-display: inline-block;
-}
-
-.estado-pendiente {
-background-color: #fff3cd;
-color: #856404;
-}
-
-.estado-en-curso {
-background-color: #cfe2ff;
-color: #084298;
-}
-
-.estado-completada {
-background-color: #d1e7dd;
-color: #0f5132;
-}
-
-
-@media (max-width: 768px) {
-.form-row,
-.form-row-triple{
-grid-template-columns: 1fr;
-}
-}
-/* ==================== HEADER ==================== */
-/* Estilo del encabezado - ALTURA FIJA Y UNIFORME */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  background-color: #0044cc;
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 80px;
-  min-height: 80px;
-}
-
-/* Logo con tamaño controlado */
-#logo {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-#logo img {
-  height: 50px;
-  width: auto;
-  max-height: 50px;
-}
-
-/* Contenedor de información de usuario */
-#user-info {
-  display: flex;
-  align-items: center;
-  height: 100%;
-}
-
-/* ==================== DROPDOWN DE USUARIO ==================== */
-.user-dropdown {
-  position: relative;
-  height: 100%;
-  display: flex;
-  align-items: center;
-}
-
-/* Botón de usuario - TAMAÑO UNIFORME */
-.user-button {
-  background-color: #ffffff;
-  color: #0044cc;
-  border: none;
-  padding: 10px 16px;
-  font-size: 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  height: 40px;
-  min-width: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-}
-
-/* Efecto hover del botón de usuario */
-.user-button:hover {
-  background-color: #f0f8ff;
-  transform: translateY(-1px);
-}
-
-/* Estilo del menú desplegable */
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: #ffffff;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  display: none;
-  flex-direction: column;
-  min-width: 180px;
-  z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  margin-top: 5px;
-}
-
-/* Estilo de los botones del menú desplegable */
-.dropdown-menu button {
-  background: none;
-  border: none;
-  padding: 12px 16px;
-  text-align: left;
-  width: 100%;
-  cursor: pointer;
-  font-size: 14px;
-  color: #333;
-  transition: background-color 0.2s ease;
-  height: 44px;
-  display: flex;
-  align-items: center;
-}
-
-/* Efecto hover de los botones del menú desplegable */
-.dropdown-menu button:hover {
-  background-color: #f0f8ff;
-}
-
-/* Mostrar el menú desplegable al hacer clic en el botón */
-.user-dropdown.active .dropdown-menu {
-  display: flex;
-}
-
-/* ==================== CALENDARIO (BOTÓN BUSCAR) ==================== */
-.calendario {
-  display: flex;
-  justify-content: center;
-  margin: 0;
-}
-
-.calendario button {
-  padding: 12px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: #0044cc;
-  color: white;
-  border: 2px solid white;
-  font-weight: bold;
-  transition: all 0.3s ease;
-}
-
-.calendario button:hover {
-  background-color: #0033aa;
-  transform: translateY(-1px);
-}
-
-/* ==================== RESPONSIVE PARA HEADER ==================== */
-@media (max-width: 768px) {
-  header {
-    height: 70px;
-    padding: 10px 15px;
-  }
-  
-  #logo img {
-    height: 40px;
-  }
-  
-  .user-button {
-    font-size: 12px;
-    padding: 8px 12px;
-    height: 35px;
-    min-width: 100px;
-  }
-  
-  .calendario button {
-    padding: 10px 18px;
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 480px) {
-  header {
-    flex-direction: column;
-    gap: 10px;
-    padding: 15px;
-    height: auto;
-    min-height: 80px;
-  }
-  
-  .user-button {
-    font-size: 11px;
-    padding: 6px 10px;
-    height: 30px;
-    min-width: 80px;
-  }
-  
-  .calendario button {
-    padding: 8px 16px;
-    font-size: 13px;
-  }
-}
-/* ==================== ESTILOS PARA PESTAÑAS ==================== */
-.tabs-container {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  border-bottom: 3px solid #0044cc;
-  padding-bottom: 0;
-}
-
-.tab-button {
-  padding: 12px 24px;
-  border: none;
-  background: #f0f0f0;
-  color: #666;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px 8px 0 0;
-  transition: all 0.3s ease;
-  position: relative;
-  top: 3px;
-}
-
-.tab-button:hover {
-  background: #e0e0e0;
-  color: #0044cc;
-}
-
-.tab-button.active {
-  background: #0044cc;
-  color: white;
-  box-shadow: 0 -2px 8px rgba(0, 68, 204, 0.3);
-}
-
-.tab-content {
-  display: none;
-  animation: fadeIn 0.3s ease;
-}
-
-.tab-content.active {
-  display: block;
-}
-
-
-/* ==================== ESTILOS PARA PUNTOS EN RUTA ==================== */
-.punto-seleccionado {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px;
-  margin: 8px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
-}
-
-.punto-seleccionado:hover {
-  transform: translateX(5px);
-}
-
-.orden-numero {
-  background: rgba(255, 255, 255, 0.3);
-  color: white;
-  font-weight: bold;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  flex-shrink: 0;
-}
-
-.btn-quitar {
-  margin-left: auto;
-  background: rgba(255, 255, 255, 0.2);
-  border: 2px solid white;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.btn-quitar:hover {
-  background: rgba(255, 77, 77, 0.9);
-  transform: scale(1.1);
-}
-
-/* ==================== ESTILOS PARA CÓDIGOS QR ==================== */
-#qr-preview {
-  border: 3px solid #0044cc;
-  animation: slideDown 0.4s ease;
-}
-
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -853,321 +744,4 @@ header {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.qr-container canvas {
-  border: 4px solid #0044cc;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 68, 204, 0.2);
-}
-
-#qr-nombre-preview {
-  font-size: 18px;
-  color: #0044cc;
-  font-weight: bold;
-}
-
-#qr-codigo-preview {
-  font-size: 12px;
-  color: #666;
-  background: #f0f0f0;
-  padding: 8px 12px;
-  border-radius: 4px;
-  display: inline-block;
-  margin-top: 5px;
-}
-
-/* ==================== ESTILOS PARA FILTROS ==================== */
-#filtro-tipo-punto {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #0044cc;
-  border-radius: 8px;
-  font-size: 16px;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-#filtro-tipo-punto:hover {
-  background: #f0f8ff;
-  border-color: #0066ff;
-}
-
-#filtro-tipo-punto:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(0, 68, 204, 0.2);
-}
-
-/* ==================== BOTONES DE ACCIÓN MEJORADOS ==================== */
-.btn-accion {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: bold;
-  transition: all 0.3s ease;
-  margin: 2px;
-}
-
-.btn-ver {
-  background: #2196f3;
-  color: white;
-}
-
-.btn-ver:hover {
-  background: #1976d2;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
-}
-
-.btn-eliminar {
-  background: #f44336;
-  color: white;
-}
-
-.btn-eliminar:hover {
-  background: #d32f2f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.3);
-}
-
-.btn-ruta {
-  background: #4caf50;
-  color: white;
-}
-
-.btn-ruta:hover {
-  background: #388e3c;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
-}
-
-/* ==================== BADGES DE TIPO ==================== */
-.badge-tipo {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.badge-gps {
-  background: #4caf50;
-  color: white;
-}
-
-.badge-qr {
-  background: #ff9800;
-  color: white;
-}
-
-/* ==================== RESPONSIVE ==================== */
-@media (max-width: 768px) {
-  .tabs-container {
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .tab-button {
-    width: 100%;
-    border-radius: 8px;
-    top: 0;
-  }
-
-  .punto-seleccionado {
-    flex-wrap: wrap;
-  }
-
-  .btn-quitar {
-    margin-left: 0;
-    width: 100%;
-  }
-
-  #qr-preview {
-    padding: 15px;
-  }
-
-  .qr-container canvas {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-/* ==================== ANIMACIONES ADICIONALES ==================== */
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-.btn-accion:active {
-  animation: pulse 0.3s ease;
-}
-
-/* ==================== ESTILOS PARA TABLAS MEJORADAS ==================== */
-.tabla tbody tr {
-  transition: all 0.3s ease;
-}
-
-.tabla tbody tr:hover {
-  background: #f0f8ff;
-  transform: translateX(5px);
-  box-shadow: 0 2px 8px rgba(0, 68, 204, 0.1);
-}
-
-.sin-datos {
-  color: #999;
-  font-style: italic;
-  text-align: center;
-  padding: 30px !important;
-}
-
-/* ==================== ESTILOS PARA CÓDIGOS EN TABLA ==================== */
-code {
-  background: #f0f0f0;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 12px;
-  color: #333;
-  border: 1px solid #ddd;
-}
-
-
-/* ==================== INSTRUCCIONES MEJORADAS ==================== */
-.instrucciones {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-  line-height: 1.8;
-}
-
-.instrucciones strong {
-  color: #fff;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-/* ==================== MENSAJES ==================== */
-.mensaje-exito, .mensaje-error {
-  padding: 15px 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  font-weight: bold;
-  animation: slideDown 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.mensaje-exito {
-  background: #4caf50;
-  color: white;
-  border-left: 5px solid #2e7d32;
-}
-
-.mensaje-error {
-  background: #f44336;
-  color: white;
-  border-left: 5px solid #c62828;
-}
-
-/* ==================== MEJORAS VISUALES GENERALES ==================== */
-.panel {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  transition: box-shadow 0.3s ease;
-}
-
-.panel:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-}
-
-.panel h3, .panel h4 {
-  color: #0044cc;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #e0e0e0;
-}
-
-.form-section {
-  margin-bottom: 20px;
-}
-
-.form-section label {
-  display: block;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.form-section input[type="text"],
-.form-section input[type="number"],
-.form-section select {
-  width: 100%;
-  padding: 12px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.form-section input:focus,
-.form-section select:focus {
-  outline: none;
-  border-color: #0044cc;
-  box-shadow: 0 0 0 3px rgba(0, 68, 204, 0.1);
-}
-
-.botones-control {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 15px;
-}
-
-.success {
-  background: #4caf50;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.success:hover {
-  background: #388e3c;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
-}
-
-.peligro {
-  background: #f44336;
-  color: white;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.peligro:hover {
-  background: #d32f2f;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(244, 67, 54, 0.3);
 }
