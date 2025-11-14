@@ -57,6 +57,12 @@ async function agregarUsuario() {
         return;
     }
 
+    // Validar contraseña
+    if (!validarPassword(password)) {
+        mostrarErrorPassword('La contraseña debe tener mínimo 6 caracteres (letras, números, símbolos, sin espacios).\nEjemplo: 123456, abcdef, a1b2c3');
+        return;
+    }
+
     try {
         const response = await fetch('../api/api_usuarios.php', {
             method: 'POST',
@@ -153,6 +159,12 @@ async function modificarUsuario(idUsuario) {
 
     if (!nombre || !email) {
         alert('⚠️ El nombre y correo no pueden estar vacíos.');
+        return;
+    }
+
+    // Validar contraseña (solo si se ingresó una nueva)
+    if (password && !validarPassword(password)) {
+        mostrarErrorPassword('La contraseña debe tener mínimo 6 caracteres (letras, números, símbolos, sin espacios).\nEjemplo: 123456, abcdef, a1b2c3');
         return;
     }
 
@@ -379,6 +391,16 @@ async function cargarUsuarios() {
     }
 }
 
+// ==================== VALIDACIÓN DE CONTRASEÑAS ====================
+function validarPassword(password) {
+    // Mínimo 6 caracteres, sin espacios, permite símbolos
+    const regex = /^[^\s]{6,}$/;
+    return regex.test(password);
+}
+
+function mostrarErrorPassword(mensaje) {
+    alert('⚠️ ' + mensaje);
+}
 
 
 // ==================== Funciones globales ====================

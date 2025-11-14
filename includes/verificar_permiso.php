@@ -11,17 +11,17 @@ if (!verificarSesion()) {
 
 // Definir permisos requeridos por página 
 $permisos_pagina = [
-    'Agregar-Usuario.php' => 'agregar_usuarios',
-    'Modificar-usuario.php' => 'modificar_usuarios',
-    'Eliminar-usuario.php' => 'eliminar_usuarios',
-    'Busqueda-guardia.php' => 'ver_guardias',
-    'Rutas.php' => 'crear_rutas',
-    'Asignar-rutas.php' => 'asignar_rutas',
-    'Rondines.php' => 'ver_rondines_propios' 
+    'agregar-usuario.php' => 'agregar_usuarios',
+    'modificar-usuario.php' => 'modificar_usuarios',
+    'eliminar-usuario.php' => 'eliminar_usuarios',
+    'busqueda-guardia.php' => 'ver_guardias',
+    'rutas.php' => 'crear_rutas',
+    'asignar-rutas.php' => 'asignar_rutas',
+    'rondines.php' => 'ver_rondines_propios' 
 ];
 
-// Obtener nombre de la página actual
-$pagina_actual = basename($_SERVER['PHP_SELF']);
+// Obtener nombre de la página actual y convertir a minúsculas
+$pagina_actual = strtolower(basename($_SERVER['PHP_SELF']));
 
 // Verificar si la página requiere permisos específicos
 if (isset($permisos_pagina[$pagina_actual])) {

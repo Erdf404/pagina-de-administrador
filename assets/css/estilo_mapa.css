@@ -35,9 +35,9 @@ header {
 }
 
 #logo img {
-  height: 50px;
+  height: 75px;
   width: auto;
-  max-height: 50px;
+  max-height: 75px;
 }
 
 #user-info {
@@ -118,7 +118,7 @@ header {
 /* ==================== CONTENEDOR PRINCIPAL ==================== */
 .container {
   max-width: 1600px;
-  margin: 0 auto;
+  margin: 20px auto;
   background-color: #fff;
   padding: 30px;
   border-radius: 12px;

@@ -38,9 +38,9 @@ header {
 }
 
 #logo img {
-  height: 50px; /* Tamaño fijo más pequeño para uniformidad */
+  height: 75px; /* Tamaño fijo más pequeño para uniformidad */
   width: auto;
-  max-height: 50px;
+  max-height: 75px;
 }
 
 /* Contenedor de información de usuario */
