@@ -20,7 +20,6 @@
     <div class="placeholder">
       <form method="POST" action="">
         <input type="text" name="busqueda" placeholder="Buscar guardia......"/>
-        <button type="submit">Buscar</button>
       </form>
     </div>
 
