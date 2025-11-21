@@ -197,7 +197,7 @@ function mostrarModalMapa(rondin, coordenadas) {
     if (modalExistente) modalExistente.remove();
     
     const listaCoordenadas = coordenadas.map((c, i) => `
-        <div style="padding: 8px; background: ${c.verificador ? '#d4edda' : '#f8d7da'}; 
+        <div style="padding: 8px; background: ${c.verificador ? '#2a9b44ff' : '#9c141fff'}; 
                     margin: 5px 0; border-radius: 4px;">
             <strong>${i + 1}.</strong> ${c.hora} - 
             ${c.verificador ? '✅' : '❌'} 
