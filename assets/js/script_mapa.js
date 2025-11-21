@@ -462,7 +462,7 @@ function verQR(idQR) {
     <div style="background: white; padding: 30px; border-radius: 12px; max-width: 500px; text-align: center; position: relative;">
       <span onclick="this.parentElement.parentElement.remove()" style="position: absolute; right: 15px; top: 10px; font-size: 28px; cursor: pointer; color: #999;">&times;</span>
       <h2 style="color: #0044cc;">🔳 ${qr.nombre}</h2>
-      <p><strong>Código:</strong> <code style="font-size: 12px; word-break: break-all; background: #f0f0f0; padding: 5px 10px; border-radius: 4px;">${qr.codigo_qr}</code></p>
+      <p><strong style="color: #000;">Código:</strong> <code style="font-size: 12px; word-break: break-all; background: #140c57ff; padding: 5px 10px; border-radius: 4px;">${qr.codigo_qr}</code></p>
       <div id="qr-modal-canvas" style="margin: 20px 0;"></div>
       <button onclick="descargarQRGuardado(${qr.id})" class="success" style="padding: 12px 24px; margin: 5px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #28a745; color: white;">💾 Descargar</button>
       <button onclick="this.parentElement.parentElement.remove()" style="padding: 12px 24px; margin: 5px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; background: #6c757d; color: white;">Cerrar</button>

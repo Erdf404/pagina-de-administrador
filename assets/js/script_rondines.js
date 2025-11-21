@@ -225,8 +225,6 @@ function mostrarModalMapa(rondin, coordenadas) {
             <div style="max-height: 400px; overflow-y: auto;">
                 ${listaCoordenadas}
             </div>
-            
-            <button class="btn-cerrar" onclick="cerrarModalRondin()">Cerrar</button>
         </div>
     `;
     
@@ -355,21 +353,6 @@ function agregarEstilosModal() {
             border-bottom: 3px solid #0044cc;
         }
         
-        .btn-cerrar {
-            margin-top: 20px;
-            padding: 12px 24px;
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-        }
-        
-        .btn-cerrar:hover {
-            background-color: #5a6268;
-        }
     `;
     document.head.appendChild(style);
 }
