@@ -196,14 +196,35 @@ function mostrarModalMapa(rondin, coordenadas) {
     const modalExistente = document.getElementById('modal-mapa-rondin');
     if (modalExistente) modalExistente.remove();
     
-    const listaCoordenadas = coordenadas.map((c, i) => `
-        <div style="padding: 8px; background: ${c.verificador ? '#2a9b44ff' : '#9c141fff'}; 
-                    margin: 5px 0; border-radius: 4px;">
-            <strong>${i + 1}.</strong> ${c.hora} - 
-            ${c.verificador ? '✅' : '❌'} 
-            ${c.lat ? `(${c.lat}, ${c.lng})` : c.qr ? `QR: ${c.qr}` : 'Sin ubicación'}
+    const listaCoordenadas = coordenadas.map((c, i) => {
+        // Determinar el texto de ubicación
+        let ubicacionTexto = '';
+        if (c.qr) {
+            ubicacionTexto = `QR: ${c.qr}`;
+        } else if (c.lat && c.lng) {
+            ubicacionTexto = `(${c.lat}, ${c.lng})`;
+        } else {
+            ubicacionTexto = 'Sin ubicación';
+        }
+        
+        return `
+        <div style="padding: 12px; background: ${c.verificador ? '#2a9b44ff' : '#9c141fff'}; 
+                    margin: 8px 0; border-radius: 8px; color: white;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;">
+                    <strong style="font-size: 16px;">${i + 1}. ${c.nombre_punto || 'Punto desconocido'}</strong>
+                    <br>
+                    <small style="opacity: 0.9;">⏰ ${c.hora}</small>
+                    <br>
+                    <small style="opacity: 0.8;">📍 ${ubicacionTexto}</small>
+                </div>
+                <div style="font-size: 24px;">
+                    ${c.verificador ? '✅' : '❌'}
+                </div>
+            </div>
         </div>
-    `).join('');
+    `;
+    }).join('');
     
     const modal = document.createElement('div');
     modal.id = 'modal-mapa-rondin';
@@ -221,7 +242,7 @@ function mostrarModalMapa(rondin, coordenadas) {
                 <strong>🗺️ Ruta:</strong> ${rondin.rutaNombre}
             </div>
             
-            <h3 style="margin-top: 20px; color: #0044cc;">📍 Puntos Registrados</h3
+            <h3 style="margin-top: 20px; color: #0044cc;">📍 Puntos Registrados (${coordenadas.length})</h3>
             <div style="max-height: 400px; overflow-y: auto;">
                 ${listaCoordenadas}
             </div>

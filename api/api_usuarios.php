@@ -236,33 +236,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   elseif ($accion === 'eliminar') {
     // Verificar permisos
     if (!tienePermiso('eliminar_usuarios')) {
-      http_response_code(403);
-      echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
-      exit;
+        http_response_code(403);
+        echo json_encode(['exito' => false, 'mensaje' => 'No tienes permisos']);
+        exit;
     }
     $idUsuario = $datos['idUsuario'];
 
     try {
-      // Verificar si el usuario tiene rondas asignadas
-      $stmt = $pdo->prepare("SELECT COUNT(*) FROM Ronda_asignada WHERE id_usuario = ?");
-      $stmt->execute([$idUsuario]);
-      $tieneRondas = $stmt->fetchColumn();
+        // Iniciar transacción para garantizar consistencia
+        $pdo->beginTransaction();
 
-      if ($tieneRondas > 0) {
-        echo json_encode(['exito' => false, 'mensaje' => 'No se puede eliminar el usuario porque tiene rondas asignadas']);
-        exit;
-      }
+        // 1. Obtener todas las rondas ejecutadas por el usuario
+        $stmt = $pdo->prepare("SELECT id_ronda_usuario FROM rondas_usuarios WHERE id_usuario = ?");
+        $stmt->execute([$idUsuario]);
+        $rondas = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
-      // Eliminar usuario
-      $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id_usuario = ?");
-      $stmt->execute([$idUsuario]);
+        // 2. Eliminar coordenadas de todas las rondas del usuario
+        if (!empty($rondas)) {
+            $placeholders = implode(',', array_fill(0, count($rondas), '?'));
+            $stmt = $pdo->prepare("DELETE FROM coordenadas_usuarios WHERE id_ronda_usuario IN ($placeholders)");
+            $stmt->execute($rondas);
+        }
 
-      echo json_encode(['exito' => true, 'mensaje' => 'Usuario eliminado correctamente']);
+        // 3. Eliminar todas las rondas ejecutadas por el usuario
+        $stmt = $pdo->prepare("DELETE FROM rondas_usuarios WHERE id_usuario = ?");
+        $stmt->execute([$idUsuario]);
+
+        // 4. Eliminar todas las asignaciones de rutas al usuario
+        $stmt = $pdo->prepare("DELETE FROM Ronda_asignada WHERE id_usuario = ?");
+        $stmt->execute([$idUsuario]);
+
+        // 5. Finalmente, eliminar el usuario
+        $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id_usuario = ?");
+        $stmt->execute([$idUsuario]);
+
+        // Confirmar todos los cambios
+        $pdo->commit();
+
+        echo json_encode([
+            'exito' => true, 
+            'mensaje' => 'Usuario eliminado correctamente junto con todas sus asignaciones y registros'
+        ]);
     } catch (PDOException $e) {
-      echo json_encode(['exito' => false, 'mensaje' => 'Error al eliminar usuario: ' . $e->getMessage()]);
+        // Revertir cambios si hay error
+        $pdo->rollBack();
+        echo json_encode([
+            'exito' => false, 
+            'mensaje' => 'Error al eliminar usuario: ' . $e->getMessage()
+        ]);
     }
-  } else {
-    echo json_encode(['exito' => false, 'mensaje' => 'Acción no válida']);
-  }
+}
 }
 ?>

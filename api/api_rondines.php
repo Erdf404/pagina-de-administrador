@@ -75,45 +75,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     
     // Obtener coordenadas de un rondín específico
-    elseif ($accion === 'obtener_coordenadas') {
-        $rondinId = isset($_GET['id']) ? intval($_GET['id']) : 0;
-        
-        try {
-            //  Verificar que el usuario tenga permiso para ver este rondín
-            if (esGuardia()) {
-                // Verificar que el rondín pertenezca al guardia
-                $stmt = $pdo->prepare("
-                    SELECT id_usuario FROM rondas_usuarios WHERE id_ronda_usuario = ?
-                ");
-                $stmt->execute([$rondinId]);
-                $rondin = $stmt->fetch(PDO::FETCH_ASSOC);
-                
-                if (!$rondin || $rondin['id_usuario'] != obtenerIdUsuario()) {
-                    http_response_code(403);
-                    echo json_encode(['exito' => false, 'mensaje' => 'No tienes permiso para ver este rondín']);
-                    exit;
-                }
-            }
-            
+elseif ($accion === 'obtener_coordenadas') {
+    $rondinId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+    
+    try {
+        // Verificar que el usuario tenga permiso para ver este rondín
+        if (esGuardia()) {
             $stmt = $pdo->prepare("
-                SELECT 
-                    id,
-                    hora_actual as hora,
-                    latitud_actual as lat,
-                    longitud_actual as lng,
-                    codigo_qr as qr,
-                    verificador
-                FROM coordenadas_usuarios
-                WHERE id_ronda_usuario = ?
-                ORDER BY hora_actual ASC
+                SELECT id_usuario FROM rondas_usuarios WHERE id_ronda_usuario = ?
             ");
             $stmt->execute([$rondinId]);
-            $coordenadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $rondin = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            echo json_encode(['exito' => true, 'datos' => $coordenadas]);
-        } catch (PDOException $e) {
-            echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
+            if (!$rondin || $rondin['id_usuario'] != obtenerIdUsuario()) {
+                http_response_code(403);
+                echo json_encode(['exito' => false, 'mensaje' => 'No tienes permiso para ver este rondín']);
+                exit;
+            }
         }
+        
+        // Obtener coordenadas con nombres de los puntos
+        $stmt = $pdo->prepare("
+            SELECT 
+                cu.id,
+                cu.hora_actual as hora,
+                cu.latitud_actual as lat,
+                cu.longitud_actual as lng,
+                cu.codigo_qr as qr,
+                cu.verificador,
+                COALESCE(
+                    -- Primero buscar por código QR exacto
+                    (SELECT nombre_coordenada 
+                     FROM Coordenadas_admin 
+                     WHERE codigo_qr = cu.codigo_qr 
+                     LIMIT 1),
+                    -- Buscar por coordenadas GPS con tolerancia de 0.001 grados (~111 metros)
+                    -- Esto cubre el radio de tolerancia típico de rondines
+                    (SELECT nombre_coordenada 
+                     FROM Coordenadas_admin 
+                     WHERE ABS(latitud - cu.latitud_actual) < 0.001 
+                     AND ABS(longitud - cu.longitud_actual) < 0.001
+                     AND latitud IS NOT NULL
+                     AND longitud IS NOT NULL
+                     ORDER BY 
+                         SQRT(POW(latitud - cu.latitud_actual, 2) + POW(longitud - cu.longitud_actual, 2))
+                     LIMIT 1),
+                    'Punto desconocido'
+                ) as nombre_punto
+            FROM coordenadas_usuarios cu
+            WHERE cu.id_ronda_usuario = ?
+            ORDER BY cu.hora_actual ASC
+        ");
+        $stmt->execute([$rondinId]);
+        $coordenadas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        echo json_encode(['exito' => true, 'datos' => $coordenadas]);
+    } catch (PDOException $e) {
+        echo json_encode(['exito' => false, 'mensaje' => 'Error: ' . $e->getMessage()]);
     }
+}
 }
 ?>
